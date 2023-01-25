@@ -6,14 +6,14 @@ name: build
 on:
   push:
     branches: [ "main" ]
-    paths: 
-      - 'src/'
-      - 'tests/'
+    paths-ignore: 
+      - 'docs/**'
+      - '**/README.md'
   pull_request:
     branches: [ "main" ]
-    paths:
-      - 'src/'
-      - 'tests/'
+    paths-ignore:
+      - 'docs/**'
+      - '**/README.md'
 
 jobs:
   build:
