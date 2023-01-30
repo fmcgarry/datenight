@@ -4,16 +4,13 @@
 name: development
 
 on:
-  push:
-    branches: [ "development" ]
-    paths-ignore: 
-      - 'docs/**'
-      - '**/README.md'
+  workflow_dispatch:
   pull_request:
-    branches: [ "development" ]
+    branches: [ "main" ]
     paths-ignore:
       - 'docs/**'
       - '**/README.md'
+      
 
 jobs:
   build:
