@@ -1,14 +1,4 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
 name: build
-
-env:
-  APP_PROJECT_PATH: src/DateNight.App
-  APP_BUILD_OUTPUT_PATH: artifacts/DateNight.App
-  
-  API_PROJECT_PATH: src/DateNight.Api
-  API_BUILD_OUTPUT_PATH: artifacts/DateNight.Api
 
 on:
   workflow_dispatch:
@@ -24,25 +14,8 @@ on:
       - '**/README.md'
 
 jobs:
-  build:
-    runs-on: windows-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '7.x'
-        
-    - name: Install MAUI workload
-      run: dotnet workload install maui
-
-    - name: Restore dependencies
-      run: dotnet restore
-      
-    - name: Build Android App
-      run: dotnet build APP_PROJECT_PATH --no-restore -c Release -f:net7.0-android -o APP_BUILD_OUTPUT_PATH
-      
-    - name: Build Api Project
-      run: dotnet build API_PROJECT_PATH --no-restore -c Release -o API_BUILD_OUTPUT_PATH
+  call-build-api-workflow:
+    uses: .github/workflows/build-api@v1
+  
+  call-build-android-workflow:
+    uses: .github/workflows/build-android@v1
