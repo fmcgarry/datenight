@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DateNight.Core", "src\DateN
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DateNight.Infrastructure", "src\DateNight.Infrastructure\DateNight.Infrastructure.csproj", "{98BFCD1B-BD0E-42FB-A0EE-30E67E769EA7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DateNight.App", "src\DateNight.App\DateNight.App.csproj", "{6F4792C1-135B-4D2B-9FFA-988690A1F1C5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +56,12 @@ Global
 		{98BFCD1B-BD0E-42FB-A0EE-30E67E769EA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98BFCD1B-BD0E-42FB-A0EE-30E67E769EA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98BFCD1B-BD0E-42FB-A0EE-30E67E769EA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F4792C1-135B-4D2B-9FFA-988690A1F1C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F4792C1-135B-4D2B-9FFA-988690A1F1C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F4792C1-135B-4D2B-9FFA-988690A1F1C5}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{6F4792C1-135B-4D2B-9FFA-988690A1F1C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F4792C1-135B-4D2B-9FFA-988690A1F1C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F4792C1-135B-4D2B-9FFA-988690A1F1C5}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -65,6 +73,7 @@ Global
 		{C5276BF0-5FBC-4262-8EE2-2C3193788991} = {3F615DEE-E136-49E8-8894-E2C8C4290838}
 		{B2E50170-2712-4735-898F-B03CBDA60301} = {3F615DEE-E136-49E8-8894-E2C8C4290838}
 		{98BFCD1B-BD0E-42FB-A0EE-30E67E769EA7} = {3F615DEE-E136-49E8-8894-E2C8C4290838}
+		{6F4792C1-135B-4D2B-9FFA-988690A1F1C5} = {3F615DEE-E136-49E8-8894-E2C8C4290838}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2DA20B2E-B615-4B23-A169-AB82F4363BA4}
