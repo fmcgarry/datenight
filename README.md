@@ -1,5 +1,6 @@
 # Overview
 
+[![android](https://github.com/fmcgarrydev/datenight/actions/workflows/android.yml/badge.svg?branch=main)](https://github.com/fmcgarrydev/datenight/actions/workflows/android.yml)
 [![build](https://github.com/fmcgarry/datenight/actions/workflows/dotnet.yml/badge.svg)](https://github.com/fmcgarry/datenight/actions/workflows/dotnet.yml)
 
 DateNight is an Android application written in .NET MAUI Blazor that provides couples a fun and conflict-free way of deciding an activity for date night. 
