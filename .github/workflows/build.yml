@@ -15,7 +15,7 @@ on:
 
 jobs:
   call-build-api-workflow:
-    uses: .github/workflows/build-api.yml@v1
+    uses: ./.github/workflows/build-api.yml
   
   call-build-android-workflow:
-    uses: .github/workflows/build-android.yml@v1
+    uses: ./.github/workflows/build-android.yml
