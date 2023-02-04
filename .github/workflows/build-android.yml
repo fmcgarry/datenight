@@ -1,0 +1,32 @@
+name: Build Android App
+
+on:
+  workflow_call:
+
+env:
+  APP_PROJECT_PATH: src/DateNight.App
+  APP_BUILD_OUTPUT_PATH: artifacts/DateNight.App
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '7.x'
+
+    - name: Install MAUI workload
+      run: dotnet workload install maui
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build Android App
+      run: dotnet build APP_PROJECT_PATH --no-restore -c Release -f:net7.0-android -o APP_BUILD_OUTPUT_PATH
+
+    - name: Build Api Project
+      run: dotnet build API_PROJECT_PATH --no-restore -c Release -o API_BUILD_OUTPUT_PATH
