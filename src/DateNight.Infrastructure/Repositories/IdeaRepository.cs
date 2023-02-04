@@ -5,6 +5,13 @@ namespace DateNight.Infrastructure.Repositories;
 
 public class IdeaRepository : IRepository<Idea>
 {
+    private readonly IAppLogger<IdeaRepository> _logger;
+
+    public IdeaRepository(IAppLogger<IdeaRepository> logger)
+    {
+        _logger = logger;
+    }
+
     public Task<Idea> AddAsync(Idea entity, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
