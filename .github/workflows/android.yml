@@ -3,23 +3,23 @@
 
 name: android
 
+env:
+  APP_PROJECT_PATH: src/DateNight
+
 on:
+  workflow_dispatch:
   push:
     branches: [ "main" ]
-    paths-ignore:
-      - 'docs/**'
-      - '**/README.md'
+    paths:
+      - APP_PROJECT_PATH
   pull_request:
     branches: [ "main" ]
-    paths-ignore:
-      - 'docs/**'
-      - '**/README.md'
+    paths:
+      - APP_PROJECT_PATH
 
 jobs:
   build:
-
     runs-on: windows-latest
-
     steps:
     - uses: actions/checkout@v3
     
@@ -32,7 +32,7 @@ jobs:
       run: dotnet workload install maui
       
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore APP_PROJECT_PATH
       
     - name: Build
-      run: dotnet build -c Release -f:net7.0-android --no-restore
+      run: dotnet build APP_PROJECT_PATH -c Release -f:net7.0-android --no-restore
