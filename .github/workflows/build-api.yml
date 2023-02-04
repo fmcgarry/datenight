@@ -20,7 +20,7 @@ jobs:
         dotnet-version: '7.x'
         
     - name: Restore dependencies
-      run: dotnet restore API_PROJECT_PATH
+      run: dotnet restore $API_PROJECT_PATH
  
     - name: Build Api Project
-      run: dotnet build API_PROJECT_PATH --no-restore -c Release -o API_BUILD_OUTPUT_PATH
+      run: dotnet build $API_PROJECT_PATH --no-restore -c Release -o $API_BUILD_OUTPUT_PATH
