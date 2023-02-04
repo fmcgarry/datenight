@@ -1,6 +1,12 @@
-﻿namespace DateNight.Infrastructure;
+﻿using DateNight.Infrastructure.Clients.DateNightApi;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace DateNight.Infrastructure;
 
 public static class Dependencies
 {
-    // Service registrations go here.
+    public static IServiceCollection AddDateNightApiClient(this IServiceCollection services, DateNightApiClientOptions options)
+    {
+        throw new NotSupportedException();
+    }
 }
