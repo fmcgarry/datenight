@@ -23,7 +23,7 @@ jobs:
       run: dotnet workload install maui
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore APP_PROJECT_PATH
 
     - name: Build Android App
       run: dotnet build APP_PROJECT_PATH --no-restore -c Release -f:net7.0-android -o APP_BUILD_OUTPUT_PATH
