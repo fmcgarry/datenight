@@ -1,4 +1,5 @@
 using DateNight.Api.Data;
+using DateNight.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DateNight.Api.Controllers
@@ -7,9 +8,9 @@ namespace DateNight.Api.Controllers
     [Route("[controller]")]
     public class IdeasController : ControllerBase
     {
-        private readonly ILogger<IdeasController> _logger;
+        private readonly IAppLogger<IdeasController> _logger;
 
-        public IdeasController(ILogger<IdeasController> logger)
+        public IdeasController(IAppLogger<IdeasController> logger)
         {
             _logger = logger;
         }
