@@ -1,15 +1,19 @@
-﻿using DateNight.Core.Interfaces;
+﻿using DateNight.Core.Entities.IdeaAggregate;
+using DateNight.Core.Interfaces;
 
 namespace DateNight.Core.Services;
 
 public class IdeaService : IIdeaService
 {
-    private readonly IDateNightApiClient _dateNightApiClient;
     private readonly IAppLogger<IdeaService> _logger;
 
-    public IdeaService(IAppLogger<IdeaService> logger, IDateNightApiClient dateNightApiClient)
+    public IdeaService(IAppLogger<IdeaService> logger)
     {
         _logger = logger;
-        _dateNightApiClient = dateNightApiClient;
+    }
+
+    public async Task AddIdeaAsync(Idea idea)
+    {
+        throw new NotImplementedException();
     }
 }
