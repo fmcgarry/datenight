@@ -4,8 +4,8 @@ on:
   workflow_call:
 
 env:
-  APP_PROJECT_PATH: src/DateNight.App
-  APP_BUILD_OUTPUT_PATH: artifacts/DateNight.App
+  APP_PROJECT_PATH: src\DateNight.App
+  APP_BUILD_OUTPUT_PATH: artifacts\DateNight.App
 
 jobs:
   build:
@@ -29,4 +29,4 @@ jobs:
       run: dotnet build $APP_PROJECT_PATH --no-restore -c Release -f:net7.0-android -o $APP_BUILD_OUTPUT_PATH
 
     - name: Build Api Project
-      run: dotnet build $API_PROJECT_PATH --no-restore -c Release -o $API_BUILD_OUTPUT_PATH
+      run: dotnet build $API_PROJECT_PATH --no-restore -c Release -o $APP_BUILD_OUTPUT_PATH
