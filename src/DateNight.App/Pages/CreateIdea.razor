@@ -1,0 +1,17 @@
+﻿@page "/ideas/create"
+
+<h3>Create Idea</h3>
+
+<EditForm Model="@_idea" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+    <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <InputText class="form-control" id="title" @bind-Value="_idea.Title"/>
+    </div>
+    <div class="mb-3">
+        <label for="summary" class="form-label">Description</label>
+        <InputTextArea id="description" class="form-control" @bind-Value="_idea.Description" />
+    </div>
+    <button class="btn btn-primary" type="submit">Submit</button>
+</EditForm>

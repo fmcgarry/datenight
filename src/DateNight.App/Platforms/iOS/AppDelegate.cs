@@ -1,6 +1,6 @@
 ﻿using Foundation;
 
-namespace DateNight.App
+namespace DateNight.App.Platforms.iOS
 {
     [Register("AppDelegate")]
     public class AppDelegate : MauiUIApplicationDelegate
