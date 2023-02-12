@@ -1,4 +1,5 @@
-﻿using DateNight.Infrastructure;
+﻿using DateNight.App.Clients.DateNightApi;
+using DateNight.App.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace DateNight.App
@@ -21,8 +22,11 @@ namespace DateNight.App
             builder.Services.AddBlazorWebViewDeveloperTools();
             builder.Logging.AddDebug();
 #endif
-            builder.Services.AddRequiredInfrastructureServices();
-            builder.Services.AddDateNightApiClient(builder.Configuration);
+            builder.Services.AddTransient<IDateNightApiClient, DateNightApiClient>();
+            builder.Services.AddHttpClient(DateNightApiClient.HttpClientName).ConfigureHttpClient(x =>
+            {
+                x.BaseAddress = new Uri(DateNightApiClient.HttpClientBaseAddress);
+            });
 
             return builder.Build();
         }
