@@ -16,4 +16,8 @@
     <ProjectReference Include="..\DateNight.Infrastructure\DateNight.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="IntegrationTests" />
+  </ItemGroup>
+
 </Project>
