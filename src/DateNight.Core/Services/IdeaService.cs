@@ -24,6 +24,7 @@ public class IdeaService : IIdeaService
 
     private async Task AddIdeaInternalAsync(Idea idea)
     {
+        idea.CreatedOn = DateTime.UtcNow;
         await _ideaRepository.AddAsync(idea);
     }
 }

@@ -16,7 +16,7 @@ public class Idea : BaseEntity<string>, IAggregateRoot
         CreatedOn = createdOn;
     }
 
-    public required DateTime CreatedOn { get; init; }
+    public DateTime CreatedOn { get; set; }
     public required string Description { get; init; }
     public required string Title { get; init; }
 }

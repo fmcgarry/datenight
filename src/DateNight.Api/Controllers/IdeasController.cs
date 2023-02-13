@@ -24,8 +24,7 @@ namespace DateNight.Api.Controllers
             var ideaModel = new Idea()
             {
                 Title = idea.Title,
-                Description = idea.Description,
-                CreatedOn = DateTime.UtcNow
+                Description = idea.Description
             };
 
             await _ideaService.AddIdeaAsync(ideaModel);
