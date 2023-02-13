@@ -1,6 +1,12 @@
+using DateNight.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddRequiredInfrastructureServices();
+
+string connectionString = builder.Configuration.GetConnectionString("DateNightCosmosDb") ?? string.Empty;
+builder.Services.AddIdeaService(connectionString);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

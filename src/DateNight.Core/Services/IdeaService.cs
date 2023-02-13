@@ -5,15 +5,25 @@ namespace DateNight.Core.Services;
 
 public class IdeaService : IIdeaService
 {
+    private readonly IRepository<Idea> _ideaRepository;
     private readonly IAppLogger<IdeaService> _logger;
 
-    public IdeaService(IAppLogger<IdeaService> logger)
+    public IdeaService(IAppLogger<IdeaService> logger, IRepository<Idea> ideaRepository)
     {
         _logger = logger;
+        _ideaRepository = ideaRepository;
     }
 
-    public async Task AddIdeaAsync(Idea idea)
+    public Task AddIdeaAsync(Idea idea)
     {
-        throw new NotImplementedException();
+        ArgumentNullException.ThrowIfNull(idea.Id);
+        _logger.LogInformation("Adding idea '{Id}'.", idea.Id);
+
+        return AddIdeaInternalAsync(idea);
+    }
+
+    private async Task AddIdeaInternalAsync(Idea idea)
+    {
+        await _ideaRepository.AddAsync(idea);
     }
 }

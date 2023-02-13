@@ -19,7 +19,7 @@ namespace DateNight.Api.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddIdea(IdeaDto idea)
+        public async Task<IActionResult> AddIdea(IdeaDto idea)
         {
             var ideaModel = new Idea()
             {
@@ -28,7 +28,7 @@ namespace DateNight.Api.Controllers
                 CreatedOn = DateTime.UtcNow
             };
 
-            _ideaService.AddIdeaAsync(ideaModel);
+            await _ideaService.AddIdeaAsync(ideaModel);
 
             return Created(ideaModel.Id!, idea);
         }
