@@ -12,7 +12,7 @@ public interface IRepository<T> where T : class, IAggregateRoot
 
     Task DeleteRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default);
 
-    Task<T?> GetAllAsync<U>(U id, CancellationToken cancellationToken = default);
+    Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default);
 
     Task<T?> GetByIdAsync<U>(U id, CancellationToken cancellationToken = default);
 

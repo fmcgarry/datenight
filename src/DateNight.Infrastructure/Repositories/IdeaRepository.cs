@@ -35,9 +35,11 @@ public class IdeaRepository : IRepository<Idea>
         throw new NotImplementedException();
     }
 
-    public Task<Idea?> GetAllAsync<U>(U id, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Idea>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        IEnumerable<Idea> results = await QueryIdeasAsync("Select * from c");
+
+        return results;
     }
 
     public Task<Idea?> GetByIdAsync<U>(U id, CancellationToken cancellationToken = default)
@@ -53,5 +55,20 @@ public class IdeaRepository : IRepository<Idea>
     public Task UpdateRangeAsync(IEnumerable<Idea> entities, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
+    }
+
+    private async Task<IEnumerable<Idea>> QueryIdeasAsync(string queryString)
+    {
+        var query = _container.GetItemQueryIterator<Idea>(new QueryDefinition(queryString));
+
+        List<Idea> results = new();
+
+        while (query.HasMoreResults)
+        {
+            var response = await query.ReadNextAsync();
+            results.AddRange(response.ToList());
+        }
+
+        return results;
     }
 }

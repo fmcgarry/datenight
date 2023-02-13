@@ -32,10 +32,17 @@ namespace DateNight.Api.Controllers
             return Created(ideaModel.Id!, idea);
         }
 
-        [HttpGet(Name = "all")]
-        public IEnumerable<IdeaDto> GetIdeas()
+        [HttpGet]
+        public async Task<IActionResult> GetIdeas()
         {
-            return Enumerable.Empty<IdeaDto>();
+            var ideas = await _ideaService.GetAllIdeasAsync();
+
+            if (!ideas.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(ideas);
         }
     }
 }

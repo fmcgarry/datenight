@@ -5,5 +5,7 @@ namespace DateNight.Core.Interfaces
     public interface IIdeaService
     {
         Task AddIdeaAsync(Idea idea);
+
+        Task<IEnumerable<Idea>> GetAllIdeasAsync();
     }
 }

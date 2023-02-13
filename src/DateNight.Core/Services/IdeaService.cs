@@ -22,6 +22,13 @@ public class IdeaService : IIdeaService
         return AddIdeaInternalAsync(idea);
     }
 
+    public async Task<IEnumerable<Idea>> GetAllIdeasAsync()
+    {
+        var ideas = await _ideaRepository.GetAllAsync();
+
+        return ideas;
+    }
+
     private async Task AddIdeaInternalAsync(Idea idea)
     {
         idea.CreatedOn = DateTime.UtcNow;
