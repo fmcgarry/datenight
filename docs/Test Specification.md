@@ -82,11 +82,11 @@ Since this is the UI project, these tests comprise of safe guards for user input
 **Post-Conditions:** The user stays on the edit page and has the option to fix their error or close without saving.  
 **Associated Requirements:** 8.1
 
-## DateNight.Infrastructure
+## DateNight.Core
 
 This project contains most of the core business logic of the application, therefore, has the most unit tests.
 
-### CreateIdea_WhenNewIdea_ThenCreatedOnDateIsToday
+### AddIdeaAsync_WhenNewIdea_ThenCreatedOnDateIsToday
 
 **Description:**  When a new idea is created, then the CreatedOn field is set to the current date.
 **Related Issues:**  #2
@@ -95,9 +95,8 @@ This project contains most of the core business logic of the application, theref
 
 | Step | Action                                                                 | Expected Response |
 |:----:| ---------------------------------------------------------------------- | ----------------- |
-|  1   | Call the CreateIdea method with a valid Idea object                    | Success           |
-|  2   | Query the idea collection for the same idea submitted in previous step | Idea is found     |
-|  3   | Verify CreatedOn date is today                                         | Success           | 
+|  1   | Call the AddIdeaAsync method with a valid Idea object                  | Success           |
+|  2   | Verify CreatedOn date is today                                         | Success           | 
 
 **Post-Conditions:**  The idea created has a CreatedOn date of today
 **Associated Requirements:** 5.4
