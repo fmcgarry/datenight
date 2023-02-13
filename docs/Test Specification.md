@@ -142,33 +142,34 @@ This project contains most of the core business logic of the application, theref
 **Post-Conditions:**  The caller is returned a success.
 **Associated Requirements:** 8.2
 
-### GetIdeas_WhenCalled_ReturnsOnlyUserIdeas
+### GetAllIdeasAsync_WhenCalled_ReturnsOnlyUserIdeas
 
 **Description:** When calling the GetIdeas method, only the ideas created by the current user are returned.  
 **Related Issues:** #7  
 **URL:**  
 **Preconditions:** Ideas have been added via the AddIdeas method. User has been created and ID is known.
 
-| Step | Action                            | Expected Response           |
-|:----:| --------------------------------- | --------------------------- |
-|  1   | Call GetIdeas method with user id | A list of ideas is returned | 
+| Step | Action                                    | Expected Response           |
+|:----:| ----------------------------------------- | --------------------------- |
+|  1   | Call GetAllIdeasAsync method with user id | A list of ideas is returned | 
 
 **Post-Conditions:** A list of ONLY the user's ideas has been returned.  
-**Associated Requirements:** 8
+**Associated Requirements:** 8, 1
 
-### GetIdeas_WhenNoIdeasInCollection_ReturnsEmpty
+### GetAllIdeasAsync_WhenNoIdeasInCollection_ReturnsEmpty
 
 **Description:**  When there are not ideas in the collection for a user, then return an empty collection.
 **Related Issues:**  #7
 **URL:**  
 **Preconditions:** None
 
-| Step | Action               | Expected Response |
-|:----:| -------------------- | ----------------- |
-|  1   | Call GetIdeas method | Empty collection  | 
+| Step | Action                       | Expected Response |
+|:----:| ---------------------------- | ----------------- |
+|  1   | Call GetAllIdeasAsync method | Empty collection  | 
 
 **Post-Conditions:**  The caller is returned an empty collection.
 **Associated Requirements:** 8
+
 ### ActivateIdea_WhenNewIdeaActivated_ThenCurrentActiveIdeaDeactivated
 
 **Description:** Multiple active Ideas are not allowed.  
@@ -355,10 +356,38 @@ These tests comprise of sending requests to and getting specific responses from 
 
 | Step | Action                                            | Expected Response |
 |:----:| ------------------------------------------------- | ----------------- |
-|  1   | Submit a user to the endpoint with the same email | 400 Bad Request                  |
+|  1   | Submit a user to the endpoint with the same email | 400 Bad Request   |
 
 **Post-Conditions:**  A 400 Bad Request is issues to the caller
 **Associated Requirements:** 1.2.2
+
+### GetIdeas_WhenIdeasFound_ReturnsOk
+
+**Description:** A 200 OK should returned when the GetIdeas enpoint is called successfully.
+**Related Issues:** #7 
+**URL:**  
+**Preconditions:** Ideas have already been added.
+
+| Step | Action                                            | Expected Response |
+|:----:| ------------------------------------------------- | ----------------- |
+|  1   | Submit a GET request to the ideas endpoint        | 200 OK            |
+
+**Post-Conditions:**  A 200 OK is issued to the caller.
+**Associated Requirements:** 8
+
+### GetIdeas_WhenIdeasFound_ReturnsIdeas
+
+**Description:**  All ideas should be returned when the GetIdeas enpoint is called successfully.
+**Related Issues:** #7
+**URL:**  
+**Preconditions:** Ideas have already been added.
+
+| Step | Action                                     | Expected Response    |
+|:----:| ------------------------------------------ | -------------------- |
+|  1   | Submit a GET request to the ideas endpoint | A collection of ideas|
+
+**Post-Conditions:**  A colelction of ideas are returned to the caller.
+**Associated Requirements:** 8
 
 # System Tests
 

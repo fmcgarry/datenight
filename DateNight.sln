@@ -16,6 +16,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{5900F346-B9C0-4DD5-B764-A3EB388D4B26}"
 	ProjectSection(SolutionItems) = preProject
 		docs\Overview.md = docs\Overview.md
+		docs\Requirements.md = docs\Requirements.md
+		docs\Test Specification.md = docs\Test Specification.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DateNight.Api", "src\DateNight.Api\DateNight.Api.csproj", "{C5276BF0-5FBC-4262-8EE2-2C3193788991}"

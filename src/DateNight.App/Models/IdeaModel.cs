@@ -2,7 +2,7 @@
 
 namespace DateNight.App.Models;
 
-internal class IdeaModel
+public class IdeaModel
 {
     public DateTime CreatedOn { get; set; }
 

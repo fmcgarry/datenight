@@ -23,8 +23,18 @@ internal class DateNightApiClient : IDateNightApiClient
 
     public async Task CreateIdeaAsync(IdeaModel idea)
     {
-        _logger.LogInformation("Creating idea 'Title'", idea.Title);
+        _logger.LogInformation("Creating idea '{Title}'", idea.Title);
 
         var response = await _httpClient.PostAsJsonAsync("ideas", idea);
+    }
+
+    public async Task<IEnumerable<IdeaModel>> GetAllIdeasAsync()
+    {
+        _logger.LogInformation("Getting all ideas");
+
+        var response = await _httpClient.GetAsync("ideas");
+        var ideas = await response.Content.ReadFromJsonAsync<IEnumerable<IdeaModel>>();
+
+        return ideas;
     }
 }
