@@ -30,6 +30,38 @@ public class IdeaServiceTests
     }
 
     [TestMethod]
+    public async Task GetAllIdeasAsync_WhenCalled_ReturnsOnlyUserIdeas()
+    {
+        // Arrange
+        var mockedLogger = new Mock<IAppLogger<IdeaService>>();
+
+        var repositoryIdeas = new List<Idea>()
+        {
+            new Idea()
+            {
+                Title = "TestTitle",
+                Description = "TestDescription",
+            },
+            new Idea()
+            {
+                Title = "TestTitle2",
+                Description = "TestDescription2",
+            }
+        };
+
+        var mockedIdeaRepository = new Mock<IRepository<Idea>>();
+        mockedIdeaRepository.Setup(x => x.GetAllAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(repositoryIdeas.AsEnumerable()));
+
+        var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object);
+
+        // Act
+        var results = await sut.GetAllIdeasAsync();
+
+        // Assert
+        Assert.AreEqual(repositoryIdeas.Count, results.Count());
+    }
+
+    [TestMethod]
     public async Task GetAllIdeasAsync_WhenNoIdeasInCollection_ReturnsEmpty()
     {
         // Arrange

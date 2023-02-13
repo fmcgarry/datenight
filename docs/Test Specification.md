@@ -142,19 +142,19 @@ This project contains most of the core business logic of the application, theref
 **Post-Conditions:**  The caller is returned a success.
 **Associated Requirements:** 8.2
 
-### GetIdeas_WhenCalled_ReturnsOnlyUserIdeas
+### GetAllIdeasAsync_WhenCalled_ReturnsOnlyUserIdeas
 
 **Description:** When calling the GetIdeas method, only the ideas created by the current user are returned.  
 **Related Issues:** #7  
 **URL:**  
 **Preconditions:** Ideas have been added via the AddIdeas method. User has been created and ID is known.
 
-| Step | Action                            | Expected Response           |
-|:----:| --------------------------------- | --------------------------- |
-|  1   | Call GetIdeas method with user id | A list of ideas is returned | 
+| Step | Action                                    | Expected Response           |
+|:----:| ----------------------------------------- | --------------------------- |
+|  1   | Call GetAllIdeasAsync method with user id | A list of ideas is returned | 
 
 **Post-Conditions:** A list of ONLY the user's ideas has been returned.  
-**Associated Requirements:** 8
+**Associated Requirements:** 8, 1
 
 ### GetAllIdeasAsync_WhenNoIdeasInCollection_ReturnsEmpty
 
