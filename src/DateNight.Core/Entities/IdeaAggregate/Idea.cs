@@ -9,12 +9,14 @@ public class Idea : BaseEntity<string>, IAggregateRoot
         Id = Guid.NewGuid().ToString();
     }
 
-    public Idea(string title, string description) : this()
+    public Idea(string title, string description, DateTime createdOn) : this()
     {
         Title = title;
         Description = description;
+        CreatedOn = createdOn;
     }
 
+    public DateTime CreatedOn { get; set; }
     public required string Description { get; init; }
     public required string Title { get; init; }
 }

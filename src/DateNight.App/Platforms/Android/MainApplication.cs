@@ -1,7 +1,7 @@
 ﻿using Android.App;
 using Android.Runtime;
 
-namespace DateNight.App
+namespace DateNight.App.Platforms.Android
 {
     [Application]
     public class MainApplication : MauiApplication

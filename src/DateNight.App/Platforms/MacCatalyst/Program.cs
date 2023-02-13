@@ -1,7 +1,7 @@
 ﻿using ObjCRuntime;
 using UIKit;
 
-namespace DateNight.App
+namespace DateNight.App.Platforms.MacCatalyst
 {
     public class Program
     {

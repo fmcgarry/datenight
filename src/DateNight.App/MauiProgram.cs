@@ -1,4 +1,5 @@
-﻿using DateNight.App.Data;
+﻿using DateNight.App.Clients.DateNightApi;
+using DateNight.App.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace DateNight.App
@@ -18,11 +19,14 @@ namespace DateNight.App
             builder.Services.AddMauiBlazorWebView();
 
 #if DEBUG
-		builder.Services.AddBlazorWebViewDeveloperTools();
-		builder.Logging.AddDebug();
+            builder.Services.AddBlazorWebViewDeveloperTools();
+            builder.Logging.AddDebug();
 #endif
-
-            builder.Services.AddSingleton<WeatherForecastService>();
+            builder.Services.AddTransient<IDateNightApiClient, DateNightApiClient>();
+            builder.Services.AddHttpClient(DateNightApiClient.HttpClientName).ConfigureHttpClient(x =>
+            {
+                x.BaseAddress = new Uri(DateNightApiClient.HttpClientBaseAddress);
+            });
 
             return builder.Build();
         }
