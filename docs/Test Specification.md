@@ -356,10 +356,38 @@ These tests comprise of sending requests to and getting specific responses from 
 
 | Step | Action                                            | Expected Response |
 |:----:| ------------------------------------------------- | ----------------- |
-|  1   | Submit a user to the endpoint with the same email | 400 Bad Request                  |
+|  1   | Submit a user to the endpoint with the same email | 400 Bad Request   |
 
 **Post-Conditions:**  A 400 Bad Request is issues to the caller
 **Associated Requirements:** 1.2.2
+
+### GetIdeas_WhenIdeasFound_ReturnsOk
+
+**Description:** A 200 OK should returned when the GetIdeas enpoint is called successfully.
+**Related Issues:** #7 
+**URL:**  
+**Preconditions:** Ideas have already been added.
+
+| Step | Action                                            | Expected Response |
+|:----:| ------------------------------------------------- | ----------------- |
+|  1   | Submit a GET request to the ideas endpoint        | 200 OK            |
+
+**Post-Conditions:**  A 200 OK is issued to the caller.
+**Associated Requirements:** 8
+
+### GetIdeas_WhenIdeasFound_ReturnsIdeas
+
+**Description:**  All ideas should be returned when the GetIdeas enpoint is called successfully.
+**Related Issues:** #7
+**URL:**  
+**Preconditions:** Ideas have already been added.
+
+| Step | Action                                     | Expected Response    |
+|:----:| ------------------------------------------ | -------------------- |
+|  1   | Submit a GET request to the ideas endpoint | A collection of ideas|
+
+**Post-Conditions:**  A colelction of ideas are returned to the caller.
+**Associated Requirements:** 8
 
 # System Tests
 

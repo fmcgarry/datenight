@@ -37,11 +37,6 @@ namespace DateNight.Api.Controllers
         {
             var ideas = await _ideaService.GetAllIdeasAsync();
 
-            if (!ideas.Any())
-            {
-                return NotFound();
-            }
-
             return Ok(ideas);
         }
     }

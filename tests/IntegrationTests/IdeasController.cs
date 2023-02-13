@@ -1,3 +1,4 @@
+using DateNight.Api.Data;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
 using System.Net.Http.Json;
@@ -38,17 +39,30 @@ namespace IntegrationTests
         }
 
         [TestMethod]
-        public async Task When_ReturnsBadRequest()
+        public async Task GetIdeas_WhenIdeasFound_ReturnsOk()
         {
             // Arrange
             var client = _factory.CreateClient();
-            var content = JsonContent.Create(new { test = "test" });
 
             // Act
-            var response = await client.PostAsync("ideas", content);
+            var response = await client.GetAsync("ideas");
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public async Task GetIdeas_WhenIdeasFound_ReturnsIdeas()
+        {
+            // Arrange
+            var client = _factory.CreateClient();
+
+            // Act
+            var response = await client.GetFromJsonAsync<IEnumerable<IdeaDto>>("ideas");
+
+            // Assert
+            Assert.IsNotNull(response);
+            Assert.IsTrue(response.Any());
         }
     }
 }
