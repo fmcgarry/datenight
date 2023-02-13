@@ -28,4 +28,22 @@ public class IdeaServiceTests
         // Assert
         Assert.AreEqual(DateTime.UtcNow.Date, idea.CreatedOn.Date);
     }
+
+    [TestMethod]
+    public async Task GetAllIdeasAsync_WhenNoIdeasInCollection_ReturnsEmpty()
+    {
+        // Arrange
+        var mockedLogger = new Mock<IAppLogger<IdeaService>>();
+
+        var mockedIdeaRepository = new Mock<IRepository<Idea>>();
+        mockedIdeaRepository.Setup(x => x.GetAllAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(Enumerable.Empty<Idea>()));
+
+        var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object);
+
+        // Act
+        var results = await sut.GetAllIdeasAsync();
+
+        // Assert
+        Assert.AreEqual(0, results.Count());
+    }
 }

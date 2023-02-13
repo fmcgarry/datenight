@@ -156,19 +156,20 @@ This project contains most of the core business logic of the application, theref
 **Post-Conditions:** A list of ONLY the user's ideas has been returned.  
 **Associated Requirements:** 8
 
-### GetIdeas_WhenNoIdeasInCollection_ReturnsEmpty
+### GetAllIdeasAsync_WhenNoIdeasInCollection_ReturnsEmpty
 
 **Description:**  When there are not ideas in the collection for a user, then return an empty collection.
 **Related Issues:**  #7
 **URL:**  
 **Preconditions:** None
 
-| Step | Action               | Expected Response |
-|:----:| -------------------- | ----------------- |
-|  1   | Call GetIdeas method | Empty collection  | 
+| Step | Action                       | Expected Response |
+|:----:| ---------------------------- | ----------------- |
+|  1   | Call GetAllIdeasAsync method | Empty collection  | 
 
 **Post-Conditions:**  The caller is returned an empty collection.
 **Associated Requirements:** 8
+
 ### ActivateIdea_WhenNewIdeaActivated_ThenCurrentActiveIdeaDeactivated
 
 **Description:** Multiple active Ideas are not allowed.  

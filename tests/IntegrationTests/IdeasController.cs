@@ -36,5 +36,19 @@ namespace IntegrationTests
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
         }
+
+        [TestMethod]
+        public async Task When_ReturnsBadRequest()
+        {
+            // Arrange
+            var client = _factory.CreateClient();
+            var content = JsonContent.Create(new { test = "test" });
+
+            // Act
+            var response = await client.PostAsync("ideas", content);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+        }
     }
 }
