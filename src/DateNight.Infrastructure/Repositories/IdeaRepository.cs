@@ -1,6 +1,8 @@
 ﻿using DateNight.Core.Entities.IdeaAggregate;
 using DateNight.Core.Interfaces;
+using DateNight.Infrastructure.Options;
 using Microsoft.Azure.Cosmos;
+using Microsoft.Extensions.Options;
 
 namespace DateNight.Infrastructure.Repositories;
 
@@ -8,11 +10,13 @@ public class IdeaRepository : IRepository<Idea>
 {
     private readonly Container _container;
     private readonly IAppLogger<IdeaRepository> _logger;
+    private readonly DateNightDatabaseOptions _options;
 
-    public IdeaRepository(IAppLogger<IdeaRepository> logger, CosmosClient cosmosClient)
+    public IdeaRepository(IAppLogger<IdeaRepository> logger, IOptions<DateNightDatabaseOptions> options, CosmosClient cosmosClient)
     {
         _logger = logger;
-        _container = cosmosClient.GetContainer("fmcgarry", "datenight");
+        _options = options.Value;
+        _container = cosmosClient.GetContainer(_options.DatabaseId, _options.ContainerId);
     }
 
     public async Task AddAsync(Idea entity, CancellationToken cancellationToken = default)
