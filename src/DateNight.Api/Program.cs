@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRequiredInfrastructureServices();
 
-string connectionString = builder.Configuration.GetConnectionString("DateNightCosmosDb") ?? string.Empty;
+string connectionString = builder.Configuration.GetConnectionString("DateNightDatabase") ?? string.Empty;
 builder.Services.AddIdeaService(connectionString);
 
 builder.Services.AddControllers();
