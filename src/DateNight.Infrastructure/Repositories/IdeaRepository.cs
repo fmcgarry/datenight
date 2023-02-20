@@ -11,12 +11,14 @@ public class IdeaRepository : IRepository<Idea>
     private readonly Container _container;
     private readonly IAppLogger<IdeaRepository> _logger;
     private readonly DateNightDatabaseOptions _options;
+    private readonly PartitionKey _partitionKey;
 
     public IdeaRepository(IAppLogger<IdeaRepository> logger, IOptions<DateNightDatabaseOptions> options, CosmosClient cosmosClient)
     {
         _logger = logger;
         _options = options.Value;
         _container = cosmosClient.GetContainer(_options.DatabaseId, _options.ContainerId);
+        _partitionKey = new PartitionKey("id");
     }
 
     public async Task AddAsync(Idea entity, CancellationToken cancellationToken = default)
@@ -46,14 +48,22 @@ public class IdeaRepository : IRepository<Idea>
         return results;
     }
 
-    public Task<Idea?> GetByIdAsync<U>(U id, CancellationToken cancellationToken = default)
+    public async Task<Idea?> GetByIdAsync<U>(U id, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var idea = await _container.ReadItemAsync<Idea>(id as string, _partitionKey, null, cancellationToken);
+            return idea;
+        }
+        catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return null;
+        }
     }
 
-    public Task UpdateAsync(Idea entity, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(Idea entity, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        await _container.UpsertItemAsync(entity, null, null, cancellationToken);
     }
 
     public Task UpdateRangeAsync(IEnumerable<Idea> entities, CancellationToken cancellationToken = default)

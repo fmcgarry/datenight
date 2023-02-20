@@ -7,5 +7,7 @@ namespace DateNight.Core.Interfaces
         Task AddIdeaAsync(Idea idea);
 
         Task<IEnumerable<Idea>> GetAllIdeasAsync();
+        Task<Idea?> GetIdeaByIdAsync(string id);
+        Task UpdateIdeaAsync(Idea idea);
     }
 }

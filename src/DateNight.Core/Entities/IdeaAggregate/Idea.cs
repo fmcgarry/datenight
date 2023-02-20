@@ -6,7 +6,7 @@ public class Idea : BaseEntity<string>, IAggregateRoot
 {
     public Idea()
     {
-        Id = Guid.NewGuid().ToString();
+        Id = Guid.NewGuid().ToString("N");
     }
 
     public Idea(string title, string description, DateTime createdOn) : this()
@@ -17,6 +17,6 @@ public class Idea : BaseEntity<string>, IAggregateRoot
     }
 
     public DateTime CreatedOn { get; set; }
-    public required string Description { get; init; }
-    public required string Title { get; init; }
+    public string Description { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
 }

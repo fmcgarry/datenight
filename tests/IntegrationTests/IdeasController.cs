@@ -58,7 +58,7 @@ namespace IntegrationTests
             var client = _factory.CreateClient();
 
             // Act
-            var response = await client.GetFromJsonAsync<IEnumerable<IdeaDto>>("ideas");
+            var response = await client.GetFromJsonAsync<IEnumerable<Idea>>("ideas");
 
             // Assert
             Assert.IsNotNull(response);

@@ -1,5 +1,3 @@
-using DateNight.Api.Data;
-using DateNight.Core.Entities.IdeaAggregate;
 using DateNight.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,9 +17,9 @@ namespace DateNight.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddIdea(IdeaDto idea)
+        public async Task<IActionResult> AddIdea(Data.Idea idea)
         {
-            var ideaModel = new Idea()
+            var ideaModel = new Core.Entities.IdeaAggregate.Idea()
             {
                 Title = idea.Title,
                 Description = idea.Description
@@ -32,12 +30,55 @@ namespace DateNight.Api.Controllers
             return Created(ideaModel.Id!, idea);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetIdea(string id)
+        {
+            var ideaModel = await _ideaService.GetIdeaByIdAsync(id);
+
+            if (ideaModel is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(ideaModel);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetIdeas()
         {
             var ideas = await _ideaService.GetAllIdeasAsync();
 
-            return Ok(ideas);
+            var returnedIdeas = new List<Data.Idea>();
+
+            foreach (var idea in ideas)
+            {
+                var returnedIdea = new Data.Idea()
+                {
+                    Description = idea.Description,
+                    Title = idea.Title
+                };
+
+                returnedIdeas.Add(returnedIdea);
+            }
+
+            return Ok(returnedIdeas);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateIdea(string id, Data.Idea idea)
+        {
+            var ideaModel = await _ideaService.GetIdeaByIdAsync(id);
+
+            if (ideaModel is null)
+            {
+                return NotFound();
+            }
+
+            ideaModel.Title = idea.Title;
+            ideaModel.Description = idea.Description;
+
+            await _ideaService.UpdateIdeaAsync(ideaModel);
+            return NoContent();
         }
     }
 }

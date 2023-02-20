@@ -41,6 +41,5 @@ internal class DateNightApiClient : IDateNightApiClient
     public async Task UpdateIdeaAsync(IdeaModel idea)
     {
         _logger.LogInformation("Updating idea '{Title}'", idea.Title);
-        throw new NotImplementedException();
     }
 }
