@@ -697,7 +697,7 @@ These tests comprise of sending requests to and getting specific responses from 
 **Post-Conditions:** The idea displayed is now a new idea.  
 **Associated Requirements:** 3.2
 
-## User can filter out completed ideas on the GetIdea page
+## User can filter out completed ideas on the Get Idea page
 
 **Description:** When on the Get Idea page, a user can choose to filter out ideas that have already been completed.  
 **Related Issues:** [#6](https://github.com/fmcgarrydev/datenight/issues/6)  
