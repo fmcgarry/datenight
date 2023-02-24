@@ -1,6 +1,8 @@
-﻿namespace DateNight.Core.Entities;
+﻿using DateNight.Core.Interfaces;
 
-public class BaseEntity<T>
+namespace DateNight.Core.Entities;
+
+public class BaseEntity<T> : IEntity
 {
     public T? Id { get; protected set; }
 }
