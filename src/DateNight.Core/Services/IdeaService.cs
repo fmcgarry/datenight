@@ -40,12 +40,20 @@ public class IdeaService : IIdeaService
         return GetIdeaByIdInternalAsync(id);
     }
 
-    public Task UpdateIdeaAsync(Idea idea)
+    public async Task UpdateIdeaAsync(Idea idea)
     {
         ArgumentNullException.ThrowIfNull(idea.Id);
+
         _logger.LogInformation("Updating idea '{Id}'.", idea.Id);
 
-        return UpdateIdeaInternalAsync(idea);
+        bool isIdeaInRepository = (await _ideaRepository.GetByIdAsync(idea.Id)) is not null;
+
+        if (!isIdeaInRepository)
+        {
+            throw new ArgumentException("Idea does not exist.", nameof(idea));
+        }
+
+        await _ideaRepository.UpdateAsync(idea);
     }
 
     private async Task AddIdeaInternalAsync(Idea idea)
@@ -58,10 +66,5 @@ public class IdeaService : IIdeaService
         var idea = await _ideaRepository.GetByIdAsync(id);
 
         return idea;
-    }
-
-    private async Task UpdateIdeaInternalAsync(Idea idea)
-    {
-        await _ideaRepository.UpdateAsync(idea);
     }
 }

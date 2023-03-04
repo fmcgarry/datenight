@@ -56,7 +56,7 @@ Since this is the UI project, these tests comprise of safe guards for user input
 ### Edit Idea Dialog: All Required Fields Have Data
 
 **Description:** When a user is editing ideas make sure the Title field has data.  
-**Related Issues:** #8  
+**Related Issues:** [#8](https://github.com/fmcgarrydev/datenight/issues/8)  
 **URL:**  
 **Preconditions:** The user is editing an idea.
 
@@ -71,7 +71,7 @@ Since this is the UI project, these tests comprise of safe guards for user input
 ### Edit Idea Dialog: Created On Date Is Not In The Future
 
 **Description:** When editing an idea, make sure the user doesn't set the Created On date in the future.  
-**Related Issues:** #8  
+**Related Issues:** [#8](https://github.com/fmcgarrydev/datenight/issues/8)  
 **URL:**  
 **Preconditions:** A user is editing an idea.
 
@@ -104,7 +104,7 @@ This project contains most of the core business logic of the application, theref
 ### UpdateIdea_WhenIdeaDoesNotExist_ThrowsArgumentException
 
 **Description:** When an idea is submitted to the UpdateIdea method, ensure it exists first before trying to update it  
-**Related Issues:** #8  
+**Related Issues:** [#8](https://github.com/fmcgarrydev/datenight/issues/8)  
 **URL:**  
 **Preconditions:** None
 
@@ -113,6 +113,34 @@ This project contains most of the core business logic of the application, theref
 |  1   | Call the UpdateIdea method with an idea that hasn't been added yet | ArgumentException is thrown |
 
 **Post-Conditions:** The UpdateIdea method has thrown an ArgumentException  
+**Associated Requirements:** 8.1
+
+### UpdateIdea_WhenIdeaIdIsNull_ThrowsArgumentNullException
+
+**Description:** When an idea is submitted to the UpdateIdea method, ensure the Id property is not null.  
+**Related Issues:** [#8](https://github.com/fmcgarrydev/datenight/issues/8)  
+**URL:**  
+**Preconditions:** None
+
+| Step | Action                                                         | Expected Response               |
+|:----:| -------------------------------------------------------------- | ------------------------------- |
+|  1   | Call the UpdateIdea method with an idea that has an Id of null | ArgumentNullException is thrown |
+
+**Post-Conditions:** The UpdateIdea method has thrown an ArgumentNullException.  
+**Associated Requirements:** 8.1
+
+### UpdateIdea_WhenValidIdea_ThenRepositoryUpdateIdeaIsCalled
+
+**Description:** When a valid idea is submitted to the UpdateIdea method, ensure the repository UpdateAsync() method is called.  
+**Related Issues:** [#8](https://github.com/fmcgarrydev/datenight/issues/8)  
+**URL:**  
+**Preconditions:** None
+
+| Step | Action                                                | Expected Response                         |
+|:----:| ----------------------------------------------------- | ----------------------------------------- |
+|  1   | Call the UpdateIdea method with an idea that is valid | Repository UpdateAsync() method is called |
+
+**Post-Conditions:** None.  
 **Associated Requirements:** 8.1
 
 ### DeleteIdea_WhenIdeaDoesNotExist_ThrowsArgumentException
@@ -477,7 +505,7 @@ These tests comprise of sending requests to and getting specific responses from 
 ## WhenUserEditsIdea_ThenUpdatedIdeaIsDisplayedOnViewIdeasPage
 
 **Description:** When a user edits an idea on the View Ideas Page, the updated information is immediately viewable.  
-**Related Issues:** #8  
+**Related Issues:** [#8](https://github.com/fmcgarrydev/datenight/issues/8)  
 **URL:**  
 **Preconditions:** There is at least 1 idea on the View Ideas page
 
