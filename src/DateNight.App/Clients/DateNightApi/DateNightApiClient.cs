@@ -26,6 +26,23 @@ internal class DateNightApiClient : IDateNightApiClient
         _logger.LogInformation("Creating idea '{Title}'", idea.Title);
 
         var response = await _httpClient.PostAsJsonAsync("ideas", idea);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Failed to create idea 'Id'", idea.Id);
+        }
+    }
+
+    public async Task DeleteIdeaAsync(IdeaModel idea)
+    {
+        _logger.LogInformation("Deleting idea '{Id}'", idea.Id);
+
+        var response = await _httpClient.DeleteAsync($"ideas/{idea.Id}");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Failed to delete idea 'Id'", idea.Id);
+        }
     }
 
     public async Task<IEnumerable<IdeaModel>> GetAllIdeasAsync()

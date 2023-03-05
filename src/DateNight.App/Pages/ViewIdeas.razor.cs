@@ -11,13 +11,13 @@ public partial class ViewIdeas
     [Inject]
     IDateNightApiClient DateNightApiClient { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected async Task GetAllIdeas()
     {
         _ideas = (await DateNightApiClient.GetAllIdeasAsync()).ToList();
     }
 
-    private void Refresh()
+    protected override async Task OnInitializedAsync()
     {
-        OnInitialized();
+        await GetAllIdeas();
     }
 }
