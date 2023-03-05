@@ -22,4 +22,9 @@ public partial class IdeaComponent
         await DateNightApiClient.DeleteIdeaAsync(Idea);
         await OnDeleteCallback.InvokeAsync();
     }
+
+    private async Task RefreshIdea()
+    {
+        Idea = await DateNightApiClient.GetIdeaAsync(Idea.Id);
+    }
 }

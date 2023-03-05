@@ -10,5 +10,7 @@ internal interface IDateNightApiClient
 
     Task<IEnumerable<IdeaModel>> GetAllIdeasAsync();
 
+    Task<IdeaModel> GetIdeaAsync(string id);
+
     Task UpdateIdeaAsync(IdeaModel idea);
 }

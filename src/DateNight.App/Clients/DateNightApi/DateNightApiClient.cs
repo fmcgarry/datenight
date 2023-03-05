@@ -69,8 +69,31 @@ internal class DateNightApiClient : IDateNightApiClient
         return ideas;
     }
 
+    public async Task<IdeaModel> GetIdeaAsync(string id)
+    {
+        _logger.LogInformation("Getting idea '{Id}'", id);
+
+        var response = await _httpClient.GetAsync($"{_ideasEndpoint}/{id}");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Failed to get idea '{Id}'. Status code: {StatusCode}", id, response.StatusCode);
+        }
+
+        var idea = await response.Content.ReadFromJsonAsync<IdeaModel>();
+
+        return idea;
+    }
+
     public async Task UpdateIdeaAsync(IdeaModel idea)
     {
         _logger.LogInformation("Updating idea '{Title}'", idea.Title);
+
+        var response = await _httpClient.PutAsJsonAsync($"{_ideasEndpoint}/{idea.Id}", idea);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Failed to updated idea '{Id}'. Status code: {StatusCode}", idea.Id, response.StatusCode);
+        }
     }
 }
