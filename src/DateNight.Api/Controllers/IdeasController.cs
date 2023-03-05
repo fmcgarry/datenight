@@ -1,3 +1,4 @@
+using DateNight.Api.Data;
 using DateNight.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +18,7 @@ namespace DateNight.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddIdea(Data.Idea idea)
+        public async Task<IActionResult> AddIdea(Idea idea)
         {
             var ideaModel = new Core.Entities.IdeaAggregate.Idea()
             {
@@ -30,15 +31,40 @@ namespace DateNight.Api.Controllers
             return Created(ideaModel.Id!, idea);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetIdea(string id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteIdea(string id)
         {
-            var ideaModel = await _ideaService.GetIdeaByIdAsync(id);
-
-            if (ideaModel is null)
+            try
+            {
+                await _ideaService.DeleteIdeaAsync(id);
+                return NoContent();
+            }
+            catch (ArgumentOutOfRangeException)
             {
                 return NotFound();
             }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetIdea(string id)
+        {
+            var idea = await _ideaService.GetIdeaByIdAsync(id);
+
+            if (idea is null)
+            {
+                return NotFound();
+            }
+
+            var ideaModel = new Idea()
+            {
+                CreatedOn = idea.CreatedOn,
+                Description = idea.Description,
+                Title = idea.Title,
+            };
 
             return Ok(ideaModel);
         }
@@ -48,12 +74,13 @@ namespace DateNight.Api.Controllers
         {
             var ideas = await _ideaService.GetAllIdeasAsync();
 
-            var returnedIdeas = new List<Data.Idea>();
+            var returnedIdeas = new List<Idea>();
 
             foreach (var idea in ideas)
             {
-                var returnedIdea = new Data.Idea()
+                var returnedIdea = new Idea()
                 {
+                    Id = idea.Id,
                     Description = idea.Description,
                     Title = idea.Title,
                     CreatedOn = idea.CreatedOn
@@ -66,20 +93,27 @@ namespace DateNight.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateIdea(string id, Data.Idea idea)
+        public async Task<IActionResult> UpdateIdea(string id, Idea idea)
         {
-            var ideaModel = await _ideaService.GetIdeaByIdAsync(id);
+            try
+            {
+                var ideaModel = await _ideaService.GetIdeaByIdAsync(id);
 
-            if (ideaModel is null)
+                ideaModel.Title = idea.Title;
+                ideaModel.Description = idea.Description;
+
+                await _ideaService.UpdateIdeaAsync(ideaModel);
+
+                return NoContent();
+            }
+            catch (ArgumentOutOfRangeException)
             {
                 return NotFound();
             }
-
-            ideaModel.Title = idea.Title;
-            ideaModel.Description = idea.Description;
-
-            await _ideaService.UpdateIdeaAsync(ideaModel);
-            return NoContent();
+            catch (ArgumentNullException)
+            {
+                return BadRequest();
+            }
         }
     }
 }

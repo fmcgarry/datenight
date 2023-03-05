@@ -24,6 +24,32 @@ public class IdeaService : IIdeaService
         return AddIdeaInternalAsync(idea);
     }
 
+    public async Task DeleteIdeaAsync(Idea idea)
+    {
+        ArgumentNullException.ThrowIfNull(idea);
+        ArgumentNullException.ThrowIfNull(idea.Id);
+
+        _logger.LogInformation("Deleting idea '{Id}'.", idea.Id);
+
+        await _ideaRepository.DeleteAsync(idea);
+    }
+
+    /// <summary>
+    /// Delete an Idea.
+    /// </summary>
+    /// <param name="id">The idea id.</param>
+    /// <exception cref="ArgumentException">When id is null or empty.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">When an idea with id is not found.</exception>
+    /// <returns></returns>
+    public async Task DeleteIdeaAsync(string id)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(id);
+
+        var idea = await GetIdeaByIdAsync(id);
+
+        await DeleteIdeaAsync(idea);
+    }
+
     public async Task<IEnumerable<Idea>> GetAllIdeasAsync()
     {
         _logger.LogInformation("Getting all ideas.");
@@ -32,7 +58,7 @@ public class IdeaService : IIdeaService
         return ideas;
     }
 
-    public Task<Idea?> GetIdeaByIdAsync(string id)
+    public Task<Idea> GetIdeaByIdAsync(string id)
     {
         ArgumentNullException.ThrowIfNull(id);
         _logger.LogInformation("Getting idea '{Id}'.", id);
@@ -61,9 +87,15 @@ public class IdeaService : IIdeaService
         await _ideaRepository.AddAsync(idea);
     }
 
-    private async Task<Idea?> GetIdeaByIdInternalAsync(string id)
+    private async Task<Idea> GetIdeaByIdInternalAsync(string id)
     {
         var idea = await _ideaRepository.GetByIdAsync(id);
+
+        if (idea is null)
+        {
+            _logger.LogError("No idea found for id '{Id}'", id);
+            throw new ArgumentOutOfRangeException(nameof(id), $"Idea '{id}' not found.");
+        }
 
         return idea;
     }
