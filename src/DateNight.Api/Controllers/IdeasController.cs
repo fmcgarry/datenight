@@ -55,7 +55,8 @@ namespace DateNight.Api.Controllers
                 var returnedIdea = new Data.Idea()
                 {
                     Description = idea.Description,
-                    Title = idea.Title
+                    Title = idea.Title,
+                    CreatedOn = idea.CreatedOn
                 };
 
                 returnedIdeas.Add(returnedIdea);

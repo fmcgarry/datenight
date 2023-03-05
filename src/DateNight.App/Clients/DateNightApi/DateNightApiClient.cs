@@ -35,6 +35,12 @@ internal class DateNightApiClient : IDateNightApiClient
         var response = await _httpClient.GetAsync("ideas");
         var ideas = await response.Content.ReadFromJsonAsync<IEnumerable<IdeaModel>>();
 
+        // CreatedOn is stored as UTC
+        foreach (var idea in ideas)
+        {
+            idea.CreatedOn = idea.CreatedOn.ToLocalTime();
+        }
+
         return ideas;
     }
 
