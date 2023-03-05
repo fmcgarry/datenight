@@ -35,13 +35,6 @@ public class IdeaService : IIdeaService
         await _ideaRepository.DeleteAsync(idea);
     }
 
-    /// <summary>
-    /// Delete an Idea.
-    /// </summary>
-    /// <param name="id">The idea id.</param>
-    /// <exception cref="ArgumentException">When id is null or empty.</exception>
-    /// <exception cref="ArgumentOutOfRangeException">When an idea with id is not found.</exception>
-    /// <returns></returns>
     public async Task DeleteIdeaAsync(string id)
     {
         ArgumentException.ThrowIfNullOrEmpty(id);
@@ -71,10 +64,11 @@ public class IdeaService : IIdeaService
         _logger.LogInformation("Getting random idea");
 
         var ideas = await GetAllIdeasInternalAsync();
+        var nonActiveIdeas = ideas.Where(idea => idea.State != IdeaState.Active);
 
-        int numIdeas = ideas.Count();
+        int numIdeas = nonActiveIdeas.Count();
         int randomIndex = numIdeas > 1 ? _random.Next(0, numIdeas) : 0;
-        Idea idea = ideas.ElementAt(randomIndex);
+        Idea idea = nonActiveIdeas.ElementAt(randomIndex);
 
         return idea;
     }
