@@ -84,6 +84,7 @@ public class IdeaService : IIdeaService
         if (currentActiveIdea is not null)
         {
             currentActiveIdea.State = IdeaState.None;
+            await UpdateIdeaInternalAsync(currentActiveIdea);
         }
         else
         {
@@ -93,23 +94,18 @@ public class IdeaService : IIdeaService
         var idea = await GetIdeaByIdInternalAsync(id);
         idea.State = IdeaState.Active;
 
+        await UpdateIdeaInternalAsync(idea);
+
         _logger.LogInformation("Idea {Id} set as active", idea.Id);
     }
 
-    public async Task UpdateIdeaAsync(Idea idea)
+    public Task UpdateIdeaAsync(Idea idea)
     {
         ArgumentNullException.ThrowIfNull(idea.Id);
 
         _logger.LogInformation("Updating idea '{Id}'.", idea.Id);
 
-        bool isIdeaInRepository = (await _ideaRepository.GetByIdAsync(idea.Id)) is not null;
-
-        if (!isIdeaInRepository)
-        {
-            throw new ArgumentException("Idea does not exist.", nameof(idea));
-        }
-
-        await _ideaRepository.UpdateAsync(idea);
+        return UpdateIdeaInternalAsync(idea);
     }
 
     private async Task AddIdeaInternalAsync(Idea idea)
@@ -134,5 +130,17 @@ public class IdeaService : IIdeaService
         }
 
         return idea;
+    }
+
+    private async Task UpdateIdeaInternalAsync(Idea idea)
+    {
+        bool isIdeaInRepository = (await _ideaRepository.GetByIdAsync(idea.Id)) is not null;
+
+        if (!isIdeaInRepository)
+        {
+            throw new ArgumentException("Idea does not exist.", nameof(idea));
+        }
+
+        await _ideaRepository.UpdateAsync(idea);
     }
 }

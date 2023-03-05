@@ -28,6 +28,7 @@ namespace DateNight.Core.Interfaces
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">When id is null or empty.</exception>
         /// <exception cref="ArgumentOutOfRangeException">When an idea with id is not found.</exception>
+        /// <exception cref="ArgumentException">When an idea with id is not found.</exception>
         Task SetActiveIdea(string id);
 
         Task UpdateIdeaAsync(Idea idea);
