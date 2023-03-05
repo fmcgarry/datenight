@@ -74,7 +74,7 @@ public class IdeaService : IIdeaService
         var ideas = await GetAllIdeasAsync();
 
         int numIdeas = ideas.Count();
-        int randomIndex = numIdeas > 1 ? _random.Next(0, numIdeas + 1) : 0;
+        int randomIndex = numIdeas > 1 ? _random.Next(0, numIdeas) : 0;
         Idea idea = ideas.ElementAt(randomIndex);
 
         return idea;
