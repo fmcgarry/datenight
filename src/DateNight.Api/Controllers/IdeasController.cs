@@ -108,6 +108,24 @@ namespace DateNight.Api.Controllers
             return Ok(ideaModel);
         }
 
+        [HttpPost("active")]
+        public async Task<IActionResult> SetActiveIdea(string id)
+        {
+            try
+            {
+                await _ideaService.SetActiveIdea(id);
+                return NoContent();
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return NotFound();
+            }
+            catch (ArgumentNullException)
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateIdea(string id, Idea idea)
         {

@@ -51,12 +51,11 @@ public class IdeaService : IIdeaService
         await DeleteIdeaAsync(idea);
     }
 
-    public async Task<IEnumerable<Idea>> GetAllIdeasAsync()
+    public Task<IEnumerable<Idea>> GetAllIdeasAsync()
     {
         _logger.LogInformation("Getting all ideas.");
-        var ideas = await _ideaRepository.GetAllAsync();
 
-        return ideas;
+        return GetAllIdeasInternalAsync();
     }
 
     public Task<Idea> GetIdeaByIdAsync(string id)
@@ -71,13 +70,36 @@ public class IdeaService : IIdeaService
     {
         _logger.LogInformation("Getting random idea");
 
-        var ideas = await GetAllIdeasAsync();
+        var ideas = await GetAllIdeasInternalAsync();
 
         int numIdeas = ideas.Count();
         int randomIndex = numIdeas > 1 ? _random.Next(0, numIdeas) : 0;
         Idea idea = ideas.ElementAt(randomIndex);
 
         return idea;
+    }
+
+    public async Task SetActiveIdea(string id)
+    {
+        ArgumentNullException.ThrowIfNull(id);
+        _logger.LogInformation("Setting idea '{Id}' as active", id);
+
+        var ideas = await GetAllIdeasInternalAsync();
+        var currentActiveIdea = ideas.FirstOrDefault(idea => idea.State == IdeaState.Active);
+
+        if (currentActiveIdea is not null)
+        {
+            currentActiveIdea.State = IdeaState.None;
+        }
+        else
+        {
+            _logger.LogInformation("No idea was currently set as active");
+        }
+
+        var idea = await GetIdeaByIdInternalAsync(id);
+        idea.State = IdeaState.Active;
+
+        _logger.LogInformation("Idea {Id} set as active", idea.Id);
     }
 
     public async Task UpdateIdeaAsync(Idea idea)
@@ -99,6 +121,12 @@ public class IdeaService : IIdeaService
     private async Task AddIdeaInternalAsync(Idea idea)
     {
         await _ideaRepository.AddAsync(idea);
+    }
+
+    private async Task<IEnumerable<Idea>> GetAllIdeasInternalAsync()
+    {
+        var ideas = await _ideaRepository.GetAllAsync();
+        return ideas;
     }
 
     private async Task<Idea> GetIdeaByIdInternalAsync(string id)
