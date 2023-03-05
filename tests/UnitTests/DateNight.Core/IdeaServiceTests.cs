@@ -50,7 +50,9 @@ public class IdeaServiceTests
         };
 
         var mockedIdeaRepository = new Mock<IRepository<Idea>>();
-        mockedIdeaRepository.Setup(x => x.GetAllAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(repositoryIdeas.AsEnumerable()));
+        mockedIdeaRepository
+            .Setup(x => x.GetAllAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(repositoryIdeas.AsEnumerable());
 
         var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object);
 
@@ -68,7 +70,9 @@ public class IdeaServiceTests
         var mockedLogger = new Mock<IAppLogger<IdeaService>>();
 
         var mockedIdeaRepository = new Mock<IRepository<Idea>>();
-        mockedIdeaRepository.Setup(x => x.GetAllAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(Enumerable.Empty<Idea>()));
+        mockedIdeaRepository
+            .Setup(x => x.GetAllAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Enumerable.Empty<Idea>());
 
         var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object);
 
@@ -77,5 +81,60 @@ public class IdeaServiceTests
 
         // Assert
         Assert.AreEqual(0, results.Count());
+    }
+
+    [TestMethod]
+    public async Task UpdateIdea_WhenIdeaDoesNotExist_ThrowsArgumentException()
+    {
+        // Arrange
+        var mockedLogger = new Mock<IAppLogger<IdeaService>>();
+        var mockedIdeaRepository = new Mock<IRepository<Idea>>();
+        var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object);
+
+        var idea = new Idea();
+
+        await Assert.ThrowsExceptionAsync<ArgumentException>(async () => await sut.UpdateIdeaAsync(idea));
+    }
+
+    [TestMethod]
+    public async Task UpdateIdea_WhenIdeaIdIsNull_ThrowsArgumentNullException()
+    {
+        // Arrange
+        var mockedLogger = new Mock<IAppLogger<IdeaService>>();
+        var mockedIdeaRepository = new Mock<IRepository<Idea>>();
+        var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object);
+
+        var idea = new Idea
+        {
+            Id = null
+        };
+
+        // Act
+        Task action() => sut.UpdateIdeaAsync(idea);
+
+        // Assert
+        await Assert.ThrowsExceptionAsync<ArgumentNullException>(action);
+    }
+
+    [TestMethod]
+    public async Task UpdateIdea_WhenValidIdea_ThenRepositoryUpdateIdeaIsCalled()
+    {
+        // Arrange
+        var mockedLogger = new Mock<IAppLogger<IdeaService>>();
+        var mockedIdeaRepository = new Mock<IRepository<Idea>>();
+
+        Idea? idea = new();
+
+        mockedIdeaRepository
+            .Setup(repository => repository.GetByIdAsync(It.IsAny<string>(), default))
+            .ReturnsAsync(idea);
+
+        var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object);
+
+        // Act
+        await sut.UpdateIdeaAsync(idea);
+
+        // Assert
+        mockedIdeaRepository.Verify(repository => repository.UpdateAsync(It.Is<Idea>(x => x.Id == idea.Id), default));
     }
 }
