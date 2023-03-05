@@ -11,14 +11,12 @@ public class IdeaRepository : IRepository<Idea>
     private readonly Container _container;
     private readonly IAppLogger<IdeaRepository> _logger;
     private readonly DateNightDatabaseOptions _options;
-    private readonly PartitionKey _partitionKey;
 
     public IdeaRepository(IAppLogger<IdeaRepository> logger, IOptions<DateNightDatabaseOptions> options, CosmosClient cosmosClient)
     {
         _logger = logger;
         _options = options.Value;
         _container = cosmosClient.GetContainer(_options.DatabaseId, _options.ContainerId);
-        _partitionKey = new PartitionKey("id");
     }
 
     public async Task AddAsync(Idea entity, CancellationToken cancellationToken = default)
@@ -31,9 +29,10 @@ public class IdeaRepository : IRepository<Idea>
         throw new NotImplementedException();
     }
 
-    public Task DeleteAsync(Idea entity, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(Idea entity, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var partitionKey = new PartitionKey(entity.Id);
+        await _container.DeleteItemAsync<Idea>(entity.Id, partitionKey, null, cancellationToken);
     }
 
     public Task DeleteRangeAsync(IEnumerable<Idea> entities, CancellationToken cancellationToken = default)
@@ -52,7 +51,10 @@ public class IdeaRepository : IRepository<Idea>
     {
         try
         {
-            var idea = await _container.ReadItemAsync<Idea>(id as string, _partitionKey, null, cancellationToken);
+            string idString = id!.ToString();
+            var partitionKey = new PartitionKey(idString);
+            var idea = await _container.ReadItemAsync<Idea>(idString, partitionKey, null, cancellationToken);
+
             return idea;
         }
         catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)

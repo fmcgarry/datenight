@@ -6,6 +6,8 @@ internal interface IDateNightApiClient
 {
     Task CreateIdeaAsync(IdeaModel idea);
 
+    Task DeleteIdeaAsync(IdeaModel idea);
+
     Task<IEnumerable<IdeaModel>> GetAllIdeasAsync();
 
     Task UpdateIdeaAsync(IdeaModel idea);
