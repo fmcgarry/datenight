@@ -14,6 +14,7 @@ internal class DateNightApiClient : IDateNightApiClient
 
     private readonly HttpClient _httpClient;
     private readonly ILogger<DateNightApiClient> _logger;
+    private string previousRandomIdeaId = string.Empty;
 
     public DateNightApiClient(ILogger<DateNightApiClient> logger, IHttpClientFactory httpClientFactory)
     {
@@ -78,6 +79,22 @@ internal class DateNightApiClient : IDateNightApiClient
         if (!response.IsSuccessStatusCode)
         {
             _logger.LogError("Failed to get idea '{Id}'. Status code: {StatusCode}", id, response.StatusCode);
+        }
+
+        var idea = await response.Content.ReadFromJsonAsync<IdeaModel>();
+
+        return idea;
+    }
+
+    public async Task<IdeaModel> GetRandomIdeaAsync()
+    {
+        _logger.LogInformation("Getting random idea");
+
+        var response = await _httpClient.GetAsync($"{_ideasEndpoint}/random");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Failed to get a random idea. Status code: {StatusCode}", response.StatusCode);
         }
 
         var idea = await response.Content.ReadFromJsonAsync<IdeaModel>();
