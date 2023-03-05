@@ -7,6 +7,7 @@ public class IdeaService : IIdeaService
 {
     private readonly IRepository<Idea> _ideaRepository;
     private readonly IAppLogger<IdeaService> _logger;
+    private readonly Random _random = new();
 
     public IdeaService(IAppLogger<IdeaService> logger, IRepository<Idea> ideaRepository)
     {
@@ -64,6 +65,19 @@ public class IdeaService : IIdeaService
         _logger.LogInformation("Getting idea '{Id}'.", id);
 
         return GetIdeaByIdInternalAsync(id);
+    }
+
+    public async Task<Idea> GetRandomIdeaAsync()
+    {
+        _logger.LogInformation("Getting random idea");
+
+        var ideas = await GetAllIdeasAsync();
+
+        int numIdeas = ideas.Count();
+        int randomIndex = numIdeas > 1 ? _random.Next(0, numIdeas + 1) : 0;
+        Idea idea = ideas.ElementAt(randomIndex);
+
+        return idea;
     }
 
     public async Task UpdateIdeaAsync(Idea idea)

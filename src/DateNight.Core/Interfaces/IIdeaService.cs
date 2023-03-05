@@ -12,6 +12,8 @@ namespace DateNight.Core.Interfaces
 
         Task<Idea> GetIdeaByIdAsync(string id);
 
+        Task<Idea> GetRandomIdeaAsync();
+
         Task UpdateIdeaAsync(Idea idea);
     }
 }

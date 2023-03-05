@@ -92,6 +92,22 @@ namespace DateNight.Api.Controllers
             return Ok(returnedIdeas);
         }
 
+        [HttpGet("random")]
+        public async Task<IActionResult> GetRandomIdea()
+        {
+            var idea = await _ideaService.GetRandomIdeaAsync();
+
+            var ideaModel = new Idea()
+            {
+                Id = idea.Id,
+                CreatedOn = idea.CreatedOn,
+                Description = idea.Description,
+                Title = idea.Title,
+            };
+
+            return Ok(ideaModel);
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateIdea(string id, Idea idea)
         {
