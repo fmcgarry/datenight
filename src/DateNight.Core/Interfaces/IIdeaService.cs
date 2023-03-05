@@ -15,6 +15,13 @@ namespace DateNight.Core.Interfaces
         /// <returns></returns>
         Task DeleteIdeaAsync(string id);
 
+        /// <summary>
+        /// Get the currently active idea.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException">No idea is active.</exception>
+        Task<Idea> GetActiveIdeaAsync();
+
         Task<IEnumerable<Idea>> GetAllIdeasAsync();
 
         Task<Idea> GetIdeaByIdAsync(string id);

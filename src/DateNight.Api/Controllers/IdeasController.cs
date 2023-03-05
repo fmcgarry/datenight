@@ -49,6 +49,29 @@ namespace DateNight.Api.Controllers
             }
         }
 
+        [HttpGet("active")]
+        public async Task<IActionResult> GetActiveIdea()
+        {
+            try
+            {
+                var idea = await _ideaService.GetActiveIdeaAsync();
+
+                var ideaModel = new Idea()
+                {
+                    Id = idea.Id,
+                    CreatedOn = idea.CreatedOn,
+                    Description = idea.Description,
+                    Title = idea.Title,
+                };
+
+                return Ok(ideaModel);
+            }
+            catch (ArgumentException)
+            {
+                return NotFound();
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetIdea(string id)
         {

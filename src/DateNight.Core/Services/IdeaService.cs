@@ -44,6 +44,21 @@ public class IdeaService : IIdeaService
         await DeleteIdeaAsync(idea);
     }
 
+    public async Task<Idea> GetActiveIdeaAsync()
+    {
+        _logger.LogInformation("Getting currently active idea");
+
+        var ideas = await GetAllIdeasInternalAsync();
+        var currentlyActiveIdea = ideas.FirstOrDefault(idea => idea.State == IdeaState.Active);
+
+        if (currentlyActiveIdea is null)
+        {
+            throw new ArgumentException("No idea currently marked as active");
+        }
+
+        return currentlyActiveIdea;
+    }
+
     public Task<IEnumerable<Idea>> GetAllIdeasAsync()
     {
         _logger.LogInformation("Getting all ideas.");
