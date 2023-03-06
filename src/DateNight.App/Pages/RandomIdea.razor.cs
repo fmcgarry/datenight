@@ -11,6 +11,9 @@ public partial class RandomIdea
     private string _previousRandomIdeaId = string.Empty;
 
     [Inject]
+    public NavigationManager NavigationManager { get; set; }
+
+    [Inject]
     IDateNightApiClient DateNightApiClient { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -37,8 +40,9 @@ public partial class RandomIdea
         await GetRandomIdea();
     }
 
-    private void SelectIdea()
+    private async Task SelectIdea()
     {
-        DateNightApiClient.SetIdeaAsActive(_idea);
+        await DateNightApiClient.SetIdeaAsActiveAsync(_idea);
+        NavigationManager.NavigateTo("/ideas/active");
     }
 }

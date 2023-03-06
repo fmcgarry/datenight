@@ -117,7 +117,7 @@ internal class DateNightApiClient : IDateNightApiClient
         return idea;
     }
 
-    public async Task SetIdeaAsActive(IdeaModel idea)
+    public async Task SetIdeaAsActiveAsync(IdeaModel idea)
     {
         _logger.LogInformation("Setting idea '{Id}' as active", idea.Id);
 

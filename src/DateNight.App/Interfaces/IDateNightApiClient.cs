@@ -16,7 +16,7 @@ internal interface IDateNightApiClient
 
     Task<IdeaModel> GetRandomIdeaAsync();
 
-    Task SetIdeaAsActive(IdeaModel idea);
+    Task SetIdeaAsActiveAsync(IdeaModel idea);
 
     Task UpdateIdeaAsync(IdeaModel idea);
 }
