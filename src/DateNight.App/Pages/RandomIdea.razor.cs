@@ -39,6 +39,6 @@ public partial class RandomIdea
 
     private void SelectIdea()
     {
-        //IdeaService.SelectIdea(_idea);
+        DateNightApiClient.SetIdeaAsActive(_idea);
     }
 }

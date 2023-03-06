@@ -8,11 +8,15 @@ internal interface IDateNightApiClient
 
     Task DeleteIdeaAsync(IdeaModel idea);
 
+    Task<IdeaModel> GetActiveIdea();
+
     Task<IEnumerable<IdeaModel>> GetAllIdeasAsync();
 
     Task<IdeaModel> GetIdeaAsync(string id);
 
     Task<IdeaModel> GetRandomIdeaAsync();
+
+    Task SetIdeaAsActive(IdeaModel idea);
 
     Task UpdateIdeaAsync(IdeaModel idea);
 }
