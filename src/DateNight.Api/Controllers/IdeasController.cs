@@ -49,6 +49,29 @@ namespace DateNight.Api.Controllers
             }
         }
 
+        [HttpGet("active")]
+        public async Task<IActionResult> GetActiveIdea()
+        {
+            try
+            {
+                var idea = await _ideaService.GetActiveIdeaAsync();
+
+                var ideaModel = new Idea()
+                {
+                    Id = idea.Id,
+                    CreatedOn = idea.CreatedOn,
+                    Description = idea.Description,
+                    Title = idea.Title,
+                };
+
+                return Ok(ideaModel);
+            }
+            catch (ArgumentException)
+            {
+                return NotFound();
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetIdea(string id)
         {
@@ -90,6 +113,41 @@ namespace DateNight.Api.Controllers
             }
 
             return Ok(returnedIdeas);
+        }
+
+        [HttpGet("random")]
+        public async Task<IActionResult> GetRandomIdea()
+        {
+            var idea = await _ideaService.GetRandomIdeaAsync();
+
+            var ideaModel = new Idea()
+            {
+                Id = idea.Id,
+                CreatedOn = idea.CreatedOn,
+                Description = idea.Description,
+                Title = idea.Title,
+            };
+
+            return Ok(ideaModel);
+        }
+
+        [HttpPost("active")]
+        [Consumes("application/x-www-form-urlencoded")]
+        public async Task<IActionResult> SetActiveIdea([FromForm] string id)
+        {
+            try
+            {
+                await _ideaService.ActivateIdea(id);
+                return NoContent();
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return NotFound();
+            }
+            catch (ArgumentNullException)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPut("{id}")]

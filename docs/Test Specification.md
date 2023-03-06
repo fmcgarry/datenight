@@ -202,7 +202,7 @@ This project contains most of the core business logic of the application, theref
 ### ActivateIdea_WhenNewIdeaActivated_ThenCurrentActiveIdeaDeactivated
 
 **Description:** Multiple active Ideas are not allowed.  
-**Related Issues:** #6  
+**Related Issues:** [#6](https://github.com/fmcgarrydev/datenight/issues/6)  
 **URL:**  
 **Preconditions:** An idea is already marked as active and a new Idea ID is known
 
@@ -214,16 +214,30 @@ This project contains most of the core business logic of the application, theref
 **Post-Conditions:** None  
 **Associated Requirements:** 4.1.1.1
 
-### ActivateIdea_WhenIdeaDoesNotExist_ThrowsArgumentException
+### ActivateIdea_WhenIdeaDoesNotExist_ThrowsArgumentOutOfRangeException
 
 **Description:** Activation requests for ideas that haven't been created yet should fail.  
-**Related Issues:** #6  
+**Related Issues:** [#6](https://github.com/fmcgarrydev/datenight/issues/6)  
 **URL:**  
 **Preconditions:** A random Idea ID is known
 
-| Step | Action                                | Expected Response              |
-| :--: | ------------------------------------- | ------------------------------ |
-|  1   | Submit Idea ID to ActivateIdea method | An ArgumentException is thrown |
+| Step | Action                                | Expected Response                        |
+| :--: | ------------------------------------- | ---------------------------------------- |
+|  1   | Submit Idea ID to ActivateIdea method | An ArgumentOutOfRangeException is thrown |
+
+**Post-Conditions:** No ideas have been marked active  
+**Associated Requirements:** 4.1.1
+
+### ActivateIdea_WhenIdIsNull_ThrowsArgumentNullException
+
+**Description:** Activation requests for ideas that haven't been created yet should fail.  
+**Related Issues:** [#6](https://github.com/fmcgarrydev/datenight/issues/6)  
+**URL:**  
+**Preconditions:** None
+
+| Step | Action                               | Expected Response                        |
+| :--: | ------------------------------------ | ---------------------------------------- |
+|  1   | Submit a null to ActivateIdea method | An ArgumentNullException is thrown |
 
 **Post-Conditions:** No ideas have been marked active  
 **Associated Requirements:** 4.1.1
@@ -537,7 +551,7 @@ These tests comprise of sending requests to and getting specific responses from 
 ## WhenUserAcceptsIdea_ThenIdeaIsActivated
 
 **Description:** A user accepts an idea on the Get Idea page and the idea is marked as active  
-**Related Issues:** #6  
+**Related Issues:** [#6](https://github.com/fmcgarrydev/datenight/issues/6)  
 **URL:**  
 **Preconditions:** An idea has been created and added to the collection. User is on the Get Idea page.
 

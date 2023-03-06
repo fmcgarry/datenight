@@ -47,6 +47,22 @@ internal class DateNightApiClient : IDateNightApiClient
         }
     }
 
+    public async Task<IdeaModel> GetActiveIdeaAsync()
+    {
+        _logger.LogInformation("Getting currently active idea");
+
+        var response = await _httpClient.GetAsync($"{_ideasEndpoint}/active");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Failed to get the currently active idea. Status code: {StatusCode}", response.StatusCode);
+        }
+
+        var idea = await response.Content.ReadFromJsonAsync<IdeaModel>();
+
+        return idea;
+    }
+
     public async Task<IEnumerable<IdeaModel>> GetAllIdeasAsync()
     {
         _logger.LogInformation("Getting all ideas");
@@ -83,6 +99,40 @@ internal class DateNightApiClient : IDateNightApiClient
         var idea = await response.Content.ReadFromJsonAsync<IdeaModel>();
 
         return idea;
+    }
+
+    public async Task<IdeaModel> GetRandomIdeaAsync()
+    {
+        _logger.LogInformation("Getting random idea");
+
+        var response = await _httpClient.GetAsync($"{_ideasEndpoint}/random");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Failed to get a random idea. Status code: {StatusCode}", response.StatusCode);
+        }
+
+        var idea = await response.Content.ReadFromJsonAsync<IdeaModel>();
+
+        return idea;
+    }
+
+    public async Task SetIdeaAsActiveAsync(IdeaModel idea)
+    {
+        _logger.LogInformation("Setting idea '{Id}' as active", idea.Id);
+
+        var queryParamters = new Dictionary<string, string>
+        {
+            { "id", idea.Id }
+        };
+
+        var content = new FormUrlEncodedContent(queryParamters);
+        var response = await _httpClient.PostAsync($"{_ideasEndpoint}/active", content);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Failed to set idea '{Id}' as active. Status code: {StatusCode}", idea.Id, response.StatusCode);
+        }
     }
 
     public async Task UpdateIdeaAsync(IdeaModel idea)
