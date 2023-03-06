@@ -47,7 +47,7 @@ internal class DateNightApiClient : IDateNightApiClient
         }
     }
 
-    public async Task<IdeaModel> GetActiveIdea()
+    public async Task<IdeaModel> GetActiveIdeaAsync()
     {
         _logger.LogInformation("Getting currently active idea");
 

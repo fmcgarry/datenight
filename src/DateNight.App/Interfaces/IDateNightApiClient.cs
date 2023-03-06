@@ -8,7 +8,7 @@ internal interface IDateNightApiClient
 
     Task DeleteIdeaAsync(IdeaModel idea);
 
-    Task<IdeaModel> GetActiveIdea();
+    Task<IdeaModel> GetActiveIdeaAsync();
 
     Task<IEnumerable<IdeaModel>> GetAllIdeasAsync();
 
