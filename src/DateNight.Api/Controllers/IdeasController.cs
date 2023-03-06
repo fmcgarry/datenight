@@ -132,7 +132,8 @@ namespace DateNight.Api.Controllers
         }
 
         [HttpPost("active")]
-        public async Task<IActionResult> SetActiveIdea(string id)
+        [Consumes("application/x-www-form-urlencoded")]
+        public async Task<IActionResult> SetActiveIdea([FromForm] string id)
         {
             try
             {
