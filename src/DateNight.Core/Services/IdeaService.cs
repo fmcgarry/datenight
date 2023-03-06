@@ -15,6 +15,32 @@ public class IdeaService : IIdeaService
         _ideaRepository = ideaRepository;
     }
 
+    public async Task ActivateIdea(string id)
+    {
+        ArgumentNullException.ThrowIfNull(id);
+        _logger.LogInformation("Setting idea '{Id}' as active", id);
+
+        var ideas = await GetAllIdeasInternalAsync();
+        var currentActiveIdea = ideas.FirstOrDefault(idea => idea.State == IdeaState.Active);
+
+        if (currentActiveIdea is not null)
+        {
+            currentActiveIdea.State = IdeaState.None;
+            await _ideaRepository.UpdateAsync(currentActiveIdea);
+        }
+        else
+        {
+            _logger.LogInformation("No idea was currently set as active");
+        }
+
+        var idea = await GetIdeaByIdInternalAsync(id);
+
+        idea.State = IdeaState.Active;
+        await _ideaRepository.UpdateAsync(idea);
+
+        _logger.LogInformation("Idea {Id} set as active", idea.Id);
+    }
+
     public Task AddIdeaAsync(Idea idea)
     {
         ArgumentNullException.ThrowIfNull(idea.Id);
@@ -86,32 +112,6 @@ public class IdeaService : IIdeaService
         Idea idea = nonActiveIdeas.ElementAt(randomIndex);
 
         return idea;
-    }
-
-    public async Task SetActiveIdea(string id)
-    {
-        ArgumentNullException.ThrowIfNull(id);
-        _logger.LogInformation("Setting idea '{Id}' as active", id);
-
-        var ideas = await GetAllIdeasInternalAsync();
-        var currentActiveIdea = ideas.FirstOrDefault(idea => idea.State == IdeaState.Active);
-
-        if (currentActiveIdea is not null)
-        {
-            currentActiveIdea.State = IdeaState.None;
-            await UpdateIdeaInternalAsync(currentActiveIdea);
-        }
-        else
-        {
-            _logger.LogInformation("No idea was currently set as active");
-        }
-
-        var idea = await GetIdeaByIdInternalAsync(id);
-        idea.State = IdeaState.Active;
-
-        await UpdateIdeaInternalAsync(idea);
-
-        _logger.LogInformation("Idea {Id} set as active", idea.Id);
     }
 
     public Task UpdateIdeaAsync(Idea idea)

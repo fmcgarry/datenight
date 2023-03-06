@@ -4,6 +4,16 @@ namespace DateNight.Core.Interfaces
 {
     public interface IIdeaService
     {
+        /// <summary>
+        /// Set the Idea with the passed id as active.
+        /// </summary>
+        /// <param name="id">The id of the Idea.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">When id is null or empty.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">When an idea with id is not found.</exception>
+        /// <exception cref="ArgumentException">When an idea with id is not found.</exception>
+        Task ActivateIdea(string id);
+
         Task AddIdeaAsync(Idea idea);
 
         /// <summary>
@@ -27,16 +37,6 @@ namespace DateNight.Core.Interfaces
         Task<Idea> GetIdeaByIdAsync(string id);
 
         Task<Idea> GetRandomIdeaAsync();
-
-        /// <summary>
-        /// Set the Idea with the passed id as active.
-        /// </summary>
-        /// <param name="id">The id of the Idea.</param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException">When id is null or empty.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">When an idea with id is not found.</exception>
-        /// <exception cref="ArgumentException">When an idea with id is not found.</exception>
-        Task SetActiveIdea(string id);
 
         Task UpdateIdeaAsync(Idea idea);
     }

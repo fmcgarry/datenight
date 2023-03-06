@@ -137,7 +137,7 @@ namespace DateNight.Api.Controllers
         {
             try
             {
-                await _ideaService.SetActiveIdea(id);
+                await _ideaService.ActivateIdea(id);
                 return NoContent();
             }
             catch (ArgumentOutOfRangeException)
