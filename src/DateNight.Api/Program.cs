@@ -3,6 +3,8 @@ using DateNight.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Configuration.AddRequiredInfrastructureConfiguration();
+
 builder.Services.AddRequiredInfrastructureServices();
 builder.Services.AddIdeaService(builder.Configuration);
 

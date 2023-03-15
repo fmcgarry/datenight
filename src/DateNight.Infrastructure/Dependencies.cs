@@ -1,4 +1,5 @@
-﻿using DateNight.Core.Entities.IdeaAggregate;
+﻿using Azure.Identity;
+using DateNight.Core.Entities.IdeaAggregate;
 using DateNight.Core.Interfaces;
 using DateNight.Core.Services;
 using DateNight.Infrastructure.Logging;
@@ -31,5 +32,15 @@ public static class Dependencies
         services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
 
         return services;
+    }
+
+    public static IConfigurationBuilder AddRequiredInfrastructureConfiguration(this IConfigurationBuilder builder)
+    {
+        var config = builder.Build();
+
+        string url = $"https://{config["KeyVaultName"]}.vault.azure.net/";
+        builder.AddAzureKeyVault(new Uri(url), new DefaultAzureCredential());
+
+        return builder;
     }
 }
