@@ -29,9 +29,10 @@ public class IdeaRepository : IRepository<Idea>
         throw new NotImplementedException();
     }
 
-    public Task DeleteAsync(Idea entity, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(Idea entity, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var partitionKey = new PartitionKey(entity.Id);
+        await _container.DeleteItemAsync<Idea>(entity.Id, partitionKey, null, cancellationToken);
     }
 
     public Task DeleteRangeAsync(IEnumerable<Idea> entities, CancellationToken cancellationToken = default)
@@ -46,14 +47,25 @@ public class IdeaRepository : IRepository<Idea>
         return results;
     }
 
-    public Task<Idea?> GetByIdAsync<U>(U id, CancellationToken cancellationToken = default)
+    public async Task<Idea?> GetByIdAsync<U>(U id, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        try
+        {
+            string idString = id!.ToString();
+            var partitionKey = new PartitionKey(idString);
+            var idea = await _container.ReadItemAsync<Idea>(idString, partitionKey, null, cancellationToken);
+
+            return idea;
+        }
+        catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return null;
+        }
     }
 
-    public Task UpdateAsync(Idea entity, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(Idea entity, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        await _container.UpsertItemAsync(entity, null, null, cancellationToken);
     }
 
     public Task UpdateRangeAsync(IEnumerable<Idea> entities, CancellationToken cancellationToken = default)

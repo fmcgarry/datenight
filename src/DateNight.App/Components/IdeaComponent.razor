@@ -8,6 +8,21 @@
                         <span class="fa-solid fa-ellipsis-v" />
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li>
+                            <button class="btn dropdown-item d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#@_editModalId">
+                                <span class="flex-fill">Edit</span>
+                                <span class="fa-solid fa-edit" />
+                            </button>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <button class="btn dropdown-item d-flex align-items-center text-danger" @onclick="Delete">
+                                <span class="flex-fill">Delete</span>
+                                <span class="fa-solid fa-trash" />
+                            </button>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -16,3 +31,5 @@
         <p class="card-text">@Idea.Description</p>
     </div>
 </div>
+
+<EditIdeaModal Id="@_editModalId" Idea=@Idea OnEditFinishedCallback="RefreshIdea"/>

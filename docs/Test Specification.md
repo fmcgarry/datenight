@@ -56,7 +56,7 @@ Since this is the UI project, these tests comprise of safe guards for user input
 ### Edit Idea Dialog: All Required Fields Have Data
 
 **Description:** When a user is editing ideas make sure the Title field has data.  
-**Related Issues:** #8  
+**Related Issues:** [#8](https://github.com/fmcgarrydev/datenight/issues/8)  
 **URL:**  
 **Preconditions:** The user is editing an idea.
 
@@ -71,7 +71,7 @@ Since this is the UI project, these tests comprise of safe guards for user input
 ### Edit Idea Dialog: Created On Date Is Not In The Future
 
 **Description:** When editing an idea, make sure the user doesn't set the Created On date in the future.  
-**Related Issues:** #8  
+**Related Issues:** [#8](https://github.com/fmcgarrydev/datenight/issues/8)  
 **URL:**  
 **Preconditions:** A user is editing an idea.
 
@@ -104,7 +104,7 @@ This project contains most of the core business logic of the application, theref
 ### UpdateIdea_WhenIdeaDoesNotExist_ThrowsArgumentException
 
 **Description:** When an idea is submitted to the UpdateIdea method, ensure it exists first before trying to update it  
-**Related Issues:** #8  
+**Related Issues:** [#8](https://github.com/fmcgarrydev/datenight/issues/8)  
 **URL:**  
 **Preconditions:** None
 
@@ -113,6 +113,34 @@ This project contains most of the core business logic of the application, theref
 |  1   | Call the UpdateIdea method with an idea that hasn't been added yet | ArgumentException is thrown |
 
 **Post-Conditions:** The UpdateIdea method has thrown an ArgumentException  
+**Associated Requirements:** 8.1
+
+### UpdateIdea_WhenIdeaIdIsNull_ThrowsArgumentNullException
+
+**Description:** When an idea is submitted to the UpdateIdea method, ensure the Id property is not null.  
+**Related Issues:** [#8](https://github.com/fmcgarrydev/datenight/issues/8)  
+**URL:**  
+**Preconditions:** None
+
+| Step | Action                                                         | Expected Response               |
+|:----:| -------------------------------------------------------------- | ------------------------------- |
+|  1   | Call the UpdateIdea method with an idea that has an Id of null | ArgumentNullException is thrown |
+
+**Post-Conditions:** The UpdateIdea method has thrown an ArgumentNullException.  
+**Associated Requirements:** 8.1
+
+### UpdateIdea_WhenValidIdea_ThenRepositoryUpdateIdeaIsCalled
+
+**Description:** When a valid idea is submitted to the UpdateIdea method, ensure the repository UpdateAsync() method is called.  
+**Related Issues:** [#8](https://github.com/fmcgarrydev/datenight/issues/8)  
+**URL:**  
+**Preconditions:** None
+
+| Step | Action                                                | Expected Response                         |
+|:----:| ----------------------------------------------------- | ----------------------------------------- |
+|  1   | Call the UpdateIdea method with an idea that is valid | Repository UpdateAsync() method is called |
+
+**Post-Conditions:** None.  
 **Associated Requirements:** 8.1
 
 ### DeleteIdea_WhenIdeaDoesNotExist_ThrowsArgumentException
@@ -174,7 +202,7 @@ This project contains most of the core business logic of the application, theref
 ### ActivateIdea_WhenNewIdeaActivated_ThenCurrentActiveIdeaDeactivated
 
 **Description:** Multiple active Ideas are not allowed.  
-**Related Issues:** #6  
+**Related Issues:** [#6](https://github.com/fmcgarrydev/datenight/issues/6)  
 **URL:**  
 **Preconditions:** An idea is already marked as active and a new Idea ID is known
 
@@ -186,16 +214,30 @@ This project contains most of the core business logic of the application, theref
 **Post-Conditions:** None  
 **Associated Requirements:** 4.1.1.1
 
-### ActivateIdea_WhenIdeaDoesNotExist_ThrowsArgumentException
+### ActivateIdea_WhenIdeaDoesNotExist_ThrowsArgumentOutOfRangeException
 
 **Description:** Activation requests for ideas that haven't been created yet should fail.  
-**Related Issues:** #6  
+**Related Issues:** [#6](https://github.com/fmcgarrydev/datenight/issues/6)  
 **URL:**  
 **Preconditions:** A random Idea ID is known
 
-| Step | Action                                | Expected Response              |
-| :--: | ------------------------------------- | ------------------------------ |
-|  1   | Submit Idea ID to ActivateIdea method | An ArgumentException is thrown |
+| Step | Action                                | Expected Response                        |
+| :--: | ------------------------------------- | ---------------------------------------- |
+|  1   | Submit Idea ID to ActivateIdea method | An ArgumentOutOfRangeException is thrown |
+
+**Post-Conditions:** No ideas have been marked active  
+**Associated Requirements:** 4.1.1
+
+### ActivateIdea_WhenIdIsNull_ThrowsArgumentNullException
+
+**Description:** Activation requests for ideas that haven't been created yet should fail.  
+**Related Issues:** [#6](https://github.com/fmcgarrydev/datenight/issues/6)  
+**URL:**  
+**Preconditions:** None
+
+| Step | Action                               | Expected Response                        |
+| :--: | ------------------------------------ | ---------------------------------------- |
+|  1   | Submit a null to ActivateIdea method | An ArgumentNullException is thrown |
 
 **Post-Conditions:** No ideas have been marked active  
 **Associated Requirements:** 4.1.1
@@ -477,7 +519,7 @@ These tests comprise of sending requests to and getting specific responses from 
 ## WhenUserEditsIdea_ThenUpdatedIdeaIsDisplayedOnViewIdeasPage
 
 **Description:** When a user edits an idea on the View Ideas Page, the updated information is immediately viewable.  
-**Related Issues:** #8  
+**Related Issues:** [#8](https://github.com/fmcgarrydev/datenight/issues/8)  
 **URL:**  
 **Preconditions:** There is at least 1 idea on the View Ideas page
 
@@ -509,7 +551,7 @@ These tests comprise of sending requests to and getting specific responses from 
 ## WhenUserAcceptsIdea_ThenIdeaIsActivated
 
 **Description:** A user accepts an idea on the Get Idea page and the idea is marked as active  
-**Related Issues:** #6  
+**Related Issues:** [#6](https://github.com/fmcgarrydev/datenight/issues/6)  
 **URL:**  
 **Preconditions:** An idea has been created and added to the collection. User is on the Get Idea page.
 

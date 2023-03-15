@@ -1,0 +1,28 @@
+﻿<div class="modal fade" id="@Id" tabindex="-1" aria-labelledby="@_editModalLabel" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <EditForm Model="@_editIdea" OnValidSubmit="OnEditValidSubmit">
+                <DataAnnotationsValidator />
+                <div class="modal-header">
+                    <h5 class="modal-title" id="@_editModalLabel">Edit Idea</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="@_editModalTitleId" class="form-label">Title</label>
+                        <InputText class="form-control" id="@_editModalTitleId" @bind-Value="_editIdea.Title" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="@_editModalDescriptionId" class="form-label">Description</label>
+                        <InputTextArea id="@_editModalDescriptionId" class="form-control" @bind-Value="_editIdea.Description" />
+                    </div>
+                </div>
+                <ValidationSummary />
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>

@@ -9,7 +9,7 @@
             @foreach (var idea in _ideas)
             {
                 <div class="col mb-4 d-flex justify-content-center">
-                    <IdeaComponent Idea="idea" />
+                    <IdeaComponent Idea="idea" OnDeleteCallback="GetAllIdeas" />
                 </div>
             }
         </div>
