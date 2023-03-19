@@ -102,14 +102,19 @@ public class IdeaService : IIdeaService
 
     public async Task<Idea> GetRandomIdeaAsync()
     {
-        _logger.LogInformation("Getting random idea");
+        _logger.LogInformation("({method}) Getting random idea", nameof(GetRandomIdeaAsync));
 
         var ideas = await GetAllIdeasInternalAsync();
         var nonActiveIdeas = ideas.Where(idea => idea.State != IdeaState.Active);
 
         int numIdeas = nonActiveIdeas.Count();
+        _logger.LogDebug("({method}) Total number of non-active ideas: {numIdeas}", nameof(GetRandomIdeaAsync), numIdeas);
+
         int randomIndex = numIdeas > 1 ? _random.Next(0, numIdeas) : 0;
+        _logger.LogDebug("({method}) Random index chosen: {randomIndex}", nameof(GetRandomIdeaAsync), randomIndex);
+
         Idea idea = nonActiveIdeas.ElementAt(randomIndex);
+        _logger.LogInformation("({method}) Returning random idea '{Id}'", nameof(GetRandomIdeaAsync), idea.Id!);
 
         return idea;
     }

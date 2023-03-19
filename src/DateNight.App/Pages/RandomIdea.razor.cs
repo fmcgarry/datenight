@@ -26,11 +26,18 @@ public partial class RandomIdea
     {
         _idea = null;
 
+        int loopCount = 1;
+
         do
         {
             // We don't want to display the same idea twice.
+            // If we get the same idea 3 times in a row, it probably means there
+            // is only 1 idea left in the collection.
+
             _idea = await DateNightApiClient.GetRandomIdeaAsync();
-        } while (_idea.Id == _previousRandomIdeaId);
+
+            loopCount++;
+        } while (_idea.Id == _previousRandomIdeaId && loopCount < 3);
 
         _previousRandomIdeaId = _idea.Id;
     }
