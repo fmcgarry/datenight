@@ -28,11 +28,13 @@ public partial class EditIdeaModal
         ResetEditIdea();
     }
 
+    private void OnEditCancel()
+    {
+        ResetEditIdea();
+    }
+
     private async Task OnEditValidSubmit()
     {
-        Idea.Title = _editIdea.Title;
-        Idea.Description = _editIdea.Description;
-
         await DateNightApiClient.UpdateIdeaAsync(Idea);
 
         ResetEditIdea();
