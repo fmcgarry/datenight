@@ -14,7 +14,6 @@ Since this is the UI project, these tests comprise of safe guards for user input
 
 **Description:** User inputs more that 8 characters in the couple code field after creating their account.  
 **Related Issues:** #5  
-**URL:**  
 **Preconditions:** Filled out information on create account page and pressed Sign Up button. User is on the enter couple code screen.
 
 | Step | Action                       | Expected Response     |
@@ -28,7 +27,6 @@ Since this is the UI project, these tests comprise of safe guards for user input
 
 **Description:** User input's their own code into the couple code field after creating their account.  
 **Related Issues:** #5  
-**URL:**  
 **Preconditions:** Filled out information on create account page and pressed Sign Up button. User is on the enter couple code screen.
 
 | Step | Action                                                           | Expected Response     |
@@ -42,7 +40,6 @@ Since this is the UI project, these tests comprise of safe guards for user input
 
 **Description:** Ensure that the user has filled out the Title field on the Create Idea page on submit.  
 **Related Issues:** #2  
-**URL:**  
 **Preconditions:** The user is on the Create Idea page
 
 | Step | Action                                                    | Expected Response |
@@ -57,7 +54,6 @@ Since this is the UI project, these tests comprise of safe guards for user input
 
 **Description:** When a user is editing ideas make sure the Title field has data.  
 **Related Issues:** [#8](https://github.com/fmcgarrydev/datenight/issues/8)  
-**URL:**  
 **Preconditions:** The user is editing an idea.
 
 | Step | Action                | Expected Response     |
@@ -72,7 +68,6 @@ Since this is the UI project, these tests comprise of safe guards for user input
 
 **Description:** When editing an idea, make sure the user doesn't set the Created On date in the future.  
 **Related Issues:** [#8](https://github.com/fmcgarrydev/datenight/issues/8)  
-**URL:**  
 **Preconditions:** A user is editing an idea.
 
 | Step | Action                                          | Expected Response     |
@@ -90,7 +85,6 @@ This project contains most of the core business logic of the application, theref
 
 **Description:** When a new idea is created, then the CreatedOn field is set to the current date.
 **Related Issues:** #2
-**URL:**  
 **Preconditions:** None
 
 | Step | Action                                                | Expected Response |
@@ -105,7 +99,6 @@ This project contains most of the core business logic of the application, theref
 
 **Description:** When an idea is submitted to the UpdateIdea method, ensure it exists first before trying to update it  
 **Related Issues:** [#8](https://github.com/fmcgarrydev/datenight/issues/8)  
-**URL:**  
 **Preconditions:** None
 
 | Step | Action                                                             | Expected Response           |
@@ -119,7 +112,6 @@ This project contains most of the core business logic of the application, theref
 
 **Description:** When an idea is submitted to the UpdateIdea method, ensure the Id property is not null.  
 **Related Issues:** [#8](https://github.com/fmcgarrydev/datenight/issues/8)  
-**URL:**  
 **Preconditions:** None
 
 | Step | Action                                                         | Expected Response               |
@@ -133,7 +125,6 @@ This project contains most of the core business logic of the application, theref
 
 **Description:** When a valid idea is submitted to the UpdateIdea method, ensure the repository UpdateAsync() method is called.  
 **Related Issues:** [#8](https://github.com/fmcgarrydev/datenight/issues/8)  
-**URL:**  
 **Preconditions:** None
 
 | Step | Action                                                | Expected Response                         |
@@ -147,7 +138,6 @@ This project contains most of the core business logic of the application, theref
 
 **Description:** When an idea ID is submitted for deletion, ensure the idea exists.  
 **Related Issues:** #9  
-**URL:**  
 **Preconditions:** None
 
 | Step | Action                                                   | Expected Response           |
@@ -161,7 +151,6 @@ This project contains most of the core business logic of the application, theref
 
 **Description:** When an idea is requested to be deleted and it exists in the collection, remove it from the collection.
 **Related Issues:** #9  
-**URL:**  
 **Preconditions:** An idea exists in the collection
 
 | Step | Action                     | Expected Response |
@@ -175,7 +164,6 @@ This project contains most of the core business logic of the application, theref
 
 **Description:** When calling the GetIdeas method, only the ideas created by the current user are returned.  
 **Related Issues:** #7  
-**URL:**  
 **Preconditions:** Ideas have been added via the AddIdeas method. User has been created and ID is known.
 
 | Step | Action                                    | Expected Response           |
@@ -189,7 +177,6 @@ This project contains most of the core business logic of the application, theref
 
 **Description:** When there are not ideas in the collection for a user, then return an empty collection.  
 **Related Issues:** #7  
-**URL:**  
 **Preconditions:** None
 
 | Step | Action                       | Expected Response |
@@ -203,7 +190,6 @@ This project contains most of the core business logic of the application, theref
 
 **Description:** Multiple active Ideas are not allowed.  
 **Related Issues:** [#6](https://github.com/fmcgarrydev/datenight/issues/6)  
-**URL:**  
 **Preconditions:** An idea is already marked as active and a new Idea ID is known
 
 | Step | Action                                                 | Expected Response       |
@@ -218,7 +204,6 @@ This project contains most of the core business logic of the application, theref
 
 **Description:** Activation requests for ideas that haven't been created yet should fail.  
 **Related Issues:** [#6](https://github.com/fmcgarrydev/datenight/issues/6)  
-**URL:**  
 **Preconditions:** A random Idea ID is known
 
 | Step | Action                                | Expected Response                        |
@@ -232,7 +217,6 @@ This project contains most of the core business logic of the application, theref
 
 **Description:** Activation requests for ideas that haven't been created yet should fail.  
 **Related Issues:** [#6](https://github.com/fmcgarrydev/datenight/issues/6)  
-**URL:**  
 **Preconditions:** None
 
 | Step | Action                               | Expected Response                        |
@@ -246,7 +230,6 @@ This project contains most of the core business logic of the application, theref
 
 **Description:** No Ideas should be returned if there aren't any active  
 **Related Issues:** #10  
-**URL:**  
 **Preconditions:** No active ideas exist in the collection
 
 | Step | Action                    | Expected Response |
@@ -260,7 +243,6 @@ This project contains most of the core business logic of the application, theref
 
 **Description:** An Idea should be returned if it is marked active  
 **Related Issues:** #10  
-**URL:**  
 **Preconditions:** An active Idea exists in the collection
 
 | Step | Action                    | Expected Response |
@@ -274,7 +256,6 @@ This project contains most of the core business logic of the application, theref
 
 **Description:** When two or more ideas have the same completion count, return no Ideas from the method call.  
 **Related Issues:** #4  
-**URL:**  
 **Preconditions:** Three ideas with the same completion count exist in the collection
 
 | Step | Action                         | Expected Response |
@@ -288,7 +269,6 @@ This project contains most of the core business logic of the application, theref
 
 **Description:** When all ideas have a completion count of less than one, return no Ideas from the method call.  
 **Related Issues:** #4  
-**URL:**  
 **Preconditions:** Two ideas with a completion count of 0 exist in the collection
 
 | Step | Action                         | Expected Response |
@@ -302,7 +282,6 @@ This project contains most of the core business logic of the application, theref
 
 **Description:** When one idea has a completion count higher than other ideas in the collection, return it.  
 **Related Issues:** #4  
-**URL:**  
 **Preconditions:** Two ideas exist in the collection, and one idea has a higher completion count
 
 | Step | Action                         | Expected Response |
@@ -316,7 +295,6 @@ This project contains most of the core business logic of the application, theref
 
 **Description:** A user must exist to be updated.  
 **Related Issues:** #11  
-**URL:**  
 **Preconditions:** No users with the user email should exist
 
 | Step | Action                                               | Expected Response       |
@@ -330,7 +308,6 @@ This project contains most of the core business logic of the application, theref
 
 **Description:** When a user is already in a couple and an attempt is made to add to another couple, then throw an ArgumentException.  
 **Related Issues:** #11  
-**URL:**  
 **Preconditions:** A user is already linked to a couple
 
 | Step | Action                                                              | Expected Response |
@@ -344,7 +321,6 @@ This project contains most of the core business logic of the application, theref
 
 **Description:** When a user tries to add a duplicate idea, (e.g., from the Suggested page), an ArgumentException is thrown.  
 **Related Issues:** #17  
-**URL:**  
 **Preconditions:** A user has added an idea from the Suggested page
 
 | Step | Action                                     | Expected Response           |
@@ -366,7 +342,6 @@ These tests comprise of sending requests to and getting specific responses from 
 
 **Description:** If an Idea is submitted with invalid or missing data, the Add Idea endpoint returns a 400 to the caller.  
 **Related Issues:** #2  
-**URL:**  
 **Preconditions:** User is authenticated
 
 | Step | Action                               | Expected Response |
@@ -380,7 +355,6 @@ These tests comprise of sending requests to and getting specific responses from 
 
 **Description:** Cannot set an idea active if it does not exist  
 **Related Issues:**  
-**URL:**  
 **Preconditions:** User is authenticated
 
 | Step | Action                                | Expected Response |
@@ -394,7 +368,6 @@ These tests comprise of sending requests to and getting specific responses from 
 
 **Description:** Duplicated user accounts are not allowed  
 **Related Issues:** #3  
-**URL:**  
 **Preconditions:** A user has already been created
 
 | Step | Action                                            | Expected Response |
@@ -408,7 +381,6 @@ These tests comprise of sending requests to and getting specific responses from 
 
 **Description:** A 200 OK should returned when the GetIdeas endpoint is called successfully.  
 **Related Issues:** #7  
-**URL:**  
 **Preconditions:** Ideas have already been added.
 
 | Step | Action                                     | Expected Response |
@@ -422,7 +394,6 @@ These tests comprise of sending requests to and getting specific responses from 
 
 **Description:** All ideas should be returned when the GetIdeas endpoint is called successfully.  
 **Related Issues:** #7  
-**URL:**  
 **Preconditions:** Ideas have already been added.
 
 | Step | Action                                     | Expected Response     |
@@ -438,7 +409,6 @@ These tests comprise of sending requests to and getting specific responses from 
 
 **Description:** Happy path for a user login.  
 **Related Issues:** #3  
-**URL:**  
 **Preconditions:** A user account has already been created with the email and password used in this test.
 
 | Step | Action                        | Expected Response |
@@ -453,7 +423,6 @@ These tests comprise of sending requests to and getting specific responses from 
 
 **Description:** Ensures invalid users are not logged in.  
 **Related Issues:** #3  
-**URL:**  
 **Preconditions:** None
 
 | Step | Action                        | Expected Response |
@@ -468,7 +437,6 @@ These tests comprise of sending requests to and getting specific responses from 
 
 **Description:** Verifies that the user's name they entered on the create account screen has been saved by the system.  
 **Related Issues:** #3  
-**URL:**  
 **Preconditions:** An email, password, and name is available to enter in the fields.
 
 | Step | Action                                       | Expected Response                  |
@@ -487,7 +455,6 @@ These tests comprise of sending requests to and getting specific responses from 
 
 **Description:** A new user enters a valid couple code and is added to the couple  
 **Related Issues:** #5  
-**URL:**  
 **Preconditions:** One user account has been created already and the couple code has been recorded for use in this test.
 
 | Step | Action                                                    | Expected Response                            |
@@ -503,7 +470,6 @@ These tests comprise of sending requests to and getting specific responses from 
 
 **Description:** Create an idea on the Create Idea Page and view it on the View Ideas Page.  
 **Related Issues:** #7  
-**URL:**  
 **Preconditions:** A user is logged into the app and is on the Create Idea page
 
 | Step | Action                                         | Expected Response                           |
@@ -520,7 +486,6 @@ These tests comprise of sending requests to and getting specific responses from 
 
 **Description:** When a user edits an idea on the View Ideas Page, the updated information is immediately viewable.  
 **Related Issues:** [#8](https://github.com/fmcgarrydev/datenight/issues/8)  
-**URL:**  
 **Preconditions:** There is at least 1 idea on the View Ideas page
 
 | Step | Action                            | Expected Response                                          |
@@ -537,7 +502,6 @@ These tests comprise of sending requests to and getting specific responses from 
 
 **Description:** When a user chooses to delete an idea, it is no longer displayed on the View Ideas page.  
 **Related Issues:** #9  
-**URL:**  
 **Preconditions:** There is at least 1 idea displayed on the View Ideas page.
 
 | Step | Action                            | Expected Response   |
@@ -552,7 +516,6 @@ These tests comprise of sending requests to and getting specific responses from 
 
 **Description:** A user accepts an idea on the Get Idea page and the idea is marked as active  
 **Related Issues:** [#6](https://github.com/fmcgarrydev/datenight/issues/6)  
-**URL:**  
 **Preconditions:** An idea has been created and added to the collection. User is on the Get Idea page.
 
 | Step | Action                      | Expected Response           |
@@ -568,7 +531,6 @@ These tests comprise of sending requests to and getting specific responses from 
 
 **Description:** Accounts cannot be linked to more than 1 user email  
 **Related Issues:** #3  
-**URL:**  
 **Preconditions:** A user account has already been created using the email address.
 
 | Step | Action                                                    | Expected Response     |
@@ -583,7 +545,6 @@ These tests comprise of sending requests to and getting specific responses from 
 
 **Description:** A user should see a recently marked Active idea on the Active Idea page  
 **Related Issues:** #10  
-**URL:**  
 **Preconditions:** An idea has been added to the collection using the Create Idea page
 
 | Step | Action                           | Expected Response                         |
@@ -599,7 +560,6 @@ These tests comprise of sending requests to and getting specific responses from 
 
 **Description:** When a user opts to leave a couple on the Account page, then they are removed and the couple code is now displayed on their profile.  
 **Related Issues:** #11  
-**URL:**  
 **Preconditions:** Two users are in a couple
 
 | Step | Action                       | Expected Response              |
@@ -614,7 +574,6 @@ These tests comprise of sending requests to and getting specific responses from 
 
 **Description:** When a user chooses to add an idea from the Suggested Ideas page, then the idea is added to their pool of ideas.  
 **Related Issues:** #17  
-**URL:**  
 **Preconditions:** The user is logged in.
 
 | Step | Action                                      | Expected Response                                 |
@@ -631,7 +590,6 @@ These tests comprise of sending requests to and getting specific responses from 
 
 **Description:** When a couple's idea is the suggested collection, do not display them in the list of ideas shown to the user.  
 **Related Issues:** #17  
-**URL:**  
 **Preconditions:** User is logged in. User has submitted ideas and completed ideas. Other users have added and completed the user's ideas.
 
 | Step | Action                                            | Expected Response                      |
@@ -646,7 +604,6 @@ These tests comprise of sending requests to and getting specific responses from 
 
 **Description:** When the user chooses to apply formatting to an idea's description, then when viewing that same idea, the formatting is visible to the user.  
 **Related Issues:** #1  
-**URL:**  
 **Preconditions:** The user is logged in and on the Create Idea page.
 
 | Step | Action                                    | Expected Response        |
@@ -664,8 +621,7 @@ These tests comprise of sending requests to and getting specific responses from 
 ## User is able to edit an idea
 
 **Description:** A user is able to edit all fields of an idea that was previously created.  
-**Related Issues:** [#8](https://github.com/fmcgarrydev/datenight/issues/8)  
-**URL:**  
+**Related Issues:** [#8](https://github.com/fmcgarrydev/datenight/issues/8)    
 **Preconditions:** An idea has already been created by the user.
 
 | Step | Action                          | Expected Response           |
@@ -682,8 +638,7 @@ These tests comprise of sending requests to and getting specific responses from 
 ## User is able to delete an idea
 
 **Description:** When a user deletes an idea, it is removed from the database.  
-**Related Issues:** [#9](https://github.com/fmcgarrydev/datenight/issues/9)  
-**URL:**  
+**Related Issues:** [#9](https://github.com/fmcgarrydev/datenight/issues/9)   
 **Preconditions:** An idea has already been created by the user.
 
 | Step | Action                          | Expected Response       |
@@ -699,7 +654,6 @@ These tests comprise of sending requests to and getting specific responses from 
 
 **Description:** When first navigating to the Get Idea page, a random idea is displayed to the user.  
 **Related Issues:** [#6](https://github.com/fmcgarrydev/datenight/issues/6)  
-**URL:**  
 **Preconditions:** More than 2 ideas has already been created by the user.
 
 | Step | Action                         | Expected Response |
@@ -713,7 +667,6 @@ These tests comprise of sending requests to and getting specific responses from 
 
 **Description:** When on the Get Idea page, a user can accept the random idea shown.  
 **Related Issues:** [#6](https://github.com/fmcgarrydev/datenight/issues/6)  
-**URL:**  
 **Preconditions:** More than 1 idea has been previously created by the user.
 
 | Step | Action                               | Expected Response          |
@@ -728,7 +681,6 @@ These tests comprise of sending requests to and getting specific responses from 
 
 **Description:** When on the Get Idea page, a user can decline the random idea.  
 **Related Issues:** [#6](https://github.com/fmcgarrydev/datenight/issues/6)  
-**URL:**  
 **Preconditions:** More than 1 idea has been previously created by the user.
 
 | Step | Action                                | Expected Response       |
@@ -743,7 +695,6 @@ These tests comprise of sending requests to and getting specific responses from 
 
 **Description:** When on the Get Idea page, a user can choose to filter out ideas that have already been completed.  
 **Related Issues:** [#6](https://github.com/fmcgarrydev/datenight/issues/6)  
-**URL:**  
 **Preconditions:** More than 1 idea has been previously created by the user.
 
 | Step | Action                         | Expected Response       |
@@ -761,7 +712,6 @@ These tests comprise of sending requests to and getting specific responses from 
 
 **Description:** When creating/editing an idea, formatting may be applied to the text.  
 **Related Issues:** [#1](https://github.com/fmcgarrydev/datenight/issues/1)  
-**URL:**  
 **Preconditions:** None
 
 | Step | Action                           | Expected Response                            |
@@ -776,3 +726,91 @@ These tests comprise of sending requests to and getting specific responses from 
 
 **Post-Conditions:** Idea with formatted description is shown  
 **Associated Requirements:** 6
+
+## User can view active Idea information
+
+**Description:** A user can view information about an idea they have marked as active.  
+**Related Issues:** [#10](https://github.com/fmcgarrydev/datenight/issues/10)  
+**Preconditions:** A user has set an idea as active  
+
+| Step | Action                           | Expected Response                                                              |
+| :--: | -------------------------------- | ------------------------------------------------------------------------------ |
+|  1   | Navigate to the Active Idea page | The title, description, name of the user, and last completed date is displayed |
+
+**Post-Conditions:** None  
+**Associated Requirements:** 4, 4.1, 4.2, 4.3, 4.4  
+
+## User can complete an active Idea
+
+**Description:** A user can mark an active idea as completed  
+**Related Issues:** [#10](https://github.com/fmcgarrydev/datenight/issues/10)  
+**Preconditions:** A user has set an idea as active  
+
+| Step | Action                           | Expected Response                                                              |
+| :--: | -------------------------------- | ------------------------------------------------------------------------------ |
+|  1   | Navigate to the Active Idea page | The title, description, name of the user, and last completed date is displayed |
+|  2   | Choose the Complete button       | A confirmation is shown.                                                       |
+|  3   | Accept the confirmation          | The active idea is no longer shown.                                            |
+
+**Post-Conditions:** The idea now has a last-completed date of today.  
+**Associated Requirements:** 4, 4.5  
+
+## User can abandon an active Idea
+
+**Description:** A user can abandon an active idea.  
+**Related Issues:** [#10](https://github.com/fmcgarrydev/datenight/issues/10)  
+**Preconditions:** A user has set an idea as active  
+
+| Step | Action                           | Expected Response                                                              |
+| :--: | -------------------------------- | ------------------------------------------------------------------------------ |
+|  1   | Navigate to the Active Idea page | The title, description, name of the user, and last completed date is displayed |
+|  2   | Choose the Abandon button        | A confirmation is shown.                                                       |
+|  3   | Accept the confirmation          | The active idea is no longer shown.                                            |
+
+**Post-Conditions:** None  
+**Associated Requirements:** 4, 4.6  
+
+## User can filter out completed ideas
+
+**Description:** A user can choose to filter out completed ideas from the Random Idea page  
+**Related Issues:** [#42](https://github.com/fmcgarrydev/datenight/issues/42)  
+**Preconditions:** A user has > 2 ideas, and 1 idea is marked as completed  
+
+| Step | Action                                | Expected Response              |
+| :--: | ------------------------------------- | ------------------------------ |
+|  1   | Navigate to the Random Idea page      | A random idea is displayed     |
+|  2   | Choose the option to filter out ideas |                                |
+|  3   | Choose reject idea button             | A new random idea is displayed |
+|  4   | Repeat step 3 as necessary            |                                |        
+
+**Post-Conditions:** No ideas that are completed are shown  
+**Associated Requirements:** 3.3  
+
+## New user can create an account
+
+**Description:** A new user can create an account  
+**Related Issues:** [#3](https://github.com/fmcgarrydev/datenight/issues/3)  
+**Preconditions:** None  
+
+| Step | Action           | Expected Response                                         |
+| :--: | ---------------- | --------------------------------------------------------- |
+|  1   | Open the app     | A login form is displayed                                 |
+|  2   | Choose "Sign Up" | A form is displayed with email, password, and name fields |
+
+**Post-Conditions:** No ideas that are completed are shown  
+**Associated Requirements:** 1, 1.1  
+
+## Existing user can log in
+
+**Description:** An existing user can log into the app  
+**Related Issues:** [#3](https://github.com/fmcgarrydev/datenight/issues/3)  
+**Preconditions:** None  
+
+| Step | Action                  | Expected Response                       |
+| :--: | ----------------------- | --------------------------------------- |
+|  1   | Open the app            | A login form is displayed               |
+|  2   | Enter email an password |                                         |
+|  3   | Choose "Sign In"        | User is presented with Active Idea page |
+
+**Post-Conditions:** The user is logged in  
+**Associated Requirements:** 1, 1.2  
