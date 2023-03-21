@@ -1,16 +1,31 @@
 ﻿@page "/ideas/active";
 
-<h2>Active Idea</h2>
-
-<div class="h-100 d-flex justify-content-center align-items-center">
-    @if (_idea is null)
-    {
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
+<div class="d-flex flex-column h-100">
+    <h2>Active Idea</h2>
+    <div class="d-flex flex-grow-1 justify-content-center mt-5">
+        @if (_idea is null)
+        {
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        }
+        else
+        {
+            <div>
+                <IdeaComponent Idea="_idea" OnDeleteCallback="GetActiveIdea"/>
+            </div>
+        }
+    </div>
+    <div class="mb-5">
+        <div class="row mb-2">
+            <div class="col">
+                <button class="btn btn-success w-100">Complete</button>
+            </div>
         </div>
-    }
-    else
-    {
-        <IdeaComponent Idea="_idea" OnDeleteCallback="GetActiveIdea"/>
-    }
+        <div class="row">
+            <div class="col">
+                <button class="btn btn-danger w-100">Abandon</button>
+            </div>
+        </div>
+    </div>
 </div>
