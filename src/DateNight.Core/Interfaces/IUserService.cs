@@ -2,8 +2,8 @@
 
 namespace DateNight.Core.Interfaces
 {
-    public interface IUsersService
+    public interface IUserService
     {
-        User? GetUser(Guid id);
+        Task<User?> GetUserAsync(Guid id);
     }
 }
