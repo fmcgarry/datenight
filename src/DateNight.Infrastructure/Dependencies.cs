@@ -27,6 +27,14 @@ public static class Dependencies
         return services;
     }
 
+    public static IServiceCollection AddUserService(this IServiceCollection services, IConfiguration config)
+    {
+        services.AddTransient<IRepository<Core.Entities.UserAggregate.User>, UserRepository>();
+        services.AddTransient<IUserService, UserService>();
+
+        return services;
+    }
+
     public static IServiceCollection AddRequiredInfrastructureServices(this IServiceCollection services)
     {
         services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
