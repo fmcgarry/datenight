@@ -48,7 +48,7 @@ internal class DateNightApiClient : IDateNightApiClient
         }
     }
 
-    public async Task<IdeaModel> GetActiveIdeaAsync()
+    public async Task<IdeaModel?> GetActiveIdeaAsync()
     {
         _logger.LogInformation("Getting currently active idea");
 
@@ -57,6 +57,7 @@ internal class DateNightApiClient : IDateNightApiClient
         if (!response.IsSuccessStatusCode)
         {
             _logger.LogError("Failed to get the currently active idea. Status code: {StatusCode}", response.StatusCode);
+            return null;
         }
 
         var idea = await response.Content.ReadFromJsonAsync<IdeaModel>();

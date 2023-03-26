@@ -2,30 +2,57 @@
 
 <div class="d-flex flex-column h-100">
     <h2>Active Idea</h2>
-    <div class="d-flex flex-grow-1 justify-content-center mt-5">
-        @if (_idea is null)
-        {
+    @if (_isFirstLoad && _idea is null)
+    {
+        <div class="d-flex flex-grow-1 justify-content-center align-items-center">
             <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        @if (_isActiveIdeaAvailable)
+        {
+            <div class="d-flex flex-grow-1 justify-content-center mt-5">
+                <div>
+                    <IdeaComponent Idea="_idea" OnDeleteCallback="GetActiveIdea"/>
+                </div>
+            </div>
+            <div class="mb-5">
+                <div class="row mb-2">
+                    <div class="col">
+                        <button class="btn btn-success w-100" @onclick=OnClickCompleteIdeaButton>Complete</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <button class="btn btn-danger w-100" @onclick=OnClickAbandonButton>Abandon</button>
+                    </div>
+                </div>
             </div>
         }
         else
         {
-            <div>
-                <IdeaComponent Idea="_idea" OnDeleteCallback="GetActiveIdea"/>
+            <div class="row flex-grow-1 justify-content-center">
+                <div class="col-auto align-self-center">
+                    <h1>No Active Idea</h1>
+                </div>
+            </div>
+            <div class="row mb-5">
+                <div class="col">
+                    <div class="row justify-content-center">
+                        <div class="col-auto mb-2">
+                            <h5>Time to find a new one?</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-primary w-100" @onclick=OnClickGetRandomIdeaButton>Get Random Idea</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         }
-    </div>
-    <div class="mb-5">
-        <div class="row mb-2">
-            <div class="col">
-                <button class="btn btn-success w-100" @onclick=OnClickCompleteIdeaButton>Complete</button>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <button class="btn btn-danger w-100" @onclick=OnClickAbandonButton>Abandon</button>
-            </div>
-        </div>
-    </div>
+    }
 </div>
