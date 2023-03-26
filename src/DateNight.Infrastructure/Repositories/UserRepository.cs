@@ -35,8 +35,7 @@ namespace DateNight.Infrastructure.Repositories
         {
             var user = new User()
             {
-                FirstName = "Testy",
-                LastName = "McTesterton",
+                Name = "Unknown"
             };
 
             return Task.FromResult<User?>(user);

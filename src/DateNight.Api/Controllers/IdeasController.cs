@@ -56,14 +56,13 @@ namespace DateNight.Api.Controllers
             try
             {
                 var idea = await _ideaService.GetActiveIdeaAsync();
-
                 var ideaModel = new Idea()
                 {
                     Id = idea.Id,
                     CreatedOn = idea.CreatedOn,
                     Description = idea.Description,
                     Title = idea.Title,
-                    CreatedBy = idea.CreatedBy.ToString(),
+                    CreatedBy = idea.CreatedBy.ToString()
                 };
 
                 return Ok(ideaModel);

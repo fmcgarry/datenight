@@ -2,7 +2,7 @@
 
 public class Idea
 {
-    public string CreatedBy { get; set; } = string.Empty;
+    public required string CreatedBy { get; init; }
     public required DateTime CreatedOn { get; init; }
     public required string Description { get; init; }
     public string? Id { get; init; }

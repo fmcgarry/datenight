@@ -7,6 +7,7 @@ namespace DateNight.App.Components;
 public partial class IdeaComponent
 {
     private readonly string _editModalId = "m" + Guid.NewGuid().ToString("N");
+    private string _subtitleText = string.Empty;
 
     [Parameter]
     public IdeaModel Idea { get; set; }
@@ -17,6 +18,17 @@ public partial class IdeaComponent
     [Inject]
     internal IDateNightApiClient DateNightApiClient { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+        await ConstructSubtitleText();
+    }
+
+    private async Task ConstructSubtitleText()
+    {
+        var user = await DateNightApiClient.GetUserAsync(Idea.CreatedBy);
+        _subtitleText = $"{user.Name}, {Idea.CreatedOn.ToShortDateString()}";
+    }
+
     private async Task Delete()
     {
         await DateNightApiClient.DeleteIdeaAsync(Idea);
@@ -26,5 +38,6 @@ public partial class IdeaComponent
     private async Task RefreshIdea()
     {
         Idea = await DateNightApiClient.GetIdeaAsync(Idea.Id);
+        await ConstructSubtitleText();
     }
 }

@@ -11,6 +11,7 @@ internal class DateNightApiClient : IDateNightApiClient
     public const string HttpClientName = "DateNightApiClient";
 
     private const string _ideasEndpoint = "ideas";
+    private const string _usersEndpoint = "users";
 
     private readonly HttpClient _httpClient;
     private readonly ILogger<DateNightApiClient> _logger;
@@ -115,6 +116,22 @@ internal class DateNightApiClient : IDateNightApiClient
         var idea = await response.Content.ReadFromJsonAsync<IdeaModel>();
 
         return idea;
+    }
+
+    public async Task<UserModel> GetUserAsync(string id)
+    {
+        _logger.LogInformation("Getting user '{id}'", id);
+
+        var response = await _httpClient.GetAsync($"{_usersEndpoint}/{id}");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Failed to get user '{id}'. Status code: {StatusCode}", id, response.StatusCode);
+        }
+
+        var user = await response.Content.ReadFromJsonAsync<UserModel>();
+
+        return user;
     }
 
     public async Task SetIdeaAsActiveAsync(IdeaModel idea)

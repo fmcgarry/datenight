@@ -18,9 +18,9 @@ public class Idea : BaseEntity<string>, IAggregateRoot
         CreatedBy = createdBy;
     }
 
+    public Guid CreatedBy { get; set; }
     public DateTime CreatedOn { get; set; }
     public string Description { get; set; } = string.Empty;
     public IdeaState State { get; set; }
     public string Title { get; set; } = string.Empty;
-    public Guid CreatedBy { get; set; }
 }

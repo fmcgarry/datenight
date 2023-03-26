@@ -1,4 +1,5 @@
 ﻿using DateNight.Api.Data;
+using DateNight.Api.Mappers;
 using DateNight.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,7 +28,7 @@ namespace DateNight.Api.Controllers
 
             if (!isValidGuid)
             {
-                _logger.LogWarning("Consumer requested id '{id}' but it was not in the correct format.", id);
+                _logger.LogDebug("Consumer requested id '{id}' but it was not in the correct format.", id);
                 return BadRequest("Value 'id' was not in the correct format.");
             }
 
@@ -35,15 +36,11 @@ namespace DateNight.Api.Controllers
 
             if (user is null)
             {
-                _logger.LogWarning("Consumer requested user with id '{id}' that does not exist.", id);
+                _logger.LogDebug("Consumer requested user with id '{id}' that does not exist.", id);
                 return NotFound($"A user with id '{id}' was not found.");
             }
 
-            var userDTO = new User()
-            {
-                Id = user.Id.ToString(),
-                Name = user.Name
-            };
+            var userDTO = user.MapToDTO();
 
             return userDTO;
         }
