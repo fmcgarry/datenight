@@ -29,16 +29,16 @@ public partial class ActiveIdea
         _isActiveIdeaAvailable = _idea is not null;
     }
 
-    private async Task OnClickGetRandomIdeaButton(MouseEventArgs e)
-    {
-        Navigation.NavigateTo("/ideas/random");
-    }
-
     private async Task OnClickAbandonButton(MouseEventArgs e)
     {
     }
 
     private async Task OnClickCompleteIdeaButton(MouseEventArgs e)
     {
+    }
+
+    private async Task OnClickGetRandomIdeaButton(MouseEventArgs e)
+    {
+        Navigation.NavigateTo("/ideas/random");
     }
 }
