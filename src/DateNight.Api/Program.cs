@@ -7,6 +7,7 @@ builder.Configuration.AddRequiredInfrastructureConfiguration();
 
 builder.Services.AddRequiredInfrastructureServices();
 builder.Services.AddIdeaService(builder.Configuration);
+builder.Services.AddUserService(builder.Configuration);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

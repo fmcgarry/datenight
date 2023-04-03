@@ -23,7 +23,8 @@ namespace DateNight.Api.Controllers
             var ideaModel = new Core.Entities.IdeaAggregate.Idea()
             {
                 Title = idea.Title,
-                Description = idea.Description
+                Description = idea.Description,
+                CreatedBy = Guid.Parse(idea.CreatedBy)
             };
 
             await _ideaService.AddIdeaAsync(ideaModel);
@@ -55,13 +56,13 @@ namespace DateNight.Api.Controllers
             try
             {
                 var idea = await _ideaService.GetActiveIdeaAsync();
-
                 var ideaModel = new Idea()
                 {
                     Id = idea.Id,
                     CreatedOn = idea.CreatedOn,
                     Description = idea.Description,
                     Title = idea.Title,
+                    CreatedBy = idea.CreatedBy.ToString()
                 };
 
                 return Ok(ideaModel);
@@ -87,6 +88,7 @@ namespace DateNight.Api.Controllers
                 CreatedOn = idea.CreatedOn,
                 Description = idea.Description,
                 Title = idea.Title,
+                CreatedBy = idea.CreatedBy.ToString()
             };
 
             return Ok(ideaModel);
@@ -106,7 +108,8 @@ namespace DateNight.Api.Controllers
                     Id = idea.Id,
                     Description = idea.Description,
                     Title = idea.Title,
-                    CreatedOn = idea.CreatedOn
+                    CreatedOn = idea.CreatedOn,
+                    CreatedBy = idea.CreatedBy.ToString()
                 };
 
                 returnedIdeas.Add(returnedIdea);
@@ -126,6 +129,7 @@ namespace DateNight.Api.Controllers
                 CreatedOn = idea.CreatedOn,
                 Description = idea.Description,
                 Title = idea.Title,
+                CreatedBy = idea.CreatedBy.ToString()
             };
 
             return Ok(ideaModel);
