@@ -35,7 +35,9 @@ namespace DateNight.Infrastructure.Repositories
         {
             var user = new User()
             {
-                Name = "Unknown"
+                Name = "Unknown",
+                PaswordHash = Array.Empty<byte>(),
+                PaswordSalt = Array.Empty<byte>(),
             };
 
             return Task.FromResult<User?>(user);

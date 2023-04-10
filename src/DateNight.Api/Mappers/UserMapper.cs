@@ -9,8 +9,8 @@ public static class UserMapper
     {
         var userDTO = new UserDTO()
         {
-            Id = user.Id.ToString(),
-            Name = user.Name
+            Name = user.Name,
+            Password = string.Empty
         };
 
         return userDTO;
