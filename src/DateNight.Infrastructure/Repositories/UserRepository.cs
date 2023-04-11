@@ -1,14 +1,17 @@
-﻿using DateNight.Core.Entities.IdeaAggregate;
-using DateNight.Core.Entities.UserAggregate;
+﻿using DateNight.Core.Entities.UserAggregate;
 using DateNight.Core.Interfaces;
 
 namespace DateNight.Infrastructure.Repositories
 {
     public class UserRepository : IRepository<User>
     {
-        public Task AddAsync(Idea entity, CancellationToken cancellationToken = default)
+        private static readonly List<User> _users = new();
+
+        public Task AddAsync(User entity, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            _users.Add(entity);
+
+            return Task.CompletedTask;
         }
 
         public Task<IEnumerable<User>> AddRangeAsync(IEnumerable<User> entities, CancellationToken cancellationToken = default)
@@ -33,14 +36,7 @@ namespace DateNight.Infrastructure.Repositories
 
         public Task<User?> GetByIdAsync<U>(U id, CancellationToken cancellationToken = default)
         {
-            var user = new User()
-            {
-                Name = "Unknown",
-                PaswordHash = Array.Empty<byte>(),
-                PaswordSalt = Array.Empty<byte>(),
-            };
-
-            return Task.FromResult<User?>(user);
+            return Task.FromResult(_users.FirstOrDefault(x => x.Name == id!.ToString()));
         }
 
         public Task UpdateAsync(User entity, CancellationToken cancellationToken = default)

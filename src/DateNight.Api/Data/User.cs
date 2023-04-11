@@ -2,6 +2,6 @@
 
 public class User
 {
-    public required string Name { get; init; }
-    public required string Password { get; init; }
+    public required string UserName { get; set; }
+    public required string Password { get; set; }
 }

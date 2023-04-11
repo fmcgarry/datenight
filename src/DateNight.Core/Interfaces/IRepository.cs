@@ -1,10 +1,8 @@
-﻿using DateNight.Core.Entities.IdeaAggregate;
-
-namespace DateNight.Core.Interfaces;
+﻿namespace DateNight.Core.Interfaces;
 
 public interface IRepository<T> where T : class, IAggregateRoot
 {
-    Task AddAsync(Idea entity, CancellationToken cancellationToken = default);
+    Task AddAsync(T entity, CancellationToken cancellationToken = default);
 
     Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default);
 

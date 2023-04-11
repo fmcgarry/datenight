@@ -1,4 +1,5 @@
 ﻿using DateNight.Core.Entities.UserAggregate;
+using DateNight.Core.Exceptions;
 using DateNight.Core.Interfaces;
 using System.Security.Cryptography;
 
@@ -7,12 +8,31 @@ namespace DateNight.Core.Services;
 public class UserService : IUserService
 {
     private readonly IAppLogger<UserService> _logger;
+    private readonly ITokenService _tokenService;
     private readonly IRepository<User> _userRepository;
 
-    public UserService(IAppLogger<UserService> logger, IRepository<User> userRepository)
+    public UserService(IAppLogger<UserService> logger, IRepository<User> userRepository, ITokenService tokenService)
     {
         _logger = logger;
         _userRepository = userRepository;
+        _tokenService = tokenService;
+    }
+
+    public async Task<string> CreateUserAsync(string name, string password)
+    {
+        CreatePasswordHash(password, out byte[] hash, out byte[] salt);
+
+        var user = new User()
+        {
+            Id = Guid.NewGuid(),
+            Name = name,
+            PaswordHash = hash,
+            PaswordSalt = salt
+        };
+
+        await _userRepository.AddAsync(user);
+
+        return user.Id.ToString();
     }
 
     public async Task<User?> GetUserAsync(Guid id)
@@ -23,27 +43,24 @@ public class UserService : IUserService
         return user;
     }
 
-    public async Task<string> CreateUserAsync(string name, string password)
+    public async Task<string> LoginUserAsync(string username, string password)
     {
-        CreatePasswordHash(password, out var hash, out var salt);
+        var user = await _userRepository.GetByIdAsync(username) ?? throw new UserDoesNotExistException();
+        bool isValidPassword = VerifyPasswordHash(password, user.PaswordHash, user.PaswordSalt);
 
-        var user = new User()
+        if (!isValidPassword)
         {
-            Id = Guid.NewGuid(),
-            Name = name,
-            PaswordHash = hash,
-            PaswordSalt = salt
-        };
+            throw new InvalidPasswordException();
+        }
 
-        // save user in userRepository
+        var token = _tokenService.GenerateToken(user.Name);
 
-        return user.Id.ToString();
+        return token;
     }
 
     private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
     {
         using var hmac = new HMACSHA512();
-
         passwordSalt = hmac.Key;
         passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
     }

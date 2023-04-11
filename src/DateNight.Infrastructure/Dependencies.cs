@@ -27,12 +27,14 @@ public static class Dependencies
         return services;
     }
 
-    public static IServiceCollection AddUserService(this IServiceCollection services, IConfiguration config)
+    public static IConfigurationBuilder AddRequiredInfrastructureConfiguration(this IConfigurationBuilder builder)
     {
-        services.AddTransient<IRepository<Core.Entities.UserAggregate.User>, UserRepository>();
-        services.AddTransient<IUserService, UserService>();
+        var config = builder.Build();
 
-        return services;
+        string url = $"https://{config["KeyVaultName"]}.vault.azure.net/";
+        builder.AddAzureKeyVault(new Uri(url), new DefaultAzureCredential());
+
+        return builder;
     }
 
     public static IServiceCollection AddRequiredInfrastructureServices(this IServiceCollection services)
@@ -42,13 +44,12 @@ public static class Dependencies
         return services;
     }
 
-    public static IConfigurationBuilder AddRequiredInfrastructureConfiguration(this IConfigurationBuilder builder)
+    public static IServiceCollection AddUserService(this IServiceCollection services, IConfiguration config)
     {
-        var config = builder.Build();
+        services.AddTransient<IRepository<Core.Entities.UserAggregate.User>, UserRepository>();
+        services.AddTransient<IUserService, UserService>();
+        services.AddTransient<ITokenService, TokenService>();
 
-        string url = $"https://{config["KeyVaultName"]}.vault.azure.net/";
-        builder.AddAzureKeyVault(new Uri(url), new DefaultAzureCredential());
-
-        return builder;
+        return services;
     }
 }

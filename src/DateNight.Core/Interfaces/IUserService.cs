@@ -5,6 +5,9 @@ namespace DateNight.Core.Interfaces
     public interface IUserService
     {
         Task<string> CreateUserAsync(string name, string password);
+
         Task<User?> GetUserAsync(Guid id);
+
+        Task<string> LoginUserAsync(string username, string password);
     }
 }
