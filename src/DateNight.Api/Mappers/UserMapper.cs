@@ -9,7 +9,7 @@ public static class UserMapper
     {
         var userDTO = new UserDTO()
         {
-            UserName = user.Name,
+            Username = user.Name,
             Password = string.Empty
         };
 

@@ -54,7 +54,7 @@ namespace DateNight.Api.Controllers
         {
             try
             {
-                var token = await _userService.LoginUserAsync(user.UserName, user.Password);
+                var token = await _userService.LoginUserAsync(user.Username, user.Password);
 
                 var result = new
                 {
@@ -77,7 +77,7 @@ namespace DateNight.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult<User>> RegisterUser(User user)
         {
-            var id = await _userService.CreateUserAsync(user.UserName, user.Password);
+            var id = await _userService.CreateUserAsync(user.Username, user.Password);
 
             return Created(id, user);
         }
