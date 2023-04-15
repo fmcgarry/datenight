@@ -7,18 +7,14 @@ namespace DateNight.App.Pages
         private class LoginModel
         {
             [Required]
-            public string Username { get; set; }
+            [EmailAddress]
+            public string Email { get; set; }
 
             [Required]
             public string Password { get; set; }
         }
 
-        private LoginModel _loginModel;
-
-        protected override void OnInitialized()
-        {
-            _loginModel = new LoginModel();
-        }
+        private readonly LoginModel _loginModel = new();
 
         private void OnValidSubmit()
         {
