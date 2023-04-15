@@ -1,23 +1,12 @@
-using System.ComponentModel.DataAnnotations;
+using DateNight.App.Models;
 
-namespace DateNight.App.Pages
+namespace DateNight.App.Pages;
+
+public partial class Login
 {
-    public partial class Login
+    private readonly LoginModel _loginModel = new();
+
+    private void OnValidSubmit()
     {
-        private class LoginModel
-        {
-            [Required]
-            [EmailAddress]
-            public string Email { get; set; }
-
-            [Required]
-            public string Password { get; set; }
-        }
-
-        private readonly LoginModel _loginModel = new();
-
-        private void OnValidSubmit()
-        {
-        }
     }
 }
