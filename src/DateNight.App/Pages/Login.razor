@@ -1,0 +1,13 @@
+﻿@page "/login"
+
+<h3>Login</h3>
+
+<EditForm class="mt-4" Model="_loginModel" OnValidSubmit="OnValidSubmit">
+    <InputText class="form-control w-100 mb-2" placeholder="Username" @bind-Value="_loginModel.Username"></InputText>
+    <InputText class="form-control w-100 mb-3" placeholder="Password" @bind-Value="_loginModel.Password"></InputText>
+    <button class="btn btn-primary w-100" type="submit">Log In</button>
+</EditForm>
+
+<div class="mt-4 d-flex justify-content-center">
+    <p>Don't have an account? <a href="/create-account">Create one</a>.</p>
+</div>
