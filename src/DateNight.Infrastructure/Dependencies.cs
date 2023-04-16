@@ -15,12 +15,19 @@ public static class Dependencies
 {
     public static IServiceCollection AddIdeaService(this IServiceCollection services, IConfiguration config)
     {
-        string connectionString = config.GetConnectionString("DateNightDatabase") ?? string.Empty;
-        var cosmosClientOptions = new CosmosClientOptions() { SerializerOptions = new() { PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase } };
+        if (config.GetValue<bool>("IsLocal"))
+        {
+            services.AddTransient<IRepository<Idea>, IdeaMemoryRepository>();
+        }
+        else
+        {
+            string connectionString = config.GetConnectionString("DateNightDatabase") ?? string.Empty;
+            var cosmosClientOptions = new CosmosClientOptions() { SerializerOptions = new() { PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase } };
 
-        services.AddSingleton(new CosmosClient(connectionString, cosmosClientOptions));
-        services.AddOptions<DateNightDatabaseOptions>().Bind(config.GetSection(DateNightDatabaseOptions.DateNightDatabase));
-        services.AddTransient<IRepository<Idea>, IdeaRepository>();
+            services.AddSingleton(new CosmosClient(connectionString, cosmosClientOptions));
+            services.AddOptions<DateNightDatabaseOptions>().Bind(config.GetSection(DateNightDatabaseOptions.DateNightDatabase));
+            services.AddTransient<IRepository<Idea>, IdeaRepository>();
+        }
 
         services.AddTransient<IIdeaService, IdeaService>();
 
@@ -31,8 +38,11 @@ public static class Dependencies
     {
         var config = builder.Build();
 
-        string url = $"https://{config["KeyVaultName"]}.vault.azure.net/";
-        builder.AddAzureKeyVault(new Uri(url), new DefaultAzureCredential());
+        if (!config.GetValue<bool>("IsLocal"))
+        {
+            string url = $"https://{config["KeyVaultName"]}.vault.azure.net/";
+            builder.AddAzureKeyVault(new Uri(url), new DefaultAzureCredential());
+        }
 
         return builder;
     }
