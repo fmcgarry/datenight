@@ -4,7 +4,7 @@ public interface IRepository<T> where T : class, IAggregateRoot
 {
     Task AddAsync(T entity, CancellationToken cancellationToken = default);
 
-    Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default);
+    Task AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default);
 
     Task DeleteAsync(T entity, CancellationToken cancellationToken = default);
 

@@ -24,7 +24,7 @@ public class IdeaRepository : IRepository<Idea>
         await _container.CreateItemAsync(entity, null, null, cancellationToken);
     }
 
-    public Task<IEnumerable<Idea>> AddRangeAsync(IEnumerable<Idea> entities, CancellationToken cancellationToken = default)
+    public Task AddRangeAsync(IEnumerable<Idea> entities, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

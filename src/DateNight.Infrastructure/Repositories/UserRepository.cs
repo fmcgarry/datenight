@@ -14,7 +14,7 @@ namespace DateNight.Infrastructure.Repositories
             return Task.CompletedTask;
         }
 
-        public Task<IEnumerable<User>> AddRangeAsync(IEnumerable<User> entities, CancellationToken cancellationToken = default)
+        public Task AddRangeAsync(IEnumerable<User> entities, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
