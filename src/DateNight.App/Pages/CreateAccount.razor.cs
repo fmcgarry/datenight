@@ -14,15 +14,10 @@ public partial class CreateAccount
     [Inject]
     public required NavigationManager NavigationManager { get; set; }
 
-    private void OnValidSubmit()
+    private async Task OnValidSubmit()
     {
-        // send the create user request
-        DateNightApiClient.CreateUserAsync(_createAccountModel.Name, _createAccountModel.Email, _createAccountModel.Password);
-
-        // log in using the email and password.
-        DateNightApiClient.LoginUserAsync(_createAccountModel.Email, _createAccountModel.Password);
-
-        // if login is successful, redirect to active idea page.
+        await DateNightApiClient.CreateUserAsync(_createAccountModel.Name, _createAccountModel.Email, _createAccountModel.Password);
+        await DateNightApiClient.LoginUserAsync(_createAccountModel.Email, _createAccountModel.Password);
         NavigationManager.NavigateTo("/ideas/active");
     }
 }
