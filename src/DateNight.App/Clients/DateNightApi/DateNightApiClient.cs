@@ -198,7 +198,6 @@ internal class DateNightApiClient : IDateNightApiClient
         }
 
         string token = await response.Content.ReadAsStringAsync();
-
-        await SecureStorage.Default.SetAsync("access_token", token);
+        _httpClient.DefaultRequestHeaders.Authorization = new("Bearer", token);
     }
 }

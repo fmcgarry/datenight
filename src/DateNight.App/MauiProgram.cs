@@ -22,7 +22,7 @@ namespace DateNight.App
             builder.Services.AddBlazorWebViewDeveloperTools();
             builder.Logging.AddDebug();
 #endif
-            builder.Services.AddTransient<IDateNightApiClient, DateNightApiClient>();
+            builder.Services.AddSingleton<IDateNightApiClient, DateNightApiClient>();
             builder.Services.AddHttpClient(DateNightApiClient.HttpClientName).ConfigureHttpClient(x =>
             {
                 x.BaseAddress = new Uri(DateNightApiClient.HttpClientBaseAddress);
