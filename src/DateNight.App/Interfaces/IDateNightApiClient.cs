@@ -5,7 +5,9 @@ namespace DateNight.App.Interfaces;
 public interface IDateNightApiClient
 {
     Task CreateIdeaAsync(IdeaModel idea);
+
     Task CreateUserAsync(string name, string email, string password);
+
     Task DeleteIdeaAsync(IdeaModel idea);
 
     Task<IdeaModel?> GetActiveIdeaAsync();
@@ -17,7 +19,9 @@ public interface IDateNightApiClient
     Task<IdeaModel> GetRandomIdeaAsync();
 
     Task<UserModel> GetUserAsync(string id);
-    Task LoginUserAsync(string email, string password);
+
+    Task<bool> LoginUserAsync(string email, string password);
+
     Task SetIdeaAsActiveAsync(IdeaModel idea);
 
     Task UpdateIdeaAsync(IdeaModel idea);

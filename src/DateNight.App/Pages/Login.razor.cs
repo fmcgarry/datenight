@@ -8,6 +8,10 @@ public partial class Login
 {
     private readonly LoginModel _loginModel = new();
 
+    private string _errorMessage = string.Empty;
+
+    private bool _isSending;
+
     [Inject]
     public required IDateNightApiClient DateNightApiClient { get; init; }
 
@@ -16,7 +20,17 @@ public partial class Login
 
     private async Task OnValidSubmit()
     {
-        await DateNightApiClient.LoginUserAsync(_loginModel.Email, _loginModel.Password);
-        NavigationManager.NavigateTo("/ideas/active");
+        _isSending = true;
+        bool isSuccessfulLogin = await DateNightApiClient.LoginUserAsync(_loginModel.Email, _loginModel.Password);
+        _isSending = false;
+
+        if (isSuccessfulLogin)
+        {
+            NavigationManager.NavigateTo("/ideas/active");
+        }
+        else
+        {
+            _errorMessage = "Invalid username or password.";
+        }
     }
 }

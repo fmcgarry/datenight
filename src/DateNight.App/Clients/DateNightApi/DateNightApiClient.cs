@@ -36,6 +36,23 @@ internal class DateNightApiClient : IDateNightApiClient
         }
     }
 
+    public async Task CreateUserAsync(string name, string email, string password)
+    {
+        var content = JsonContent.Create(new
+        {
+            Email = email,
+            Password = password,
+            Name = name
+        });
+
+        var response = await _httpClient.PostAsync($@"{_usersEndpoint}\register", content);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Failed to create user. Status code: {StatusCode}", response.StatusCode);
+        }
+    }
+
     public async Task DeleteIdeaAsync(IdeaModel idea)
     {
         _logger.LogInformation("Deleting idea '{Id}'", idea.Id);
@@ -135,6 +152,29 @@ internal class DateNightApiClient : IDateNightApiClient
         return user;
     }
 
+    public async Task<bool> LoginUserAsync(string email, string password)
+    {
+        var content = JsonContent.Create(new
+        {
+            Email = email,
+            Password = password
+        });
+
+        var response = await _httpClient.PostAsync($@"{_usersEndpoint}\login", content);
+
+        if (response.IsSuccessStatusCode)
+        {
+            string token = await response.Content.ReadAsStringAsync();
+            _httpClient.DefaultRequestHeaders.Authorization = new("Bearer", token);
+
+            return true;
+        }
+
+        _logger.LogError("Failed to login user. Status code: {StatusCode}", response.StatusCode);
+
+        return false;
+    }
+
     public async Task SetIdeaAsActiveAsync(IdeaModel idea)
     {
         _logger.LogInformation("Setting idea '{Id}' as active", idea.Id);
@@ -163,41 +203,5 @@ internal class DateNightApiClient : IDateNightApiClient
         {
             _logger.LogError("Failed to updated idea '{Id}'. Status code: {StatusCode}", idea.Id, response.StatusCode);
         }
-    }
-
-    public async Task CreateUserAsync(string name, string email, string password)
-    {
-        var content = JsonContent.Create(new
-        {
-            Email = email,
-            Password = password,
-            Name = name
-        });
-
-        var response = await _httpClient.PostAsync($@"{_usersEndpoint}\register", content);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            _logger.LogError("Failed to create user. Status code: {StatusCode}", response.StatusCode);
-        }
-    }
-
-    public async Task LoginUserAsync(string email, string password)
-    {
-        var content = JsonContent.Create(new
-        {
-            Email = email,
-            Password = password
-        });
-
-        var response = await _httpClient.PostAsync($@"{_usersEndpoint}\login", content);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            _logger.LogError("Failed to login user. Status code: {StatusCode}", response.StatusCode);
-        }
-
-        string token = await response.Content.ReadAsStringAsync();
-        _httpClient.DefaultRequestHeaders.Authorization = new("Bearer", token);
     }
 }
