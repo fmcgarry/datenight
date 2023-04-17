@@ -13,11 +13,13 @@ namespace DateNight.Infrastructure;
 
 public static class Dependencies
 {
+    private const string IsLocal = "IsLocal";
+
     public static IServiceCollection AddIdeaService(this IServiceCollection services, IConfiguration config)
     {
-        if (config.GetValue<bool>("IsLocal"))
+        if (config.GetValue<bool>(IsLocal))
         {
-            services.AddTransient<IRepository<Idea>, IdeaMemoryRepository>();
+            services.AddSingleton<IRepository<Idea>, MemoryRepository<Idea>>();
         }
         else
         {
@@ -38,7 +40,7 @@ public static class Dependencies
     {
         var config = builder.Build();
 
-        if (!config.GetValue<bool>("IsLocal"))
+        if (!config.GetValue<bool>(IsLocal))
         {
             string url = $"https://{config["KeyVaultName"]}.vault.azure.net/";
             builder.AddAzureKeyVault(new Uri(url), new DefaultAzureCredential());
@@ -56,7 +58,15 @@ public static class Dependencies
 
     public static IServiceCollection AddUserService(this IServiceCollection services, IConfiguration config)
     {
-        services.AddTransient<IRepository<Core.Entities.UserAggregate.User>, UserRepository>();
+        if (config.GetValue<bool>(IsLocal))
+        {
+            services.AddSingleton<IRepository<Core.Entities.UserAggregate.User>, MemoryRepository<Core.Entities.UserAggregate.User>>();
+        }
+        else
+        {
+            services.AddTransient<IRepository<Core.Entities.UserAggregate.User>, UserRepository>();
+        }
+
         services.AddTransient<IUserService, UserService>();
         services.AddTransient<ITokenService, TokenService>();
 
