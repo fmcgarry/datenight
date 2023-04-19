@@ -1,8 +1,8 @@
-﻿using DateNight.Api.Data;
-using DateNight.Api.Mappers;
-using DateNight.Core.Exceptions;
+﻿using DateNight.Core.Exceptions;
 using DateNight.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Mime;
+using static DateNight.Api.Data.UserActions;
 
 namespace DateNight.Api.Controllers
 {
@@ -20,10 +20,10 @@ namespace DateNight.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<User>> GetUser(string id)
+        [ProducesResponseType(typeof(GetUserResponse), StatusCodes.Status200OK, MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest, MediaTypeNames.Text.Plain)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound, MediaTypeNames.Text.Plain)]
+        public async Task<ActionResult<GetUserResponse>> GetUser(string id)
         {
             bool isValidGuid = Guid.TryParse(id, out Guid guid);
 
@@ -41,16 +41,16 @@ namespace DateNight.Api.Controllers
                 return NotFound($"A user with id '{id}' was not found.");
             }
 
-            var userDTO = user.MapToDTO();
+            var response = new GetUserResponse(user.Name);
 
-            return userDTO;
+            return Ok(response);
         }
 
         [HttpPost("login")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest, "text/plain")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound, "text/plain")]
-        [ProducesResponseType(typeof(JsonResult), StatusCodes.Status200OK, "application/json")]
-        public async Task<IActionResult> LoginUser(User user)
+        [ProducesResponseType(typeof(UserLoginResponse), StatusCodes.Status200OK, MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest, MediaTypeNames.Text.Plain)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound, MediaTypeNames.Text.Plain)]
+        public async Task<ActionResult<UserLoginResponse>> LoginUser(UserLoginRequest user)
         {
             try
             {
@@ -61,7 +61,9 @@ namespace DateNight.Api.Controllers
                     token
                 };
 
-                return new JsonResult(result);
+                var response = new UserLoginResponse(token);
+
+                return Ok(result);
             }
             catch (UserDoesNotExistException)
             {
@@ -74,12 +76,14 @@ namespace DateNight.Api.Controllers
         }
 
         [HttpPost("register")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<User>> RegisterUser(User user)
+        [ProducesResponseType(typeof(UserRegisterResponse), StatusCodes.Status201Created, MediaTypeNames.Application.Json)]
+        public async Task<ActionResult<UserRegisterResponse>> RegisterUser(UserRegisterRequest user)
         {
             var id = await _userService.CreateUserAsync(user.Name, user.Email, user.Password);
 
-            return Created(id, user);
+            var reponse = new UserRegisterResponse(user.Name, user.Email, user.Password);
+
+            return Created(id, reponse);
         }
     }
 }
