@@ -18,16 +18,20 @@ public class UserService : IUserService
         _tokenService = tokenService;
     }
 
-    public async Task<string> CreateUserAsync(string name, string password)
+    public async Task<string> CreateUserAsync(string name, string email, string password)
     {
         CreatePasswordHash(password, out byte[] hash, out byte[] salt);
 
         var user = new User()
         {
             Id = Guid.NewGuid(),
+            Email = email,
             Name = name,
-            PaswordHash = hash,
-            PaswordSalt = salt
+            Password = new Password
+            {
+                Hash = hash,
+                Salt = salt
+            }
         };
 
         await _userRepository.AddAsync(user);
@@ -46,7 +50,7 @@ public class UserService : IUserService
     public async Task<string> LoginUserAsync(string username, string password)
     {
         var user = await _userRepository.GetByIdAsync(username) ?? throw new UserDoesNotExistException();
-        bool isValidPassword = VerifyPasswordHash(password, user.PaswordHash, user.PaswordSalt);
+        bool isValidPassword = VerifyPasswordHash(password, user.Password.Hash, user.Password.Salt);
 
         if (!isValidPassword)
         {

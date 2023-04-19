@@ -77,7 +77,7 @@ namespace DateNight.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult<User>> RegisterUser(User user)
         {
-            var id = await _userService.CreateUserAsync(user.Email, user.Password);
+            var id = await _userService.CreateUserAsync(user.Name, user.Email, user.Password);
 
             return Created(id, user);
         }

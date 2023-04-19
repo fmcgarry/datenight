@@ -36,7 +36,7 @@ namespace DateNight.Infrastructure.Repositories
 
         public Task<User?> GetByIdAsync<U>(U id, CancellationToken cancellationToken = default)
         {
-            return Task.FromResult(_users.FirstOrDefault(x => x.Name == id!.ToString()));
+            return Task.FromResult(_users.FirstOrDefault(x => x.Email == id!.ToString()));
         }
 
         public Task UpdateAsync(User entity, CancellationToken cancellationToken = default)
