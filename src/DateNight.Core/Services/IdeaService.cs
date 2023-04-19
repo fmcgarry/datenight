@@ -5,11 +5,11 @@ namespace DateNight.Core.Services;
 
 public class IdeaService : IIdeaService
 {
-    private readonly IRepository<Idea> _ideaRepository;
+    private readonly IIdeaRepository _ideaRepository;
     private readonly IAppLogger<IdeaService> _logger;
     private readonly Random _random = new();
 
-    public IdeaService(IAppLogger<IdeaService> logger, IRepository<Idea> ideaRepository)
+    public IdeaService(IAppLogger<IdeaService> logger, IIdeaRepository ideaRepository)
     {
         _logger = logger;
         _ideaRepository = ideaRepository;
@@ -20,8 +20,8 @@ public class IdeaService : IIdeaService
         ArgumentNullException.ThrowIfNull(id);
         _logger.LogInformation("Setting idea '{Id}' as active", id);
 
-        var ideas = await GetAllIdeasInternalAsync();
-        var currentActiveIdea = ideas.FirstOrDefault(idea => idea.State == IdeaState.Active);
+        var ideas = await _ideaRepository.GetAllAsync();
+        var currentActiveIdea = ideas.FirstOrDefault(idea => idea.Id == id && idea.State == IdeaState.Active);
 
         if (currentActiveIdea is not null)
         {
@@ -70,11 +70,13 @@ public class IdeaService : IIdeaService
         await DeleteIdeaAsync(idea);
     }
 
-    public async Task<Idea> GetActiveIdeaAsync()
+    public async Task<Idea> GetUserActiveIdeaAsync(string? userId)
     {
+        ArgumentNullException.ThrowIfNull(userId);
+
         _logger.LogInformation("Getting currently active idea");
 
-        var ideas = await GetAllIdeasInternalAsync();
+        var ideas = await GetAllUserIdeasInternalAsync(userId);
         var currentlyActiveIdea = ideas.FirstOrDefault(idea => idea.State == IdeaState.Active);
 
         if (currentlyActiveIdea is null)
@@ -85,11 +87,13 @@ public class IdeaService : IIdeaService
         return currentlyActiveIdea;
     }
 
-    public Task<IEnumerable<Idea>> GetAllIdeasAsync()
+    public Task<IEnumerable<Idea>> GetAllUserIdeasAsync(string? userId)
     {
-        _logger.LogInformation("Getting all ideas.");
+        ArgumentNullException.ThrowIfNull(userId);
 
-        return GetAllIdeasInternalAsync();
+        _logger.LogInformation("Getting all ideas for user '{userId}'.", userId);
+
+        return GetAllUserIdeasInternalAsync(userId);
     }
 
     public Task<Idea> GetIdeaByIdAsync(string id)
@@ -100,21 +104,21 @@ public class IdeaService : IIdeaService
         return GetIdeaByIdInternalAsync(id);
     }
 
-    public async Task<Idea> GetRandomIdeaAsync()
+    public async Task<Idea> GetRandomUserIdeaAsync(string userId)
     {
-        _logger.LogInformation("({method}) Getting random idea", nameof(GetRandomIdeaAsync));
+        _logger.LogInformation("Getting random idea");
 
-        var ideas = await GetAllIdeasInternalAsync();
+        var ideas = await GetAllUserIdeasInternalAsync(userId);
         var nonActiveIdeas = ideas.Where(idea => idea.State != IdeaState.Active);
 
         int numIdeas = nonActiveIdeas.Count();
-        _logger.LogDebug("({method}) Total number of non-active ideas: {numIdeas}", nameof(GetRandomIdeaAsync), numIdeas);
+        _logger.LogDebug("Total number of non-active ideas: {numIdeas}", numIdeas);
 
         int randomIndex = numIdeas > 1 ? _random.Next(0, numIdeas) : 0;
-        _logger.LogDebug("({method}) Random index chosen: {randomIndex}", nameof(GetRandomIdeaAsync), randomIndex);
+        _logger.LogDebug("Random index chosen: {randomIndex}", randomIndex);
 
         Idea idea = nonActiveIdeas.ElementAt(randomIndex);
-        _logger.LogInformation("({method}) Returning random idea '{Id}'", nameof(GetRandomIdeaAsync), idea.Id!);
+        _logger.LogInformation("Returning random idea '{Id}'", idea.Id!);
 
         return idea;
     }
@@ -133,9 +137,9 @@ public class IdeaService : IIdeaService
         await _ideaRepository.AddAsync(idea);
     }
 
-    private async Task<IEnumerable<Idea>> GetAllIdeasInternalAsync()
+    private async Task<IEnumerable<Idea>> GetAllUserIdeasInternalAsync(string userId)
     {
-        var ideas = await _ideaRepository.GetAllAsync();
+        var ideas = await _ideaRepository.GetAllUserIdeasAsync(userId);
         return ideas;
     }
 

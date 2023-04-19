@@ -1,7 +1,8 @@
-﻿namespace DateNight.Core.Interfaces
+﻿using DateNight.Core.Entities.UserAggregate;
+
+namespace DateNight.Core.Interfaces;
+
+public interface ITokenService
 {
-    public interface ITokenService
-    {
-        public string GenerateToken(string username, IEnumerable<string> roles);
-    }
+    public string GenerateToken(User user, IEnumerable<string> roles);
 }

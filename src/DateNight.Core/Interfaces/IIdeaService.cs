@@ -30,13 +30,13 @@ namespace DateNight.Core.Interfaces
         /// </summary>
         /// <returns></returns>
         /// <exception cref="ArgumentException">No idea is active.</exception>
-        Task<Idea> GetActiveIdeaAsync();
+        Task<Idea> GetUserActiveIdeaAsync(string? userId);
 
-        Task<IEnumerable<Idea>> GetAllIdeasAsync();
+        Task<IEnumerable<Idea>> GetAllUserIdeasAsync(string? userId);
 
         Task<Idea> GetIdeaByIdAsync(string id);
 
-        Task<Idea> GetRandomIdeaAsync();
+        Task<Idea> GetRandomUserIdeaAsync(string userId);
 
         Task UpdateIdeaAsync(Idea idea);
     }

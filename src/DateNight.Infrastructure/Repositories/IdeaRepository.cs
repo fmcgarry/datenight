@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace DateNight.Infrastructure.Repositories;
 
-public class IdeaRepository : IRepository<Idea>
+public class IdeaRepository : IIdeaRepository
 {
     private readonly Container _container;
     private readonly IAppLogger<IdeaRepository> _logger;
@@ -42,7 +42,16 @@ public class IdeaRepository : IRepository<Idea>
 
     public async Task<IEnumerable<Idea>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        IEnumerable<Idea> results = await QueryIdeasAsync("Select * from c");
+        var query = new QueryDefinition("SELECT * FROM c ");
+        IEnumerable<Idea> results = await QueryIdeasAsync(query);
+
+        return results;
+    }
+
+    public async Task<IEnumerable<Idea>> GetAllUserIdeasAsync(string userId)
+    {
+        var query = new QueryDefinition("SELECT * FROM c WHERE c.createdBy = @userId").WithParameter("userId", userId);
+        IEnumerable<Idea> results = await QueryIdeasAsync(query);
 
         return results;
     }
@@ -73,15 +82,15 @@ public class IdeaRepository : IRepository<Idea>
         throw new NotImplementedException();
     }
 
-    private async Task<IEnumerable<Idea>> QueryIdeasAsync(string queryString)
+    private async Task<IEnumerable<Idea>> QueryIdeasAsync(QueryDefinition query)
     {
-        var query = _container.GetItemQueryIterator<Idea>(new QueryDefinition(queryString));
+        var queryIterator = _container.GetItemQueryIterator<Idea>(query);
 
         List<Idea> results = new();
 
-        while (query.HasMoreResults)
+        while (queryIterator.HasMoreResults)
         {
-            var response = await query.ReadNextAsync();
+            var response = await queryIterator.ReadNextAsync();
             results.AddRange(response.ToList());
         }
 

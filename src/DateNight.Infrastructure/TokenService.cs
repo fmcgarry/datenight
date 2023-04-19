@@ -1,4 +1,5 @@
-﻿using DateNight.Core.Interfaces;
+﻿using DateNight.Core.Entities.UserAggregate;
+using DateNight.Core.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -18,13 +19,14 @@ public class TokenService : ITokenService
         _configuration = configuration;
     }
 
-    public string GenerateToken(string username, IEnumerable<string> roles)
+    public string GenerateToken(User user, IEnumerable<string> roles)
     {
-        _logger.LogInformation("Generating token for user '{0}'", username);
+        _logger.LogInformation("Generating token for user '{0}'", user.Email);
 
         var claims = new List<Claim>()
         {
-            new Claim(ClaimTypes.Name, username),
+            new Claim(ClaimTypes.Name, user.Email),
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Nbf, new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString()),
             new Claim(JwtRegisteredClaimNames.Exp, new DateTimeOffset(DateTime.Now.AddDays(1)).ToUnixTimeSeconds().ToString()),
         };
