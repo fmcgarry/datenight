@@ -18,11 +18,9 @@ public class TokenService : ITokenService
         _configuration = configuration;
     }
 
-    public string GenerateToken(string username)
+    public string GenerateToken(string username, IEnumerable<string> roles)
     {
         _logger.LogInformation("Generating token for user '{0}'", username);
-
-        var roles = new List<string>(); // TODO: need to somehow get roles?
 
         var claims = new List<Claim>()
         {

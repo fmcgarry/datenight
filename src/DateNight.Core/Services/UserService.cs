@@ -68,7 +68,7 @@ public class UserService : IUserService
             throw new InvalidPasswordException();
         }
 
-        var token = _tokenService.GenerateToken(user.Name);
+        var token = _tokenService.GenerateToken(user.Name, user.Roles);
 
         return token;
     }
