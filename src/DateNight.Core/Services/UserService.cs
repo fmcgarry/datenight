@@ -9,9 +9,9 @@ public class UserService : IUserService
 {
     private readonly IAppLogger<UserService> _logger;
     private readonly ITokenService _tokenService;
-    private readonly IRepository<User> _userRepository;
+    private readonly IUserRepository _userRepository;
 
-    public UserService(IAppLogger<UserService> logger, IRepository<User> userRepository, ITokenService tokenService)
+    public UserService(IAppLogger<UserService> logger, IUserRepository userRepository, ITokenService tokenService)
     {
         _logger = logger;
         _userRepository = userRepository;
@@ -39,17 +39,28 @@ public class UserService : IUserService
         return user.Id.ToString();
     }
 
-    public async Task<User?> GetUserAsync(Guid id)
+    public async Task<User> GetUserByIdAsync(Guid id)
     {
         _logger.LogInformation("Getting user '{id}'", id);
-        var user = await _userRepository.GetByIdAsync(id);
+
+        var user = await _userRepository.GetByIdAsync(id) ?? throw new UserDoesNotExistException();
+
+        return user;
+    }
+
+    public async Task<User> GetUserbyEmailAsync(string email)
+    {
+        _logger.LogInformation("Getting user with email '{email}'", email);
+
+        var user = await _userRepository.GetByEmail(email) ?? throw new UserDoesNotExistException();
 
         return user;
     }
 
     public async Task<string> LoginUserAsync(string username, string password)
     {
-        var user = await _userRepository.GetByIdAsync(username) ?? throw new UserDoesNotExistException();
+        var user = await GetUserbyEmailAsync(username);
+
         bool isValidPassword = VerifyPasswordHash(password, user.Password.Hash, user.Password.Salt);
 
         if (!isValidPassword)

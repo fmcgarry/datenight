@@ -5,7 +5,7 @@ namespace DateNight.Infrastructure.Repositories
 {
     internal class MemoryRepository<T> : IRepository<T> where T : class, IAggregateRoot
     {
-        private readonly List<T> _objects = new();
+        protected readonly List<T> _objects = new();
 
         public Task AddAsync(T entity, CancellationToken cancellationToken = default)
         {

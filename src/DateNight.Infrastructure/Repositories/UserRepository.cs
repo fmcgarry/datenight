@@ -3,15 +3,11 @@ using DateNight.Core.Interfaces;
 
 namespace DateNight.Infrastructure.Repositories
 {
-    public class UserRepository : IRepository<User>
+    public class UserRepository : IUserRepository
     {
-        private static readonly List<User> _users = new();
-
         public Task AddAsync(User entity, CancellationToken cancellationToken = default)
         {
-            _users.Add(entity);
-
-            return Task.CompletedTask;
+            throw new NotImplementedException();
         }
 
         public Task AddRangeAsync(IEnumerable<User> entities, CancellationToken cancellationToken = default)
@@ -34,9 +30,14 @@ namespace DateNight.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
+        public Task<User?> GetByEmail(string email)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<User?> GetByIdAsync<U>(U id, CancellationToken cancellationToken = default)
         {
-            return Task.FromResult(_users.FirstOrDefault(x => x.Email == id!.ToString()));
+            throw new NotImplementedException();
         }
 
         public Task UpdateAsync(User entity, CancellationToken cancellationToken = default)

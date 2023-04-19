@@ -33,7 +33,7 @@ namespace DateNight.Api.Controllers
                 return BadRequest("Value 'id' was not in the correct format.");
             }
 
-            var user = await _userService.GetUserAsync(guid);
+            var user = await _userService.GetUserByIdAsync(guid);
 
             if (user is null)
             {

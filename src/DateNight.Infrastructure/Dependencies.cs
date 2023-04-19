@@ -60,11 +60,11 @@ public static class Dependencies
     {
         if (config.GetValue<bool>(IsLocal))
         {
-            services.AddSingleton<IRepository<Core.Entities.UserAggregate.User>, MemoryRepository<Core.Entities.UserAggregate.User>>();
+            services.AddSingleton<IUserRepository, UserMemoryRepository>();
         }
         else
         {
-            services.AddTransient<IRepository<Core.Entities.UserAggregate.User>, UserRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
         }
 
         services.AddTransient<IUserService, UserService>();
