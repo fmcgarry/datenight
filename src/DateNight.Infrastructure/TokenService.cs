@@ -34,7 +34,7 @@ public class TokenService : ITokenService
             claims.Add(new Claim(ClaimTypes.Role, role));
         }
 
-        var apiToken = _configuration.GetRequiredSection("ApiToken").Value!;
+        var apiToken = _configuration.GetRequiredSection("ApiKey").Value!;
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(apiToken));
         var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
         var token = new JwtSecurityToken(new JwtHeader(signingCredentials), new JwtPayload(claims));

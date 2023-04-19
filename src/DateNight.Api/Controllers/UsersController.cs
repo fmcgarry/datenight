@@ -1,5 +1,6 @@
 ﻿using DateNight.Core.Exceptions;
 using DateNight.Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 using static DateNight.Api.Data.UserActions;
@@ -19,7 +20,7 @@ namespace DateNight.Api.Controllers
             _userService = userService;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize]
         [ProducesResponseType(typeof(GetUserResponse), StatusCodes.Status200OK, MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest, MediaTypeNames.Text.Plain)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound, MediaTypeNames.Text.Plain)]

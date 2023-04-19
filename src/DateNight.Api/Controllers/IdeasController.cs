@@ -1,10 +1,11 @@
 using DateNight.Api.Data;
 using DateNight.Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DateNight.Api.Controllers
 {
-    [ApiController]
+    [ApiController, Authorize]
     [Route("[controller]")]
     public class IdeasController : ControllerBase
     {
