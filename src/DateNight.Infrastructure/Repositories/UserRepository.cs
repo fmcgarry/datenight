@@ -8,8 +8,8 @@ namespace DateNight.Infrastructure.Repositories;
 
 public class UserRepository : IUserRepository
 {
-    private readonly IAppLogger<UserRepository> _logger;
     protected readonly Container _container;
+    private readonly IAppLogger<UserRepository> _logger;
     private readonly DateNightDatabaseOptions _options;
 
     public UserRepository(IAppLogger<UserRepository> logger, IOptions<DateNightDatabaseOptions> options, CosmosClient cosmosClient)
@@ -17,11 +17,6 @@ public class UserRepository : IUserRepository
         _logger = logger;
         _options = options.Value;
         _container = cosmosClient.GetContainer(_options.DatabaseId, _options.UsersContainer);
-    }
-
-    public async Task<User?> GetByEmail(string email)
-    {
-        throw new NotImplementedException();
     }
 
     public async Task AddAsync(User entity, CancellationToken cancellationToken = default)
@@ -53,6 +48,14 @@ public class UserRepository : IUserRepository
         IEnumerable<User> results = await QueryAsync(query);
 
         return results;
+    }
+
+    public async Task<User?> GetByEmail(string email)
+    {
+        var query = new QueryDefinition("SELECT * FROM c WHERE c.email = @email").WithParameter("@email", email);
+        IEnumerable<User> results = await QueryAsync(query);
+
+        return results.FirstOrDefault();
     }
 
     public async Task<User?> GetByIdAsync(string id, CancellationToken cancellationToken = default)

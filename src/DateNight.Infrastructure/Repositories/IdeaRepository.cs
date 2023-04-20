@@ -52,7 +52,7 @@ public class IdeaRepository : IIdeaRepository
 
     public async Task<IEnumerable<Idea>> GetAllUserIdeasAsync(string userId)
     {
-        var query = new QueryDefinition("SELECT * FROM c WHERE c.createdBy = @userId").WithParameter("userId", userId);
+        var query = new QueryDefinition("SELECT * FROM c WHERE c.createdBy = @userId").WithParameter("@userId", userId);
         IEnumerable<Idea> results = await QueryAsync(query);
 
         return results;
