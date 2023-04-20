@@ -70,23 +70,6 @@ public class IdeaService : IIdeaService
         await DeleteIdeaAsync(idea);
     }
 
-    public async Task<Idea> GetUserActiveIdeaAsync(string? userId)
-    {
-        ArgumentNullException.ThrowIfNull(userId);
-
-        _logger.LogInformation("Getting currently active idea");
-
-        var ideas = await GetAllUserIdeasInternalAsync(userId);
-        var currentlyActiveIdea = ideas.FirstOrDefault(idea => idea.State == IdeaState.Active);
-
-        if (currentlyActiveIdea is null)
-        {
-            throw new ArgumentException("No idea currently marked as active");
-        }
-
-        return currentlyActiveIdea;
-    }
-
     public Task<IEnumerable<Idea>> GetAllUserIdeasAsync(string? userId)
     {
         ArgumentNullException.ThrowIfNull(userId);
@@ -121,6 +104,23 @@ public class IdeaService : IIdeaService
         _logger.LogInformation("Returning random idea '{Id}'", idea.Id!);
 
         return idea;
+    }
+
+    public async Task<Idea> GetUserActiveIdeaAsync(string? userId)
+    {
+        ArgumentNullException.ThrowIfNull(userId);
+
+        _logger.LogInformation("Getting currently active idea");
+
+        var ideas = await GetAllUserIdeasInternalAsync(userId);
+        var currentlyActiveIdea = ideas.FirstOrDefault(idea => idea.State == IdeaState.Active);
+
+        if (currentlyActiveIdea is null)
+        {
+            throw new ArgumentException("No idea currently marked as active");
+        }
+
+        return currentlyActiveIdea;
     }
 
     public Task UpdateIdeaAsync(Idea idea)

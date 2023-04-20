@@ -39,20 +39,20 @@ public class UserService : IUserService
         return user.Id.ToString();
     }
 
-    public async Task<User> GetUserByIdAsync(Guid id)
-    {
-        _logger.LogInformation("Getting user '{id}'", id);
-
-        var user = await _userRepository.GetByIdAsync(id) ?? throw new UserDoesNotExistException();
-
-        return user;
-    }
-
     public async Task<User> GetUserbyEmailAsync(string email)
     {
         _logger.LogInformation("Getting user with email '{email}'", email);
 
         var user = await _userRepository.GetByEmail(email) ?? throw new UserDoesNotExistException();
+
+        return user;
+    }
+
+    public async Task<User> GetUserByIdAsync(Guid id)
+    {
+        _logger.LogInformation("Getting user '{id}'", id);
+
+        var user = await _userRepository.GetByIdAsync(id) ?? throw new UserDoesNotExistException();
 
         return user;
     }
