@@ -3,6 +3,7 @@ using DateNight.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using static DateNight.Api.Data.IdeaActions;
 
 namespace DateNight.Api.Controllers
 {
@@ -20,7 +21,7 @@ namespace DateNight.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddIdea(Idea idea)
+        public async Task<IActionResult> AddIdea(AddIdeaRequest idea)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -33,12 +34,13 @@ namespace DateNight.Api.Controllers
             {
                 Title = idea.Title,
                 Description = idea.Description,
-                CreatedBy = Guid.Parse(userId)
+                CreatedBy = Guid.Parse(userId),
+                CreatedOn = DateTime.UtcNow
             };
 
             await _ideaService.AddIdeaAsync(ideaModel);
 
-            return Created(ideaModel.Id!, idea);
+            return Created(ideaModel.Id, idea);
         }
 
         [HttpDelete("{id}")]
