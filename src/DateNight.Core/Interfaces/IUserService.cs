@@ -11,5 +11,7 @@ namespace DateNight.Core.Interfaces
         Task<User> GetUserByIdAsync(string id);
 
         Task<string> LoginUserAsync(string username, string password);
+
+        Task DeleteUserAsync(string id);
     }
 }

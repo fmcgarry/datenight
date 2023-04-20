@@ -78,5 +78,23 @@ namespace DateNight.Api.Controllers
 
             return Created(id, reponse);
         }
+
+        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
+        [Consumes(MediaTypeNames.Text.Plain)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK, MediaTypeNames.Text.Plain)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest, MediaTypeNames.Text.Plain)]
+        public async Task<ActionResult<UserRegisterResponse>> DeleteUser(string id)
+        {
+            try
+            {
+                await _userService.DeleteUserAsync(id);
+
+                return Ok($"Deleted user '{id}'.");
+            }
+            catch (UserDoesNotExistException)
+            {
+                return NotFound("User does not exist.");
+            }
+        }
     }
 }

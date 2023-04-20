@@ -56,6 +56,13 @@ public class UserService : IUserService
         return user;
     }
 
+    public async Task DeleteUserAsync(string id)
+    {
+        var user = id.Contains('@') ? await GetUserbyEmailAsync(id) : await GetUserByIdAsync(id);
+
+        await _userRepository.DeleteAsync(user);
+    }
+
     public async Task<string> LoginUserAsync(string username, string password)
     {
         var user = await GetUserbyEmailAsync(username);
