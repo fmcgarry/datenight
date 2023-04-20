@@ -34,7 +34,7 @@ namespace DateNight.Api.Controllers
             {
                 Title = idea.Title,
                 Description = idea.Description,
-                CreatedBy = Guid.Parse(userId),
+                CreatedBy = userId,
                 CreatedOn = DateTime.UtcNow
             };
 
@@ -75,7 +75,7 @@ namespace DateNight.Api.Controllers
                     CreatedOn = idea.CreatedOn,
                     Description = idea.Description,
                     Title = idea.Title,
-                    CreatedBy = idea.CreatedBy.ToString()
+                    CreatedBy = idea.CreatedBy
                 };
 
                 return Ok(ideaModel);
@@ -105,7 +105,7 @@ namespace DateNight.Api.Controllers
                 CreatedOn = idea.CreatedOn,
                 Description = idea.Description,
                 Title = idea.Title,
-                CreatedBy = idea.CreatedBy.ToString()
+                CreatedBy = idea.CreatedBy
             };
 
             return Ok(ideaModel);
@@ -129,7 +129,7 @@ namespace DateNight.Api.Controllers
                         Description = idea.Description,
                         Title = idea.Title,
                         CreatedOn = idea.CreatedOn,
-                        CreatedBy = idea.CreatedBy.ToString()
+                        CreatedBy = idea.CreatedBy
                     };
 
                     returnedIdeas.Add(returnedIdea);
@@ -157,7 +157,7 @@ namespace DateNight.Api.Controllers
                     CreatedOn = idea.CreatedOn,
                     Description = idea.Description,
                     Title = idea.Title,
-                    CreatedBy = idea.CreatedBy.ToString()
+                    CreatedBy = idea.CreatedBy
                 };
 
                 return Ok(ideaModel);

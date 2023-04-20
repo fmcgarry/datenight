@@ -9,7 +9,7 @@ public class Idea : BaseEntity, IAggregateRoot
         Id = Guid.NewGuid().ToString("N");
     }
 
-    public Guid CreatedBy { get; set; }
+    public string CreatedBy { get; set; } = string.Empty;
     public DateTime CreatedOn { get; set; }
     public string Description { get; set; } = string.Empty;
     public IdeaState State { get; set; }
