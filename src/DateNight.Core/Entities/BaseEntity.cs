@@ -1,6 +1,6 @@
 ﻿namespace DateNight.Core.Entities;
 
-public class BaseEntity<T>
+public class BaseEntity
 {
-    public T? Id { get; set; }
+    public string Id { get; protected set; } = string.Empty;
 }

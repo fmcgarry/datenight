@@ -24,7 +24,6 @@ public class UserService : IUserService
 
         var user = new User()
         {
-            Id = Guid.NewGuid(),
             Email = email,
             Name = name,
             Password = new Password
@@ -48,7 +47,7 @@ public class UserService : IUserService
         return user;
     }
 
-    public async Task<User> GetUserByIdAsync(Guid id)
+    public async Task<User> GetUserByIdAsync(string id)
     {
         _logger.LogInformation("Getting user '{id}'", id);
 

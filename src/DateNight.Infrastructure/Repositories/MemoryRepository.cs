@@ -3,7 +3,7 @@ using DateNight.Core.Interfaces;
 
 namespace DateNight.Infrastructure.Repositories
 {
-    internal class MemoryRepository<T> : IRepository<T> where T : class, IAggregateRoot
+    internal class MemoryRepository<T> : IRepository<T> where T : BaseEntity, IAggregateRoot
     {
         protected readonly List<T> _objects = new();
 
@@ -43,9 +43,9 @@ namespace DateNight.Infrastructure.Repositories
             return Task.FromResult(_objects.AsEnumerable());
         }
 
-        public Task<T?> GetByIdAsync<U>(U id, CancellationToken cancellationToken = default)
+        public Task<T?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
         {
-            var idea = _objects.FirstOrDefault(x => (x as BaseEntity<U>)!.Id!.Equals(id));
+            var idea = _objects.FirstOrDefault(x => (x.Id.Equals(id)));
 
             return Task.FromResult(idea);
         }

@@ -26,15 +26,7 @@ namespace DateNight.Api.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound, MediaTypeNames.Text.Plain)]
         public async Task<ActionResult<GetUserResponse>> GetUser(string id)
         {
-            bool isValidGuid = Guid.TryParse(id, out Guid guid);
-
-            if (!isValidGuid)
-            {
-                _logger.LogDebug("Consumer requested id '{id}' but it was not in the correct format.", id);
-                return BadRequest("Value 'id' was not in the correct format.");
-            }
-
-            var user = await _userService.GetUserByIdAsync(guid);
+            var user = await _userService.GetUserByIdAsync(id);
 
             if (user is null)
             {

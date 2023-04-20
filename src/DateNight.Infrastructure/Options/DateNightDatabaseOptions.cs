@@ -7,8 +7,10 @@ public class DateNightDatabaseOptions
     public const string DateNightDatabase = "DateNightDatabase";
 
     [Required]
-    public string ContainerId { get; set; } = string.Empty;
+    public string DatabaseId { get; set; } = string.Empty;
 
     [Required]
-    public string DatabaseId { get; set; } = string.Empty;
+    public string IdeasContainer { get; set; } = string.Empty;
+
+    public string UsersContainer { get; set; } = string.Empty;
 }

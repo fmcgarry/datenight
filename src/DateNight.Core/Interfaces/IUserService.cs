@@ -8,7 +8,7 @@ namespace DateNight.Core.Interfaces
 
         Task<User> GetUserbyEmailAsync(string email);
 
-        Task<User> GetUserByIdAsync(Guid id);
+        Task<User> GetUserByIdAsync(string id);
 
         Task<string> LoginUserAsync(string username, string password);
     }

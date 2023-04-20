@@ -12,7 +12,7 @@ public interface IRepository<T> where T : class, IAggregateRoot
 
     Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default);
 
-    Task<T?> GetByIdAsync<U>(U id, CancellationToken cancellationToken = default);
+    Task<T?> GetByIdAsync(string id, CancellationToken cancellationToken = default);
 
     Task UpdateAsync(T entity, CancellationToken cancellationToken = default);
 

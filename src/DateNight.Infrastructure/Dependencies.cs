@@ -1,5 +1,4 @@
 ﻿using Azure.Identity;
-using DateNight.Core.Entities.IdeaAggregate;
 using DateNight.Core.Interfaces;
 using DateNight.Core.Services;
 using DateNight.Infrastructure.Logging;
@@ -19,7 +18,7 @@ public static class Dependencies
     {
         if (config.GetValue<bool>(IsLocal))
         {
-            services.AddSingleton<IRepository<Idea>, MemoryRepository<Idea>>();
+            services.AddSingleton<IIdeaRepository, IdeaMemoryRepository>();
         }
         else
         {
@@ -28,7 +27,7 @@ public static class Dependencies
 
             services.AddSingleton(new CosmosClient(connectionString, cosmosClientOptions));
             services.AddOptions<DateNightDatabaseOptions>().Bind(config.GetSection(DateNightDatabaseOptions.DateNightDatabase));
-            services.AddTransient<IRepository<Idea>, IdeaRepository>();
+            services.AddTransient<IIdeaRepository, IdeaRepository>();
         }
 
         services.AddTransient<IIdeaService, IdeaService>();

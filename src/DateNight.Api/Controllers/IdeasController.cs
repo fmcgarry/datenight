@@ -192,7 +192,6 @@ namespace DateNight.Api.Controllers
             {
                 var ideaModel = await _ideaService.GetIdeaByIdAsync(id);
 
-                ideaModel.Id = idea.Id;
                 ideaModel.CreatedOn = idea.CreatedOn;
                 ideaModel.Title = idea.Title;
                 ideaModel.Description = idea.Description;
