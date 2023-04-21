@@ -62,4 +62,9 @@ public partial class RandomIdea
         await DateNightApiClient.SetIdeaAsActiveAsync(_idea);
         NavigationManager.NavigateTo("/ideas/active");
     }
+
+    private void OnCreateMoreClick()
+    {
+        NavigationManager.NavigateTo("/ideas/create");
+    }
 }
