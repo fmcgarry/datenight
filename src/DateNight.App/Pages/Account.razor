@@ -40,5 +40,45 @@
                 }
             </button>
         </EditForm>
+
+        <div class="mt-4">
+            <div class="row">
+                <div class="col">
+                    <h3>Partners</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    @if(_isInPartnership)
+                    {
+                        <div class="row flex-column">
+                            <div class="col">
+                                <p>You are partners with: @(string.Join(", ", _partners))</p>
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-danger w-100 mt-2">Leave</button>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row flex-column">
+                            <div class="col">
+                                <p>Your code: abcd1234</p>
+                            </div>
+                            <div class="col">
+                                <div>
+                                    <label for="partnerCode" class="form-label">Enter another user's code to join:</label>
+                                    <InputText class="form-control" id="partnerCode" @bind-Value="_partnerCode"></InputText>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-primary w-100 mt-2">Join</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
     }
 </div>

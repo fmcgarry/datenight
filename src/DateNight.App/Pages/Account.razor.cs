@@ -11,6 +11,9 @@ public partial class Account
     private bool _isDirty;
     private bool _isBusy;
     private bool _isLoading = true;
+    private bool _isInPartnership;
+    private string _partnerCode = string.Empty;
+    private List<string> _partners = new() { "Jane", "Janet" };
 
     [Inject]
     public required NavigationManager NavigationManager { get; init; }
