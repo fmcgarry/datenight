@@ -7,15 +7,15 @@
     <ValidationSummary />
     <div class="mb-3">
         <label for="name" class="form-label">Name</label>
-        <InputText class="form-control" id="name" @bind-Value="_account.Name"></InputText>
+        <InputText class="form-control" id="name" @bind-Value="_account.Name" @onkeypress=@(() => _isDirty = true)></InputText>
     </div>
     <div class="mb-3">
         <label for="email" class="form-label">Email</label>
-        <InputText class="form-control" id="email" @bind-Value="_account.Email" />
+        <InputText class="form-control" id="email" @bind-Value="_account.Email" @onkeypress=@(() => _isDirty = true) />
     </div>
     <div class="mb-3">
         <label for="password" class="form-label">Password</label>
-        <button class="btn btn-outline-primary w-100" id="password">Change your password</button>
+        <button class="btn btn-outline-primary w-100" id="password" disabled="@_isDirty">Change your password</button>
     </div>
-    <button type="submit" class="btn btn-success w-100">Save</button>
+    <button type="submit" class="btn btn-success w-100" disabled="@(!_isDirty)">Save</button>
 </EditForm>
