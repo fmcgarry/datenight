@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace DateNight.App.Pages;
 
-public partial class ActiveIdea
+public partial class ActiveDate
 {
     private IdeaModel? _idea;
     private bool _isActiveIdeaAvailable;

@@ -1,7 +1,7 @@
 ﻿@page "/ideas/active";
 
 <div class="d-flex flex-column h-100">
-    <h2>Active Idea</h2>
+    <h2>Active Date</h2>
     @if (_isFirstLoad && _idea is null)
     {
         <div class="d-flex flex-grow-1 justify-content-center align-items-center">
@@ -36,7 +36,7 @@
         {
             <div class="row flex-grow-1 justify-content-center">
                 <div class="col-auto align-self-center">
-                    <h1>No Active Idea</h1>
+                    <h1>No active date</h1>
                 </div>
             </div>
             <div class="row mb-5">
@@ -48,7 +48,7 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <button class="btn btn-secondary w-100" @onclick=OnClickCreateNewIdeaButton>Create a new idea</button>
+                            <button class="btn btn-secondary w-100" @onclick=OnClickCreateNewIdeaButton>Create a date</button>
                         </div>
                     </div>
                 </div>
