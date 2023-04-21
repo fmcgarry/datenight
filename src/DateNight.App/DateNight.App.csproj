@@ -14,7 +14,7 @@
         <Nullable>enable</Nullable>
 
         <!-- Display name -->
-        <ApplicationTitle>Date Night</ApplicationTitle>
+        <ApplicationTitle>DateNight</ApplicationTitle>
 
         <!-- App Identifier -->
         <ApplicationId>com.fmcgarrydev.datenight.app</ApplicationId>
