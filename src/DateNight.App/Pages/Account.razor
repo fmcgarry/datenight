@@ -1,0 +1,44 @@
+﻿@page "/account"
+
+<div class="d-flex flex-column h-100">
+    <h3>Your Information</h3>
+
+    @if(_isLoading)
+    {
+        <div class="d-flex h-100 justify-content-center align-items-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <EditForm Model="_account" OnValidSubmit="OnValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <InputText class="form-control" id="name" @bind-Value="_account.Name" @onkeypress=@(() => _isDirty = true)></InputText>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <InputText class="form-control" id="email" @bind-Value="_account.Email" @onkeypress=@(() => _isDirty = true) />
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <button class="btn btn-outline-primary w-100" id="password" disabled="@_isDirty" @onclick="OnChangePasswordButtonClick">Change your password</button>
+            </div>
+            <button type="submit" class="btn btn-success w-100 mt-1" disabled="@(!_isDirty)">
+                @if (_isBusy)
+                {
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <span class="visually-hidden">Updating...</span>
+                }
+                else
+                {
+                    <span>Update</span>
+                }
+            </button>
+        </EditForm>
+    }
+</div>

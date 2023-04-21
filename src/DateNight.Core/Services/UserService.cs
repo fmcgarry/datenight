@@ -18,19 +18,15 @@ public class UserService : IUserService
         _tokenService = tokenService;
     }
 
-    public async Task<string> CreateUserAsync(string name, string email, string password)
+    public async Task<string> CreateUserAsync(string name, string email, string passwordText)
     {
-        CreatePasswordHash(password, out byte[] hash, out byte[] salt);
+        var password = CreateSecurePassword(passwordText);
 
         var user = new User()
         {
             Email = email,
             Name = name,
-            Password = new Password
-            {
-                Hash = hash,
-                Salt = salt
-            }
+            Password = password
         };
 
         await _userRepository.AddAsync(user);
@@ -61,13 +57,14 @@ public class UserService : IUserService
         var user = id.Contains('@') ? await GetUserbyEmailAsync(id) : await GetUserByIdAsync(id);
 
         await _userRepository.DeleteAsync(user);
+        _logger.LogInformation("Deleted user '{id}'", id);
     }
 
-    public async Task<string> LoginUserAsync(string username, string password)
+    public async Task<string> LoginUserAsync(string username, string passwordText)
     {
         var user = await GetUserbyEmailAsync(username);
 
-        bool isValidPassword = VerifyPasswordHash(password, user.Password.Hash, user.Password.Salt);
+        bool isValidPassword = VerifyPassword(passwordText, user.Password);
 
         if (!isValidPassword)
         {
@@ -79,19 +76,51 @@ public class UserService : IUserService
         return token;
     }
 
-    private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+    public async Task UpdateUserAsync(string id, string name, string email, string passwordText)
     {
-        using var hmac = new HMACSHA512();
-        passwordSalt = hmac.Key;
-        passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+        var user = await GetUserByIdAsync(id) ?? throw new UserDoesNotExistException();
+
+        if (!string.IsNullOrEmpty(email))
+        {
+            user.Email = email;
+            _logger.LogDebug("Updating user '{id}' email", id);
+        }
+
+        if (!string.IsNullOrEmpty(name))
+        {
+            user.Name = name;
+            _logger.LogDebug("Updating user '{id}' name", id);
+        }
+
+        if (!string.IsNullOrEmpty(passwordText))
+        {
+            user.Password = CreateSecurePassword(passwordText);
+            _logger.LogDebug("Updating user '{id}' password", id);
+        }
+
+        await _userRepository.UpdateAsync(user);
+        _logger.LogInformation("Updated user '{id}'", id);
     }
 
-    private static bool VerifyPasswordHash(string password, byte[] hash, byte[] salt)
+    private static Password CreateSecurePassword(string passwordText)
     {
-        using var hmac = new HMACSHA512(salt);
-        var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+        using var hmac = new HMACSHA512();
 
-        bool isMatch = computedHash.SequenceEqual(hash);
+        var password = new Password
+        {
+            Salt = hmac.Key,
+            Hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(passwordText))
+        };
+
+        return password;
+    }
+
+    private static bool VerifyPassword(string passwordText, Password password)
+    {
+        using var hmac = new HMACSHA512(password.Salt);
+        var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(passwordText));
+
+        bool isMatch = computedHash.SequenceEqual(password.Hash);
 
         return isMatch;
     }

@@ -18,6 +18,7 @@ public partial class CreateAccount
     {
         await DateNightApiClient.CreateUserAsync(_createAccountModel.Name, _createAccountModel.Email, _createAccountModel.Password);
         await DateNightApiClient.LoginUserAsync(_createAccountModel.Email, _createAccountModel.Password);
+
         NavigationManager.NavigateTo("/ideas/active");
     }
 }

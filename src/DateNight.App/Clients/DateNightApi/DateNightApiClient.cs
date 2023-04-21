@@ -1,7 +1,9 @@
 ﻿using DateNight.App.Interfaces;
 using DateNight.App.Models;
 using Microsoft.Extensions.Logging;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Json;
+using System.Security.Claims;
 using System.Text.Json.Nodes;
 
 namespace DateNight.App.Clients.DateNightApi;
@@ -54,6 +56,23 @@ internal class DateNightApiClient : IDateNightApiClient
         }
     }
 
+    public async Task UpdateUserAsync(string name, string email)
+    {
+        await UpdateUserInternalAsync(name, email, string.Empty);
+    }
+
+    public async Task UpdateUserPasswordAsync(string password)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var token = handler.ReadJwtToken(_httpClient.DefaultRequestHeaders.Authorization!.Parameter);
+
+        string email = token.Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
+        string name = token.Claims.First(claim => claim.Type == ClaimTypes.Name).Value;
+
+        await UpdateUserInternalAsync(string.Empty, string.Empty, password);
+        await LoginUserAsync(email, password);
+    }
+
     public async Task DeleteIdeaAsync(IdeaModel idea)
     {
         _logger.LogInformation("Deleting idea '{Id}'", idea.Id);
@@ -96,16 +115,30 @@ internal class DateNightApiClient : IDateNightApiClient
 
         var ideas = await response.Content.ReadFromJsonAsync<IEnumerable<IdeaModel>>();
 
-        // CreatedOn is stored as UTC
-        foreach (var idea in ideas)
+        if (ideas is not null)
         {
-            idea.CreatedOn = idea.CreatedOn.ToLocalTime();
+            foreach (var idea in ideas)
+            {
+                idea.CreatedOn = idea.CreatedOn.ToLocalTime();
+            }
+
+            return ideas;
         }
 
-        return ideas;
+        return Enumerable.Empty<IdeaModel>();
     }
 
-    public async Task<IdeaModel> GetIdeaAsync(string id)
+    public async Task<UserModel?> GetCurrentUserAsync()
+    {
+        _logger.LogInformation("Getting current user");
+
+        string id = GetUserIdFromToken();
+        var user = await GetUserAsync(id);
+
+        return user;
+    }
+
+    public async Task<IdeaModel?> GetIdeaAsync(string id)
     {
         _logger.LogInformation("Getting idea '{Id}'", id);
 
@@ -143,7 +176,7 @@ internal class DateNightApiClient : IDateNightApiClient
         return idea;
     }
 
-    public async Task<UserModel> GetUserAsync(string id)
+    public async Task<UserModel?> GetUserAsync(string id)
     {
         _logger.LogInformation("Getting user '{id}'", id);
 
@@ -211,6 +244,34 @@ internal class DateNightApiClient : IDateNightApiClient
         if (!response.IsSuccessStatusCode)
         {
             _logger.LogError("Failed to updated idea '{Id}'. Status code: {StatusCode}", idea.Id, response.StatusCode);
+        }
+    }
+
+    private string GetUserIdFromToken()
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var token = handler.ReadJwtToken(_httpClient.DefaultRequestHeaders.Authorization!.Parameter);
+        string id = token.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+
+        return id;
+    }
+
+    public async Task UpdateUserInternalAsync(string name, string email, string password)
+    {
+        string id = GetUserIdFromToken();
+
+        var content = JsonContent.Create(new
+        {
+            Email = email,
+            Password = password,
+            Name = name
+        });
+
+        var response = await _httpClient.PutAsync($@"{_usersEndpoint}\{id}", content);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Failed to update user. Status code: {StatusCode}", response.StatusCode);
         }
     }
 }

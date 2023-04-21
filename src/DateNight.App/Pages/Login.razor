@@ -13,8 +13,14 @@
 <EditForm class="mt-4" Model="_loginModel" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator/>
     <ValidationSummary/>
-    <InputText class="form-control w-100 mb-2" placeholder="Email" @bind-Value="_loginModel.Email"></InputText>
-    <InputText class="form-control w-100 mb-3" type="password" placeholder="Password" @bind-Value="_loginModel.Password"></InputText>
+    <div class="form-floating mb-3">
+        <InputText id="email" type="email" class="form-control w-100" placeholder="Email" @bind-Value="_loginModel.Email"></InputText>
+        <label for="email">Email address</label>
+    </div>
+    <div class="form-floating mb-3">
+        <InputText id="password" type="password" class="form-control w-100" placeholder="Password" @bind-Value="_loginModel.Password"></InputText>
+        <label for="password">Password</label>
+    </div>
     <button class="btn btn-primary w-100" type="submit">
         @if (_isSending)
         {
