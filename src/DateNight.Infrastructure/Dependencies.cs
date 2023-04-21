@@ -1,5 +1,4 @@
 ﻿using Azure.Identity;
-using DateNight.Core.Entities.IdeaAggregate;
 using DateNight.Core.Interfaces;
 using DateNight.Core.Services;
 using DateNight.Infrastructure.Logging;
@@ -13,26 +12,40 @@ namespace DateNight.Infrastructure;
 
 public static class Dependencies
 {
+    private const string IsLocal = "IsLocal";
+
     public static IServiceCollection AddIdeaService(this IServiceCollection services, IConfiguration config)
     {
-        string connectionString = config.GetConnectionString("DateNightDatabase") ?? string.Empty;
-        var cosmosClientOptions = new CosmosClientOptions() { SerializerOptions = new() { PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase } };
+        if (config.GetValue<bool>(IsLocal))
+        {
+            services.AddSingleton<IIdeaRepository, IdeaMemoryRepository>();
+        }
+        else
+        {
+            string connectionString = config.GetConnectionString("DateNightDatabase") ?? string.Empty;
+            var cosmosClientOptions = new CosmosClientOptions() { SerializerOptions = new() { PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase } };
 
-        services.AddSingleton(new CosmosClient(connectionString, cosmosClientOptions));
-        services.AddOptions<DateNightDatabaseOptions>().Bind(config.GetSection(DateNightDatabaseOptions.DateNightDatabase));
-        services.AddTransient<IRepository<Idea>, IdeaRepository>();
+            services.AddSingleton(new CosmosClient(connectionString, cosmosClientOptions));
+            services.AddOptions<DateNightDatabaseOptions>().Bind(config.GetSection(DateNightDatabaseOptions.DateNightDatabase));
+            services.AddTransient<IIdeaRepository, IdeaRepository>();
+        }
 
         services.AddTransient<IIdeaService, IdeaService>();
 
         return services;
     }
 
-    public static IServiceCollection AddUserService(this IServiceCollection services, IConfiguration config)
+    public static IConfigurationBuilder AddRequiredInfrastructureConfiguration(this IConfigurationBuilder builder)
     {
-        services.AddTransient<IRepository<Core.Entities.UserAggregate.User>, UserRepository>();
-        services.AddTransient<IUserService, UserService>();
+        var config = builder.Build();
 
-        return services;
+        if (!config.GetValue<bool>(IsLocal))
+        {
+            string url = $"https://{config["KeyVaultName"]}.vault.azure.net/";
+            builder.AddAzureKeyVault(new Uri(url), new DefaultAzureCredential());
+        }
+
+        return builder;
     }
 
     public static IServiceCollection AddRequiredInfrastructureServices(this IServiceCollection services)
@@ -42,13 +55,20 @@ public static class Dependencies
         return services;
     }
 
-    public static IConfigurationBuilder AddRequiredInfrastructureConfiguration(this IConfigurationBuilder builder)
+    public static IServiceCollection AddUserService(this IServiceCollection services, IConfiguration config)
     {
-        var config = builder.Build();
+        if (config.GetValue<bool>(IsLocal))
+        {
+            services.AddSingleton<IUserRepository, UserMemoryRepository>();
+        }
+        else
+        {
+            services.AddTransient<IUserRepository, UserRepository>();
+        }
 
-        string url = $"https://{config["KeyVaultName"]}.vault.azure.net/";
-        builder.AddAzureKeyVault(new Uri(url), new DefaultAzureCredential());
+        services.AddTransient<IUserService, UserService>();
+        services.AddTransient<ITokenService, TokenService>();
 
-        return builder;
+        return services;
     }
 }

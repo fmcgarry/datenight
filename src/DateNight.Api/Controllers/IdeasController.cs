@@ -1,10 +1,13 @@
 using DateNight.Api.Data;
 using DateNight.Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using static DateNight.Api.Data.IdeaActions;
 
 namespace DateNight.Api.Controllers
 {
-    [ApiController]
+    [ApiController, Authorize]
     [Route("[controller]")]
     public class IdeasController : ControllerBase
     {
@@ -18,18 +21,26 @@ namespace DateNight.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddIdea(Idea idea)
+        public async Task<IActionResult> AddIdea(AddIdeaRequest idea)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId is null)
+            {
+                return BadRequest();
+            }
+
             var ideaModel = new Core.Entities.IdeaAggregate.Idea()
             {
                 Title = idea.Title,
                 Description = idea.Description,
-                CreatedBy = Guid.Parse(idea.CreatedBy)
+                CreatedBy = userId,
+                CreatedOn = DateTime.UtcNow
             };
 
             await _ideaService.AddIdeaAsync(ideaModel);
 
-            return Created(ideaModel.Id!, idea);
+            return Created(ideaModel.Id, idea);
         }
 
         [HttpDelete("{id}")]
@@ -55,17 +66,23 @@ namespace DateNight.Api.Controllers
         {
             try
             {
-                var idea = await _ideaService.GetActiveIdeaAsync();
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var idea = await _ideaService.GetUserActiveIdeaAsync(userId);
+
                 var ideaModel = new Idea()
                 {
                     Id = idea.Id,
                     CreatedOn = idea.CreatedOn,
                     Description = idea.Description,
                     Title = idea.Title,
-                    CreatedBy = idea.CreatedBy.ToString()
+                    CreatedBy = idea.CreatedBy
                 };
 
                 return Ok(ideaModel);
+            }
+            catch (ArgumentNullException)
+            {
+                return BadRequest();
             }
             catch (ArgumentException)
             {
@@ -88,7 +105,7 @@ namespace DateNight.Api.Controllers
                 CreatedOn = idea.CreatedOn,
                 Description = idea.Description,
                 Title = idea.Title,
-                CreatedBy = idea.CreatedBy.ToString()
+                CreatedBy = idea.CreatedBy
             };
 
             return Ok(ideaModel);
@@ -97,42 +114,63 @@ namespace DateNight.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetIdeas()
         {
-            var ideas = await _ideaService.GetAllIdeasAsync();
-
-            var returnedIdeas = new List<Idea>();
-
-            foreach (var idea in ideas)
+            try
             {
-                var returnedIdea = new Idea()
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var ideas = await _ideaService.GetAllUserIdeasAsync(userId);
+
+                var returnedIdeas = new List<Idea>();
+
+                foreach (var idea in ideas)
                 {
-                    Id = idea.Id,
-                    Description = idea.Description,
-                    Title = idea.Title,
-                    CreatedOn = idea.CreatedOn,
-                    CreatedBy = idea.CreatedBy.ToString()
-                };
+                    var returnedIdea = new Idea()
+                    {
+                        Id = idea.Id,
+                        Description = idea.Description,
+                        Title = idea.Title,
+                        CreatedOn = idea.CreatedOn,
+                        CreatedBy = idea.CreatedBy
+                    };
 
-                returnedIdeas.Add(returnedIdea);
+                    returnedIdeas.Add(returnedIdea);
+                }
+
+                return Ok(returnedIdeas);
             }
-
-            return Ok(returnedIdeas);
+            catch (ArgumentNullException)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpGet("random")]
         public async Task<IActionResult> GetRandomIdea()
         {
-            var idea = await _ideaService.GetRandomIdeaAsync();
-
-            var ideaModel = new Idea()
+            try
             {
-                Id = idea.Id,
-                CreatedOn = idea.CreatedOn,
-                Description = idea.Description,
-                Title = idea.Title,
-                CreatedBy = idea.CreatedBy.ToString()
-            };
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var idea = await _ideaService.GetRandomUserIdeaAsync(userId);
 
-            return Ok(ideaModel);
+                if (idea is null)
+                {
+                    return NotFound("No ideas were found.");
+                }
+
+                var ideaModel = new Idea()
+                {
+                    Id = idea.Id,
+                    CreatedOn = idea.CreatedOn,
+                    Description = idea.Description,
+                    Title = idea.Title,
+                    CreatedBy = idea.CreatedBy
+                };
+
+                return Ok(ideaModel);
+            }
+            catch (ArgumentNullException)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPost("active")]
@@ -161,7 +199,6 @@ namespace DateNight.Api.Controllers
             {
                 var ideaModel = await _ideaService.GetIdeaByIdAsync(id);
 
-                ideaModel.Id = idea.Id;
                 ideaModel.CreatedOn = idea.CreatedOn;
                 ideaModel.Title = idea.Title;
                 ideaModel.Description = idea.Description;

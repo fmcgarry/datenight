@@ -2,6 +2,7 @@
 using DateNight.App.Models;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
+using System.Text.Json.Nodes;
 
 namespace DateNight.App.Clients.DateNightApi;
 
@@ -33,6 +34,23 @@ internal class DateNightApiClient : IDateNightApiClient
         if (!response.IsSuccessStatusCode)
         {
             _logger.LogError("Failed to create idea '{Id}'. Status code: {StatusCode}", idea.Id, response.StatusCode);
+        }
+    }
+
+    public async Task CreateUserAsync(string name, string email, string password)
+    {
+        var content = JsonContent.Create(new
+        {
+            Email = email,
+            Password = password,
+            Name = name
+        });
+
+        var response = await _httpClient.PostAsync($@"{_usersEndpoint}\register", content);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Failed to create user. Status code: {StatusCode}", response.StatusCode);
         }
     }
 
@@ -103,7 +121,7 @@ internal class DateNightApiClient : IDateNightApiClient
         return idea;
     }
 
-    public async Task<IdeaModel> GetRandomIdeaAsync()
+    public async Task<IdeaModel?> GetRandomIdeaAsync()
     {
         _logger.LogInformation("Getting random idea");
 
@@ -111,6 +129,12 @@ internal class DateNightApiClient : IDateNightApiClient
 
         if (!response.IsSuccessStatusCode)
         {
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                // no ideas were found
+                return null;
+            }
+
             _logger.LogError("Failed to get a random idea. Status code: {StatusCode}", response.StatusCode);
         }
 
@@ -133,6 +157,31 @@ internal class DateNightApiClient : IDateNightApiClient
         var user = await response.Content.ReadFromJsonAsync<UserModel>();
 
         return user;
+    }
+
+    public async Task<bool> LoginUserAsync(string email, string password)
+    {
+        var content = JsonContent.Create(new
+        {
+            Email = email,
+            Password = password
+        });
+
+        var response = await _httpClient.PostAsync($@"{_usersEndpoint}\login", content);
+
+        if (response.IsSuccessStatusCode)
+        {
+            string responseContent = await response.Content.ReadAsStringAsync();
+            var token = JsonNode.Parse(responseContent)!["token"]!.GetValue<string>();
+
+            _httpClient.DefaultRequestHeaders.Authorization = new("Bearer", token);
+
+            return true;
+        }
+
+        _logger.LogError("Failed to login user. Status code: {StatusCode}", response.StatusCode);
+
+        return false;
     }
 
     public async Task SetIdeaAsActiveAsync(IdeaModel idea)

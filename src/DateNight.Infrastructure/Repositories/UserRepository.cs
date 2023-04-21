@@ -1,54 +1,100 @@
-﻿using DateNight.Core.Entities.IdeaAggregate;
-using DateNight.Core.Entities.UserAggregate;
-using DateNight.Core.Interfaces;
+﻿using DateNight.Core.Interfaces;
+using DateNight.Infrastructure.Options;
+using Microsoft.Azure.Cosmos;
+using Microsoft.Extensions.Options;
+using User = DateNight.Core.Entities.UserAggregate.User;
 
-namespace DateNight.Infrastructure.Repositories
+namespace DateNight.Infrastructure.Repositories;
+
+public class UserRepository : IUserRepository
 {
-    public class UserRepository : IRepository<User>
+    protected readonly Container _container;
+    private readonly IAppLogger<UserRepository> _logger;
+    private readonly DateNightDatabaseOptions _options;
+
+    public UserRepository(IAppLogger<UserRepository> logger, IOptions<DateNightDatabaseOptions> options, CosmosClient cosmosClient)
     {
-        public Task AddAsync(Idea entity, CancellationToken cancellationToken = default)
+        _logger = logger;
+        _options = options.Value;
+        _container = cosmosClient.GetContainer(_options.DatabaseId, _options.UsersContainer);
+    }
+
+    public async Task AddAsync(User entity, CancellationToken cancellationToken = default)
+    {
+        await _container.CreateItemAsync(entity, null, null, cancellationToken);
+    }
+
+    public async Task AddRangeAsync(IEnumerable<User> entities, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task DeleteAsync(User entity, CancellationToken cancellationToken = default)
+    {
+        string id = entity.Id.ToString();
+        var partitionKey = new PartitionKey(id);
+
+        await _container.DeleteItemAsync<User>(id, partitionKey, null, cancellationToken);
+    }
+
+    public async Task DeleteRangeAsync(IEnumerable<User> entities, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<IEnumerable<User>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        var query = new QueryDefinition("SELECT * FROM c ");
+        IEnumerable<User> results = await QueryAsync(query);
+
+        return results;
+    }
+
+    public async Task<User?> GetByEmail(string email)
+    {
+        var query = new QueryDefinition("SELECT * FROM c WHERE c.email = @email").WithParameter("@email", email);
+        IEnumerable<User> results = await QueryAsync(query);
+
+        return results.FirstOrDefault();
+    }
+
+    public async Task<User?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    {
+        try
         {
-            throw new NotImplementedException();
+            var partitionKey = new PartitionKey(id);
+            var item = await _container.ReadItemAsync<User>(id, partitionKey, null, cancellationToken);
+
+            return item;
+        }
+        catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return null;
+        }
+    }
+
+    public async Task UpdateAsync(User entity, CancellationToken cancellationToken = default)
+    {
+        await _container.UpsertItemAsync(entity, null, null, cancellationToken);
+    }
+
+    public async Task UpdateRangeAsync(IEnumerable<User> entities, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    protected async Task<IEnumerable<User>> QueryAsync(QueryDefinition query)
+    {
+        var queryIterator = _container.GetItemQueryIterator<User>(query);
+
+        List<User> results = new();
+
+        while (queryIterator.HasMoreResults)
+        {
+            var response = await queryIterator.ReadNextAsync();
+            results.AddRange(response.ToList());
         }
 
-        public Task<IEnumerable<User>> AddRangeAsync(IEnumerable<User> entities, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task DeleteAsync(User entity, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task DeleteRangeAsync(IEnumerable<User> entities, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<User>> GetAllAsync(CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<User?> GetByIdAsync<U>(U id, CancellationToken cancellationToken = default)
-        {
-            var user = new User()
-            {
-                Name = "Unknown"
-            };
-
-            return Task.FromResult<User?>(user);
-        }
-
-        public Task UpdateAsync(User entity, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateRangeAsync(IEnumerable<User> entities, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
+        return results;
     }
 }

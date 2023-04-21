@@ -2,23 +2,14 @@
 
 namespace DateNight.Core.Entities.IdeaAggregate;
 
-public class Idea : BaseEntity<string>, IAggregateRoot
+public class Idea : BaseEntity, IAggregateRoot
 {
     public Idea()
     {
         Id = Guid.NewGuid().ToString("N");
     }
 
-    public Idea(string id, string title, string description, DateTime createdOn, Guid createdBy) : this()
-    {
-        Id = id;
-        Title = title;
-        Description = description;
-        CreatedOn = createdOn;
-        CreatedBy = createdBy;
-    }
-
-    public Guid CreatedBy { get; set; }
+    public string CreatedBy { get; set; } = string.Empty;
     public DateTime CreatedOn { get; set; }
     public string Description { get; set; } = string.Empty;
     public IdeaState State { get; set; }

@@ -6,9 +6,9 @@ using Microsoft.Extensions.Options;
 
 namespace DateNight.Infrastructure.Repositories;
 
-public class IdeaRepository : IRepository<Idea>
+public class IdeaRepository : IIdeaRepository
 {
-    private readonly Container _container;
+    protected readonly Container _container;
     private readonly IAppLogger<IdeaRepository> _logger;
     private readonly DateNightDatabaseOptions _options;
 
@@ -16,7 +16,7 @@ public class IdeaRepository : IRepository<Idea>
     {
         _logger = logger;
         _options = options.Value;
-        _container = cosmosClient.GetContainer(_options.DatabaseId, _options.ContainerId);
+        _container = cosmosClient.GetContainer(_options.DatabaseId, _options.IdeasContainer);
     }
 
     public async Task AddAsync(Idea entity, CancellationToken cancellationToken = default)
@@ -24,38 +24,48 @@ public class IdeaRepository : IRepository<Idea>
         await _container.CreateItemAsync(entity, null, null, cancellationToken);
     }
 
-    public Task<IEnumerable<Idea>> AddRangeAsync(IEnumerable<Idea> entities, CancellationToken cancellationToken = default)
+    public async Task AddRangeAsync(IEnumerable<Idea> entities, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
 
     public async Task DeleteAsync(Idea entity, CancellationToken cancellationToken = default)
     {
-        var partitionKey = new PartitionKey(entity.Id);
-        await _container.DeleteItemAsync<Idea>(entity.Id, partitionKey, null, cancellationToken);
+        string id = entity.Id.ToString();
+        var partitionKey = new PartitionKey(id);
+
+        await _container.DeleteItemAsync<Idea>(id, partitionKey, null, cancellationToken);
     }
 
-    public Task DeleteRangeAsync(IEnumerable<Idea> entities, CancellationToken cancellationToken = default)
+    public async Task DeleteRangeAsync(IEnumerable<Idea> entities, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
 
     public async Task<IEnumerable<Idea>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        IEnumerable<Idea> results = await QueryIdeasAsync("Select * from c");
+        var query = new QueryDefinition("SELECT * FROM c ");
+        IEnumerable<Idea> results = await QueryAsync(query);
 
         return results;
     }
 
-    public async Task<Idea?> GetByIdAsync<U>(U id, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Idea>> GetAllUserIdeasAsync(string userId)
+    {
+        var query = new QueryDefinition("SELECT * FROM c WHERE c.createdBy = @userId").WithParameter("@userId", userId);
+        IEnumerable<Idea> results = await QueryAsync(query);
+
+        return results;
+    }
+
+    public async Task<Idea?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
         try
         {
-            string idString = id!.ToString();
-            var partitionKey = new PartitionKey(idString);
-            var idea = await _container.ReadItemAsync<Idea>(idString, partitionKey, null, cancellationToken);
+            var partitionKey = new PartitionKey(id);
+            var item = await _container.ReadItemAsync<Idea>(id, partitionKey, null, cancellationToken);
 
-            return idea;
+            return item;
         }
         catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
@@ -68,20 +78,20 @@ public class IdeaRepository : IRepository<Idea>
         await _container.UpsertItemAsync(entity, null, null, cancellationToken);
     }
 
-    public Task UpdateRangeAsync(IEnumerable<Idea> entities, CancellationToken cancellationToken = default)
+    public async Task UpdateRangeAsync(IEnumerable<Idea> entities, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
 
-    private async Task<IEnumerable<Idea>> QueryIdeasAsync(string queryString)
+    protected async Task<IEnumerable<Idea>> QueryAsync(QueryDefinition query)
     {
-        var query = _container.GetItemQueryIterator<Idea>(new QueryDefinition(queryString));
+        var queryIterator = _container.GetItemQueryIterator<Idea>(query);
 
         List<Idea> results = new();
 
-        while (query.HasMoreResults)
+        while (queryIterator.HasMoreResults)
         {
-            var response = await query.ReadNextAsync();
+            var response = await queryIterator.ReadNextAsync();
             results.AddRange(response.ToList());
         }
 

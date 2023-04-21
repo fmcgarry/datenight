@@ -37,8 +37,13 @@ public partial class ActiveIdea
     {
     }
 
-    private async Task OnClickGetRandomIdeaButton(MouseEventArgs e)
+    private void OnClickGetRandomIdeaButton(MouseEventArgs e)
     {
         Navigation.NavigateTo("/ideas/random");
+    }
+
+    private void OnClickCreateNewIdeaButton(MouseEventArgs e)
+    {
+        Navigation.NavigateTo("/ideas/create");
     }
 }

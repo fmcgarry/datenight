@@ -1,0 +1,32 @@
+﻿@layout SimpleLayout
+
+@page "/"
+@page "/login"
+
+<h3>Login</h3>
+
+@if(_errorMessage != string.Empty)
+{
+    <p style="color: red">@_errorMessage</p>
+}
+
+<EditForm class="mt-4" Model="_loginModel" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+    <InputText class="form-control w-100 mb-2" placeholder="Email" @bind-Value="_loginModel.Email"></InputText>
+    <InputText class="form-control w-100 mb-3" type="password" placeholder="Password" @bind-Value="_loginModel.Password"></InputText>
+    <button class="btn btn-primary w-100" type="submit">
+        @if (_isSending)
+        {
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        }
+        else
+        {
+            <span>Login</span>
+        }
+    </button>
+</EditForm>
+
+<div class="mt-4 d-flex justify-content-center">
+    <p>Don't have an account? <a href="/create-account">Create one</a>.</p>
+</div>
