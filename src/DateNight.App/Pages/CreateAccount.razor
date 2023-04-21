@@ -7,9 +7,18 @@
 <EditForm class="mt-4" Model="_createAccountModel" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator/>
     <ValidationSummary/>
-    <InputText class="form-control w-100 mb-2" placeholder="Name" @bind-Value=_createAccountModel.Name></InputText>
-    <InputText class="form-control w-100 mb-2" placeholder="Email" @bind-Value=_createAccountModel.Email></InputText>
-    <InputText class="form-control w-100 mb-3" placeholder="Password" type="password" @bind-Value=_createAccountModel.Password></InputText>
+    <div class="form-floating mb-3">
+        <InputText id="name" class="form-control w-100" placeholder="Name" @bind-Value=_createAccountModel.Name></InputText>
+        <label for="name">Name</label>
+    </div>
+    <div class="form-floating mb-3">
+        <InputText id="email" type="email" class="form-control w-100" placeholder="Email" @bind-Value="_createAccountModel.Email"></InputText>
+        <label for="email">Email address</label>
+    </div>
+    <div class="form-floating mb-3">
+        <InputText id="password" type="password" class="form-control w-100" placeholder="Password" @bind-Value="_createAccountModel.Password"></InputText>
+        <label for="password">Password</label>
+    </div>
     <button class="btn btn-primary w-100" type="submit">Create</button>
 </EditForm>
 
