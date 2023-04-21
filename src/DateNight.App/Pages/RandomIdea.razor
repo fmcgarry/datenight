@@ -12,12 +12,20 @@ else
 {
     if (_isIdeaCollectionEmpty)
     {
-        <div class="d-flex h-100 flex-column align-items-center justify-content-center text-center">
-            <span style="color: Black;">
-                <i class="fa-regular fa-face-frown fa-6x mb-3"></i>
-            </span>
-            <p>Uh oh, it looks like you're out of ideas.</p>
-            <button class="btn btn-primary" style="width: 12rem;" @onclick=OnCreateMoreClick>Create more</button>
+        <div class="d-flex h-100 flex-column">
+            <div class="row flex-grow-1 align-items-center justify-content-center text-center">
+                <div class="col">
+                    <span style="color: Black;">
+                        <i class="fa-regular fa-face-frown fa-6x mb-4"></i>
+                    </span>
+                    <p>Uh oh, it looks like you're out of ideas.</p>
+                </div>
+            </div>
+            <div class="row mb-5">
+                <div class="col">
+                    <button class="btn btn-primary w-100" @onclick=OnCreateMoreClick>Create more</button>
+                </div>
+            </div>
         </div>
     }
     else
