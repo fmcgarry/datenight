@@ -6,7 +6,7 @@ namespace DateNight.App.Pages;
 
 public partial class CreateAccount
 {
-    private readonly CreateAccountModel _createAccountModel = new();
+    private readonly AccountModel _createAccountModel = new();
 
     [Inject]
     public required IDateNightApiClient DateNightApiClient { get; init; }
