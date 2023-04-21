@@ -87,7 +87,7 @@ public class IdeaService : IIdeaService
         return GetIdeaByIdInternalAsync(id);
     }
 
-    public async Task<Idea> GetRandomUserIdeaAsync(string userId)
+    public async Task<Idea?> GetRandomUserIdeaAsync(string userId)
     {
         _logger.LogInformation("Getting random idea");
 
@@ -96,6 +96,12 @@ public class IdeaService : IIdeaService
 
         int numIdeas = nonActiveIdeas.Count();
         _logger.LogDebug("Total number of non-active ideas: {numIdeas}", numIdeas);
+
+        if (numIdeas == 0)
+        {
+            _logger.LogDebug("No ideas were found", numIdeas);
+            return null;
+        }
 
         int randomIndex = numIdeas > 1 ? _random.Next(0, numIdeas) : 0;
         _logger.LogDebug("Random index chosen: {randomIndex}", randomIndex);

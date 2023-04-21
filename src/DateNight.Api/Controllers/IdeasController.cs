@@ -151,6 +151,11 @@ namespace DateNight.Api.Controllers
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var idea = await _ideaService.GetRandomUserIdeaAsync(userId);
 
+                if (idea is null)
+                {
+                    return NotFound("No ideas were found.");
+                }
+
                 var ideaModel = new Idea()
                 {
                     Id = idea.Id,

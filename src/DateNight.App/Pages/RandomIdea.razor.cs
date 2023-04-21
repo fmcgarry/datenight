@@ -6,15 +6,16 @@ namespace DateNight.App.Pages;
 
 public partial class RandomIdea
 {
-    private IdeaModel _idea;
+    private IdeaModel? _idea = null;
     private bool _isFirstLoad = true;
+    private bool _isIdeaCollectionEmpty = false;
     private string _previousRandomIdeaId = string.Empty;
 
     [Inject]
-    public NavigationManager NavigationManager { get; set; }
+    public required NavigationManager NavigationManager { get; init; }
 
     [Inject]
-    IDateNightApiClient DateNightApiClient { get; set; }
+    public required IDateNightApiClient DateNightApiClient { get; init; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -25,6 +26,7 @@ public partial class RandomIdea
     private async Task GetRandomIdea()
     {
         _idea = null;
+        _isIdeaCollectionEmpty = false;
 
         int loopCount = 1;
 
@@ -34,7 +36,15 @@ public partial class RandomIdea
             // If we get the same idea 3 times in a row, it probably means there
             // is only 1 idea left in the collection.
 
-            _idea = await DateNightApiClient.GetRandomIdeaAsync();
+            var idea = await DateNightApiClient.GetRandomIdeaAsync();
+
+            if (idea is null)
+            {
+                _isIdeaCollectionEmpty = true;
+                return;
+            }
+
+            _idea = idea;
 
             loopCount++;
         } while (_idea.Id == _previousRandomIdeaId && loopCount < 3);

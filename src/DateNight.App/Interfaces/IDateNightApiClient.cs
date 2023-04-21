@@ -16,7 +16,7 @@ public interface IDateNightApiClient
 
     Task<IdeaModel> GetIdeaAsync(string id);
 
-    Task<IdeaModel> GetRandomIdeaAsync();
+    Task<IdeaModel?> GetRandomIdeaAsync();
 
     Task<UserModel> GetUserAsync(string id);
 

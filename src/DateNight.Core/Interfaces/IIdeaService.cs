@@ -29,7 +29,7 @@ namespace DateNight.Core.Interfaces
 
         Task<Idea> GetIdeaByIdAsync(string id);
 
-        Task<Idea> GetRandomUserIdeaAsync(string userId);
+        Task<Idea?> GetRandomUserIdeaAsync(string userId);
 
         /// <summary>
         /// Get the currently active idea.

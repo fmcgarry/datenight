@@ -2,6 +2,7 @@
 using DateNight.App.Models;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
+using System.Text.Json.Nodes;
 
 namespace DateNight.App.Clients.DateNightApi;
 
@@ -120,7 +121,7 @@ internal class DateNightApiClient : IDateNightApiClient
         return idea;
     }
 
-    public async Task<IdeaModel> GetRandomIdeaAsync()
+    public async Task<IdeaModel?> GetRandomIdeaAsync()
     {
         _logger.LogInformation("Getting random idea");
 
@@ -128,6 +129,12 @@ internal class DateNightApiClient : IDateNightApiClient
 
         if (!response.IsSuccessStatusCode)
         {
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                // no ideas were found
+                return null;
+            }
+
             _logger.LogError("Failed to get a random idea. Status code: {StatusCode}", response.StatusCode);
         }
 
@@ -164,7 +171,9 @@ internal class DateNightApiClient : IDateNightApiClient
 
         if (response.IsSuccessStatusCode)
         {
-            string token = await response.Content.ReadAsStringAsync();
+            string responseContent = await response.Content.ReadAsStringAsync();
+            var token = JsonNode.Parse(responseContent)!["token"]!.GetValue<string>();
+
             _httpClient.DefaultRequestHeaders.Authorization = new("Bearer", token);
 
             return true;
