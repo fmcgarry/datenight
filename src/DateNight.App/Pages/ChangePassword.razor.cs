@@ -1,4 +1,5 @@
-﻿using DateNight.App.Models;
+﻿using DateNight.App.Interfaces;
+using DateNight.App.Models;
 using Microsoft.AspNetCore.Components;
 
 namespace DateNight.App.Pages;
@@ -11,11 +12,15 @@ public partial class ChangePassword
     [Inject]
     public required NavigationManager NavigationManager { get; init; }
 
+    [Inject]
+    public required IDateNightApiClient DateNightApiClient { get; init; }
+
     private async Task OnValidSubmit()
     {
         _isBusy = true;
-        await Task.Factory.StartNew(() => Thread.Sleep(1000)); // TODO: replace with actual call
+        await DateNightApiClient.UpdateUserPasswordAsync(_model.NewPassword);
         _isBusy = false;
+
         NavigationManager.NavigateTo("/account");
     }
 }

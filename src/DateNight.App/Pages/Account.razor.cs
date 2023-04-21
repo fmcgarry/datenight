@@ -1,3 +1,4 @@
+using DateNight.App.Interfaces;
 using DateNight.App.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -13,8 +14,15 @@ public partial class Account
     [Inject]
     public required NavigationManager NavigationManager { get; init; }
 
-    private void OnValidSubmit()
+    [Inject]
+    public required IDateNightApiClient DateNightApiClient { get; set; }
+
+    private async Task OnValidSubmit()
     {
+        _isBusy = true;
+        await DateNightApiClient.UpdateUserAsync(_account.Name, _account.Email);
+        _isBusy = false;
+
         _isDirty = false;
     }
 

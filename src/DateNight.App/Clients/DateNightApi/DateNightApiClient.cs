@@ -1,7 +1,9 @@
 ﻿using DateNight.App.Interfaces;
 using DateNight.App.Models;
 using Microsoft.Extensions.Logging;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Json;
+using System.Security.Claims;
 using System.Text.Json.Nodes;
 
 namespace DateNight.App.Clients.DateNightApi;
@@ -52,6 +54,40 @@ internal class DateNightApiClient : IDateNightApiClient
         {
             _logger.LogError("Failed to create user. Status code: {StatusCode}", response.StatusCode);
         }
+    }
+
+    public async Task UpdateUserAsync(string name, string email, string password = "")
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var token = handler.ReadJwtToken(_httpClient.DefaultRequestHeaders.Authorization!.Parameter);
+        string id = token.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+
+        var content = JsonContent.Create(new
+        {
+            Email = email,
+            Password = password,
+            Name = name
+        });
+
+        var response = await _httpClient.PostAsync($@"{_usersEndpoint}\{id}", content);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Failed to update user. Status code: {StatusCode}", response.StatusCode);
+        }
+
+        await LoginUserAsync(email, password);
+    }
+
+    public async Task UpdateUserPasswordAsync(string password)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var token = handler.ReadJwtToken(_httpClient.DefaultRequestHeaders.Authorization!.Parameter);
+
+        string email = token.Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
+        string name = token.Claims.First(claim => claim.Type == ClaimTypes.Name).Value;
+
+        await UpdateUserAsync(name, email, password);
     }
 
     public async Task DeleteIdeaAsync(IdeaModel idea)
