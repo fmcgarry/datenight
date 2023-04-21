@@ -7,9 +7,10 @@ namespace DateNight.App.Pages;
 
 public partial class Account
 {
-    private readonly AccountModel _account = new();
+    private AccountModel _account = new();
     private bool _isDirty;
     private bool _isBusy;
+    private bool _isLoading = true;
 
     [Inject]
     public required NavigationManager NavigationManager { get; init; }
@@ -17,13 +18,34 @@ public partial class Account
     [Inject]
     public required IDateNightApiClient DateNightApiClient { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAccountInfo();
+        _isLoading = false;
+    }
+
+    private async Task GetAccountInfo()
+    {
+        var user = await DateNightApiClient.GetCurrentUserAsync();
+
+        _account = new();
+
+        if (user is not null)
+        {
+            _account.Name = user.Name;
+            _account.Email = user.Email;
+        }
+
+        _isDirty = false;
+    }
+
     private async Task OnValidSubmit()
     {
         _isBusy = true;
         await DateNightApiClient.UpdateUserAsync(_account.Name, _account.Email);
         _isBusy = false;
 
-        _isDirty = false;
+        await GetAccountInfo();
     }
 
     private void OnChangePasswordButtonClick(MouseEventArgs e)

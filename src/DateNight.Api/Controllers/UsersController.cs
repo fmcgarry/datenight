@@ -3,6 +3,7 @@ using DateNight.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
+using System.Security.Claims;
 using static DateNight.Api.Data.UserActions;
 
 namespace DateNight.Api.Controllers
@@ -34,7 +35,7 @@ namespace DateNight.Api.Controllers
                 return NotFound($"A user with id '{id}' was not found.");
             }
 
-            var response = new GetUserResponse(user.Name);
+            var response = new GetUserResponse(user.Name, user.Email);
 
             return Ok(response);
         }
@@ -90,6 +91,31 @@ namespace DateNight.Api.Controllers
                 await _userService.DeleteUserAsync(id);
 
                 return Ok($"Deleted user '{id}'.");
+            }
+            catch (UserDoesNotExistException)
+            {
+                return NotFound("User does not exist.");
+            }
+        }
+
+        [HttpPut("{id}"), Authorize]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK, MediaTypeNames.Text.Plain)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound, MediaTypeNames.Text.Plain)]
+        public async Task<IActionResult> UpdateUser(string id, UserRegisterRequest user)
+        {
+            try
+            {
+                string accessingUserId = User.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+
+                if (accessingUserId != id)
+                {
+                    return Unauthorized("You may only update your own information.");
+                }
+
+                await _userService.UpdateUserAsync(id, user.Name, user.Email, user.Password);
+
+                return Ok($"Updated user '{id}'");
             }
             catch (UserDoesNotExistException)
             {

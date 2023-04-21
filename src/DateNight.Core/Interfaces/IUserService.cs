@@ -4,7 +4,7 @@ namespace DateNight.Core.Interfaces
 {
     public interface IUserService
     {
-        Task<string> CreateUserAsync(string name, string email, string password);
+        Task<string> CreateUserAsync(string name, string email, string passwordText);
 
         Task<User> GetUserbyEmailAsync(string email);
 
@@ -13,5 +13,7 @@ namespace DateNight.Core.Interfaces
         Task<string> LoginUserAsync(string username, string password);
 
         Task DeleteUserAsync(string id);
+
+        Task UpdateUserAsync(string id, string name, string email, string passwordText);
     }
 }
