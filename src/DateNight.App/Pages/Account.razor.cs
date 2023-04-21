@@ -1,4 +1,5 @@
 using DateNight.App.Models;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace DateNight.App.Pages;
 
@@ -10,5 +11,10 @@ public partial class Account
     private void OnValidSubmit()
     {
         _isDirty = false;
+    }
+
+    private void OnChangePasswordButtonClick(MouseEventArgs e)
+    {
+
     }
 }
