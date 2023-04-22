@@ -7,19 +7,19 @@ namespace DateNight.App.Pages;
 
 public partial class Account
 {
+    private readonly bool _isInPartnership = false;
+    private readonly List<string> _partners = new() { "Jane", "Janet" };
     private AccountModel _account = new();
-    private bool _isDirty;
     private bool _isBusy;
+    private bool _isDirty;
     private bool _isLoading = true;
-    private bool _isInPartnership;
     private string _partnerCode = string.Empty;
-    private List<string> _partners = new() { "Jane", "Janet" };
+
+    [Inject]
+    public required IDateNightApiClient DateNightApiClient { get; init; }
 
     [Inject]
     public required NavigationManager NavigationManager { get; init; }
-
-    [Inject]
-    public required IDateNightApiClient DateNightApiClient { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -42,6 +42,11 @@ public partial class Account
         _isDirty = false;
     }
 
+    private void OnChangePasswordButtonClick(MouseEventArgs e)
+    {
+        NavigationManager.NavigateTo("/change-password");
+    }
+
     private async Task OnValidSubmit()
     {
         _isBusy = true;
@@ -49,10 +54,5 @@ public partial class Account
         _isBusy = false;
 
         await GetAccountInfo();
-    }
-
-    private void OnChangePasswordButtonClick(MouseEventArgs e)
-    {
-        NavigationManager.NavigateTo("/change-password");
     }
 }

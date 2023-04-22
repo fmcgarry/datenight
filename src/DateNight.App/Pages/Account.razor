@@ -20,26 +20,27 @@
                 <label for="name" class="form-label">Name</label>
                 <InputText class="form-control" id="name" @bind-Value="_account.Name" @onkeypress=@(() => _isDirty = true)></InputText>
             </div>
-            <div class="mb-3">
+            <div class="mb-4">
                 <label for="email" class="form-label">Email</label>
                 <InputText class="form-control" id="email" @bind-Value="_account.Email" @onkeypress=@(() => _isDirty = true) />
             </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <button class="btn btn-outline-primary w-100" id="password" disabled="@_isDirty" @onclick="OnChangePasswordButtonClick">Change your password</button>
+            <div class="mb-2">
+                <button type="submit" class="btn btn-success w-100" disabled="@(!_isDirty)">
+                    @if (_isBusy)
+                    {
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <span class="visually-hidden">Updating...</span>
+                    }
+                    else
+                    {
+                        <span>Update</span>
+                    }
+                </button>
             </div>
-            <button type="submit" class="btn btn-success w-100 mt-1" disabled="@(!_isDirty)">
-                @if (_isBusy)
-                {
-                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                    <span class="visually-hidden">Updating...</span>
-                }
-                else
-                {
-                    <span>Update</span>
-                }
-            </button>
         </EditForm>
+        <div>
+            <button class="btn btn-outline-primary w-100" id="password" disabled="@_isDirty" @onclick="OnChangePasswordButtonClick">Change your password</button>
+        </div>
 
         <div class="mt-4">
             <div class="row">
@@ -53,7 +54,7 @@
                     {
                         <div class="row flex-column">
                             <div class="col">
-                                <p>You are partners with: @(string.Join(", ", _partners))</p>
+                                <span>You are partners with: @(string.Join(", ", _partners))</span>
                             </div>
                             <div class="col">
                                 <button class="btn btn-danger w-100 mt-2">Leave</button>
@@ -63,17 +64,17 @@
                     else
                     {
                         <div class="row flex-column">
-                            <div class="col">
-                                <p>Your code: abcd1234</p>
+                            <div class="col mb-2">
+                                <span>Your code: abcd1234</span>
                             </div>
-                            <div class="col">
+                            <div class="col mb-2">
                                 <div>
                                     <label for="partnerCode" class="form-label">Enter another user's code to join:</label>
                                     <InputText class="form-control" id="partnerCode" @bind-Value="_partnerCode"></InputText>
                                 </div>
                             </div>
                             <div class="col">
-                                <button class="btn btn-primary w-100 mt-2">Join</button>
+                                <button class="btn btn-primary w-100 ">Join</button>
                             </div>
                         </div>
                     }
