@@ -2,7 +2,6 @@ using DateNight.Api.Data;
 using DateNight.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using static DateNight.Api.Data.IdeaActions;
 
@@ -24,7 +23,7 @@ namespace DateNight.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddIdea(AddIdeaRequest idea)
         {
-            var userId = User.FindFirstValue(JwtRegisteredClaimNames.NameId);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (userId is null)
             {
@@ -67,7 +66,7 @@ namespace DateNight.Api.Controllers
         {
             try
             {
-                var userId = User.FindFirstValue(JwtRegisteredClaimNames.NameId);
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var idea = await _ideaService.GetUserActiveIdeaAsync(userId);
 
                 var ideaModel = new Idea()
@@ -117,7 +116,7 @@ namespace DateNight.Api.Controllers
         {
             try
             {
-                var userId = User.FindFirstValue(JwtRegisteredClaimNames.NameId);
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var ideas = await _ideaService.GetAllUserIdeasAsync(userId);
 
                 var returnedIdeas = new List<Idea>();
@@ -149,7 +148,7 @@ namespace DateNight.Api.Controllers
         {
             try
             {
-                var userId = User.FindFirstValue(JwtRegisteredClaimNames.NameId)!;
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
                 var idea = await _ideaService.GetRandomUserIdeaAsync(userId);
 
                 if (idea is null)
