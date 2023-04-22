@@ -68,14 +68,9 @@ namespace DateNight.Api.Controllers
             {
                 var token = await _userService.LoginUserAsync(user.Email, user.Password);
 
-                var result = new
-                {
-                    token
-                };
-
                 var response = new UserLoginResponse(token);
 
-                return Ok(result);
+                return Ok(response);
             }
             catch (UserDoesNotExistException)
             {
