@@ -45,14 +45,19 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddAuthentication().AddJwtBearer(options =>
 {
-    string apiKey = builder.Configuration.GetValue<string>("ApiKey")!;
+    string key = builder.Configuration["JwtSettings:Key"]!;
+    string issuer = builder.Configuration["JwtSettings:Issuer"]!;
+    string audience = builder.Configuration["JwtSettings:Audience"]!;
 
-    options.TokenValidationParameters = new()
+    options.TokenValidationParameters = new TokenValidationParameters()
     {
+        ValidIssuer = issuer,
+        ValidAudience = audience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidateAudience = false,
-        ValidateIssuer = false,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(apiKey))
     };
 });
 

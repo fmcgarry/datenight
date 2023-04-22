@@ -3,7 +3,6 @@ using DateNight.App.Models;
 using Microsoft.Extensions.Logging;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Json;
-using System.Security.Claims;
 using System.Text.Json.Nodes;
 
 namespace DateNight.App.Clients.DateNightApi;
@@ -54,23 +53,6 @@ internal class DateNightApiClient : IDateNightApiClient
         {
             _logger.LogError("Failed to create user. Status code: {StatusCode}", response.StatusCode);
         }
-    }
-
-    public async Task UpdateUserAsync(string name, string email)
-    {
-        await UpdateUserInternalAsync(name, email, string.Empty);
-    }
-
-    public async Task UpdateUserPasswordAsync(string password)
-    {
-        var handler = new JwtSecurityTokenHandler();
-        var token = handler.ReadJwtToken(_httpClient.DefaultRequestHeaders.Authorization!.Parameter);
-
-        string email = token.Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
-        string name = token.Claims.First(claim => claim.Type == ClaimTypes.Name).Value;
-
-        await UpdateUserInternalAsync(string.Empty, string.Empty, password);
-        await LoginUserAsync(email, password);
     }
 
     public async Task DeleteIdeaAsync(IdeaModel idea)
@@ -247,13 +229,9 @@ internal class DateNightApiClient : IDateNightApiClient
         }
     }
 
-    private string GetUserIdFromToken()
+    public async Task UpdateUserAsync(string name, string email)
     {
-        var handler = new JwtSecurityTokenHandler();
-        var token = handler.ReadJwtToken(_httpClient.DefaultRequestHeaders.Authorization!.Parameter);
-        string id = token.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
-
-        return id;
+        await UpdateUserInternalAsync(name, email, string.Empty);
     }
 
     public async Task UpdateUserInternalAsync(string name, string email, string password)
@@ -273,5 +251,25 @@ internal class DateNightApiClient : IDateNightApiClient
         {
             _logger.LogError("Failed to update user. Status code: {StatusCode}", response.StatusCode);
         }
+    }
+
+    public async Task UpdateUserPasswordAsync(string password)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var token = handler.ReadJwtToken(_httpClient.DefaultRequestHeaders.Authorization!.Parameter);
+
+        string email = token.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Email).Value;
+
+        await UpdateUserInternalAsync(string.Empty, string.Empty, password);
+        await LoginUserAsync(email, password);
+    }
+
+    private string GetUserIdFromToken()
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var token = handler.ReadJwtToken(_httpClient.DefaultRequestHeaders.Authorization!.Parameter);
+        string id = token.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.NameId).Value;
+
+        return id;
     }
 }
