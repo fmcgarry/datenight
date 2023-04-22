@@ -2,7 +2,7 @@
 
 public class UserDoesNotExistException : Exception
 {
-    public UserDoesNotExistException() : base("User does not exist")
+    public UserDoesNotExistException(string id) : base($"User '{id}' does not exist")
     {
     }
 }

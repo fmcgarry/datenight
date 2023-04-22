@@ -9,20 +9,38 @@ using static DateNight.Api.Data.UserActions;
 namespace DateNight.Api.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly IAppLogger<UsersController> _logger;
         private readonly IUserService _userService;
 
-        public UsersController(IAppLogger<UsersController> logger, IUserService userService)
+        public UsersController(IUserService userService)
         {
-            _logger = logger;
             _userService = userService;
         }
 
+        [HttpPost("{id}/partners/add")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK, MediaTypeNames.Text.Plain)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest, MediaTypeNames.Text.Plain)]
+        public async Task<ActionResult<UserRegisterResponse>> AddUserPartner(string id, string partnerCode)
+        {
+            try
+            {
+                await _userService.AddUserPartnerAsync(id, partnerCode);
+                return Ok($"Added partner '{partnerCode}' to user '{id}'.");
+            }
+            catch (UserCreationFailedException)
+            {
+                return BadRequest("Failed to register user. Please try again.");
+            }
+            catch (Exception)
+            {
+                return Problem();
+            }
+        }
+
         [HttpDelete("{id}"), Authorize(Roles = "Admin")]
-        [Consumes(MediaTypeNames.Text.Plain)]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK, MediaTypeNames.Text.Plain)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest, MediaTypeNames.Text.Plain)]
         public async Task<ActionResult<UserRegisterResponse>> DeleteUser(string id)
@@ -39,26 +57,51 @@ namespace DateNight.Api.Controllers
             }
         }
 
-        [HttpGet("{id}"), Authorize]
+        [HttpGet("{id}")]
         [ProducesResponseType(typeof(GetUserResponse), StatusCodes.Status200OK, MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest, MediaTypeNames.Text.Plain)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound, MediaTypeNames.Text.Plain)]
         public async Task<ActionResult<GetUserResponse>> GetUser(string id)
         {
-            var user = await _userService.GetUserByIdAsync(id);
-
-            if (user is null)
+            try
             {
-                _logger.LogDebug("Consumer requested user with id '{id}' that does not exist.", id);
+                var user = await _userService.GetUserByIdAsync(id);
+                var response = new GetUserResponse(user.Name, user.Email);
+
+                return Ok(response);
+            }
+            catch (UserDoesNotExistException)
+            {
                 return NotFound($"A user with id '{id}' was not found.");
             }
+            catch (Exception)
+            {
+                return Problem();
+            }
+        }
 
-            var response = new GetUserResponse(user.Name, user.Email);
-
-            return Ok(response);
+        [HttpGet("{id}/partners")]
+        [ProducesResponseType(typeof(UserRegisterResponse), StatusCodes.Status200OK, MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound, MediaTypeNames.Text.Plain)]
+        public async Task<ActionResult<UserRegisterResponse>> GetUserPartners(string id)
+        {
+            try
+            {
+                var partners = await _userService.GetUserPartners(id);
+                return Ok(partners);
+            }
+            catch (UserDoesNotExistException)
+            {
+                return NotFound($"A user with id '{id}' was not found.");
+            }
+            catch (Exception)
+            {
+                return Problem();
+            }
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(UserLoginResponse), StatusCodes.Status200OK, MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest, MediaTypeNames.Text.Plain)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound, MediaTypeNames.Text.Plain)]
@@ -83,15 +126,16 @@ namespace DateNight.Api.Controllers
         }
 
         [HttpPost("register")]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(UserRegisterResponse), StatusCodes.Status201Created, MediaTypeNames.Application.Json)]
         public async Task<ActionResult<UserRegisterResponse>> RegisterUser(UserRegisterRequest user)
         {
             try
             {
-                var id = await _userService.CreateUserAsync(user.Name, user.Email, user.Password);
+                var userId = await _userService.CreateUserAsync(user.Name, user.Email, user.Password);
                 var response = new UserRegisterResponse(user.Name, user.Email, user.Password);
 
-                return Created(id, response);
+                return Created(userId, response);
             }
             catch (UserCreationFailedException)
             {
@@ -103,7 +147,23 @@ namespace DateNight.Api.Controllers
             }
         }
 
-        [HttpPut("{id}"), Authorize]
+        [HttpPost("{id}/partners/remove")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK, MediaTypeNames.Text.Plain)]
+        public async Task<ActionResult<UserRegisterResponse>> RemoveUserPartner(string id, string partnerId)
+        {
+            try
+            {
+                await _userService.RemoveUserPartner(id, partnerId);
+
+                return Ok($"Removed partner '{partnerId}' from user '{id}'.");
+            }
+            catch (Exception)
+            {
+                return Problem();
+            }
+        }
+
+        [HttpPut("{id}")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK, MediaTypeNames.Text.Plain)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound, MediaTypeNames.Text.Plain)]

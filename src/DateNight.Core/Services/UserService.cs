@@ -20,6 +20,21 @@ public class UserService : IUserService
         _tokenService = tokenService;
     }
 
+    public async Task AddUserPartnerAsync(string id, string partnerId)
+    {
+        var user = await GetUserByIdAsync(id);
+        var partners = await _userRepository.GetUsersByPartialIdAsync(partnerId);
+
+        if (partners.Count() > 1)
+        {
+            throw new ArgumentException($"More than one user id begins with {partnerId}");
+        }
+
+        user.Partners.Add(partners.First().Id);
+
+        await _userRepository.UpdateAsync(user);
+    }
+
     public async Task<string> CreateUserAsync(string name, string email, string passwordText)
     {
         var password = CreateSecurePassword(passwordText);
@@ -50,7 +65,7 @@ public class UserService : IUserService
     {
         _logger.LogInformation("Getting user with email '{email}'", email);
 
-        var user = await _userRepository.GetByEmail(email) ?? throw new UserDoesNotExistException();
+        var user = await _userRepository.GetByEmail(email) ?? throw new UserDoesNotExistException(email);
 
         return user;
     }
@@ -59,9 +74,16 @@ public class UserService : IUserService
     {
         _logger.LogInformation("Getting user '{id}'", id);
 
-        var user = await _userRepository.GetByIdAsync(id) ?? throw new UserDoesNotExistException();
+        var user = await _userRepository.GetByIdAsync(id) ?? throw new UserDoesNotExistException(id);
 
         return user;
+    }
+
+    public async Task<IEnumerable<string>> GetUserPartners(string id)
+    {
+        var user = await GetUserByIdAsync(id);
+
+        return user.Partners;
     }
 
     public async Task<string> LoginUserAsync(string username, string passwordText)
@@ -80,9 +102,18 @@ public class UserService : IUserService
         return token;
     }
 
+    public async Task RemoveUserPartner(string id, string partnerId)
+    {
+        var user = await GetUserByIdAsync(id);
+
+        user.Partners.Remove(partnerId);
+
+        await _userRepository.UpdateAsync(user);
+    }
+
     public async Task UpdateUserAsync(string id, string name, string email, string passwordText)
     {
-        var user = await GetUserByIdAsync(id) ?? throw new UserDoesNotExistException();
+        var user = await GetUserByIdAsync(id) ?? throw new UserDoesNotExistException(id);
 
         if (!string.IsNullOrEmpty(email))
         {
