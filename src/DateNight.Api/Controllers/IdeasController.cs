@@ -112,12 +112,12 @@ namespace DateNight.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetIdeas()
+        public async Task<IActionResult> GetIdeas(bool includePartnerIdeas)
         {
             try
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var ideas = await _ideaService.GetAllUserIdeasAsync(userId);
+                var ideas = await _ideaService.GetAllUserIdeasAsync(userId, includePartnerIdeas);
 
                 var returnedIdeas = new List<Idea>();
 

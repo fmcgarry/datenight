@@ -14,7 +14,8 @@ public class IdeaServiceTests
         // Arrange
         var mockedLogger = new Mock<IAppLogger<IdeaService>>();
         var mockedIdeaRepository = new Mock<IIdeaRepository>();
-        var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object);
+        var mockedUserService = new Mock<IUserService>();
+        var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object, mockedUserService.Object);
 
         // Act/Assert
         await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(async () => await sut.ActivateIdea(""));
@@ -26,7 +27,8 @@ public class IdeaServiceTests
         // Arrange
         var mockedLogger = new Mock<IAppLogger<IdeaService>>();
         var mockedIdeaRepository = new Mock<IIdeaRepository>();
-        var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object);
+        var mockedUserService = new Mock<IUserService>();
+        var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object, mockedUserService.Object);
 
         // Act/Assert
         await Assert.ThrowsExceptionAsync<ArgumentNullException>(async () => await sut.ActivateIdea(null));
@@ -74,7 +76,8 @@ public class IdeaServiceTests
                 repositoryIdeas[index] = idea;
             });
 
-        var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object);
+        var mockedUserService = new Mock<IUserService>();
+        var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object, mockedUserService.Object);
 
         await sut.ActivateIdea(newActiveIdea.Id);
 
@@ -87,7 +90,8 @@ public class IdeaServiceTests
         // Arrange
         var mockedLogger = new Mock<IAppLogger<IdeaService>>();
         var mockedIdeaRepository = new Mock<IIdeaRepository>();
-        var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object);
+        var mockedUserService = new Mock<IUserService>();
+        var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object, mockedUserService.Object);
 
         var idea = new Idea()
         {
@@ -103,20 +107,39 @@ public class IdeaServiceTests
     }
 
     [TestMethod]
+    public async Task GetAllIdeasAsync_WhenIncludePartnerIdeasIsFalse_ReturnsUserIdeas()
+    {
+        bool includePartnerIdeas = false;
+        int expectedCount = 1;
+        await GetAllIdeasAsync_WhenIncludePartnerIdeasIsSet_ReturnsExpectedCount(includePartnerIdeas, expectedCount);
+    }
+
+    [TestMethod]
+    public async Task GetAllIdeasAsync_WhenIncludePartnerIdeasIsTrue_ReturnsUserAndPartnerIdeas()
+    {
+        bool includePartnerIdeas = true;
+        int expectedCount = 4;
+        await GetAllIdeasAsync_WhenIncludePartnerIdeasIsSet_ReturnsExpectedCount(includePartnerIdeas, expectedCount);
+    }
+
+    [TestMethod]
     public async Task GetAllIdeasAsync_WhenNoIdeasInCollection_ReturnsEmpty()
     {
         // Arrange
+        string userId = "123";
+
         var mockedLogger = new Mock<IAppLogger<IdeaService>>();
 
         var mockedIdeaRepository = new Mock<IIdeaRepository>();
         mockedIdeaRepository
-            .Setup(x => x.GetAllAsync(It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAllUserIdeasAsync(userId))
             .ReturnsAsync(Enumerable.Empty<Idea>());
 
-        var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object);
+        var mockedUserService = new Mock<IUserService>();
+        var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object, mockedUserService.Object);
 
         // Act
-        var results = await sut.GetAllUserIdeasAsync("123");
+        var results = await sut.GetAllUserIdeasAsync(userId, false);
 
         // Assert
         Assert.AreEqual(0, results.Count());
@@ -128,7 +151,8 @@ public class IdeaServiceTests
         // Arrange
         var mockedLogger = new Mock<IAppLogger<IdeaService>>();
         var mockedIdeaRepository = new Mock<IIdeaRepository>();
-        var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object);
+        var mockedUserService = new Mock<IUserService>();
+        var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object, mockedUserService.Object);
 
         var idea = new Idea();
 
@@ -141,7 +165,8 @@ public class IdeaServiceTests
         // Arrange
         var mockedLogger = new Mock<IAppLogger<IdeaService>>();
         var mockedIdeaRepository = new Mock<IIdeaRepository>();
-        var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object);
+        var mockedUserService = new Mock<IUserService>();
+        var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object, mockedUserService.Object);
 
         var idea = new Idea
         {
@@ -159,21 +184,66 @@ public class IdeaServiceTests
     public async Task UpdateIdea_WhenValidIdea_ThenRepositoryUpdateIdeaIsCalled()
     {
         // Arrange
+        Idea? idea = new();
+
         var mockedLogger = new Mock<IAppLogger<IdeaService>>();
         var mockedIdeaRepository = new Mock<IIdeaRepository>();
-
-        Idea? idea = new();
 
         mockedIdeaRepository
             .Setup(repository => repository.GetByIdAsync(It.IsAny<string>(), default))
             .ReturnsAsync(idea);
 
-        var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object);
+        var mockedUserService = new Mock<IUserService>();
+        var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object, mockedUserService.Object);
 
         // Act
         await sut.UpdateIdeaAsync(idea);
 
         // Assert
         mockedIdeaRepository.Verify(repository => repository.UpdateAsync(It.Is<Idea>(x => x.Id == idea.Id), default));
+    }
+
+    private async Task GetAllIdeasAsync_WhenIncludePartnerIdeasIsSet_ReturnsExpectedCount(bool isIncludePartnerIdeasSet, int expectedCount)
+    {
+        // Arrange
+        string userId = "user";
+        string partnerOneId = "partnerOne";
+        string partnerTwoId = "partnerTwo";
+
+        var ideas = new List<Idea>()
+        {
+            new Idea() { CreatedBy = userId },
+            new Idea() { CreatedBy = partnerOneId },
+            new Idea() { CreatedBy = partnerOneId },
+            new Idea() { CreatedBy = partnerTwoId },
+            new Idea() { CreatedBy = "random1" },
+            new Idea() { CreatedBy = "random2" },
+        };
+
+        var mockedLogger = new Mock<IAppLogger<IdeaService>>();
+
+        var mockedIdeaRepository = new Mock<IIdeaRepository>();
+        mockedIdeaRepository
+            .Setup(x => x.GetAllUserIdeasAsync(userId))
+            .ReturnsAsync(ideas.Where(x => x.CreatedBy.Equals(userId)));
+        mockedIdeaRepository
+            .Setup(x => x.GetAllUserIdeasAsync(partnerOneId))
+            .ReturnsAsync(ideas.Where(x => x.CreatedBy.Equals(partnerOneId)));
+        mockedIdeaRepository
+            .Setup(x => x.GetAllUserIdeasAsync(partnerTwoId))
+            .ReturnsAsync(ideas.Where(x => x.CreatedBy.Equals(partnerTwoId)));
+
+        var mockedUserService = new Mock<IUserService>();
+        mockedUserService
+            .Setup(x => x.GetUserPartners(userId))
+            .ReturnsAsync(new List<string>() { partnerOneId, partnerTwoId });
+
+        var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object, mockedUserService.Object);
+
+        // Act
+        var results = await sut.GetAllUserIdeasAsync(userId, isIncludePartnerIdeasSet);
+
+        // Assert
+        Assert.AreEqual(expectedCount, results.Count());
     }
 }

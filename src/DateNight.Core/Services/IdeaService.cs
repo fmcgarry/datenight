@@ -8,11 +8,13 @@ public class IdeaService : IIdeaService
     private readonly IIdeaRepository _ideaRepository;
     private readonly IAppLogger<IdeaService> _logger;
     private readonly Random _random = new();
+    private readonly IUserService _userService;
 
-    public IdeaService(IAppLogger<IdeaService> logger, IIdeaRepository ideaRepository)
+    public IdeaService(IAppLogger<IdeaService> logger, IIdeaRepository ideaRepository, IUserService userService)
     {
         _logger = logger;
         _ideaRepository = ideaRepository;
+        _userService = userService;
     }
 
     public async Task ActivateIdea(string id)
@@ -70,13 +72,13 @@ public class IdeaService : IIdeaService
         await DeleteIdeaAsync(idea);
     }
 
-    public Task<IEnumerable<Idea>> GetAllUserIdeasAsync(string? userId)
+    public Task<IEnumerable<Idea>> GetAllUserIdeasAsync(string? userId, bool includePartnerIdeas)
     {
         ArgumentNullException.ThrowIfNull(userId);
 
         _logger.LogInformation("Getting all ideas for user '{userId}'.", userId);
 
-        return GetAllUserIdeasInternalAsync(userId);
+        return GetAllUserIdeasInternalAsync(userId, includePartnerIdeas);
     }
 
     public Task<Idea> GetIdeaByIdAsync(string id)
@@ -91,7 +93,7 @@ public class IdeaService : IIdeaService
     {
         _logger.LogInformation("Getting random idea");
 
-        var ideas = await GetAllUserIdeasInternalAsync(userId);
+        var ideas = await GetAllUserIdeasInternalAsync(userId, true);
         var nonActiveIdeas = ideas.Where(idea => idea.State != IdeaState.Active);
 
         int numIdeas = nonActiveIdeas.Count();
@@ -118,7 +120,7 @@ public class IdeaService : IIdeaService
 
         _logger.LogInformation("Getting currently active idea");
 
-        var ideas = await GetAllUserIdeasInternalAsync(userId);
+        var ideas = await GetAllUserIdeasInternalAsync(userId, false);
         var currentlyActiveIdea = ideas.FirstOrDefault(idea => idea.State == IdeaState.Active);
 
         if (currentlyActiveIdea is null)
@@ -143,9 +145,24 @@ public class IdeaService : IIdeaService
         await _ideaRepository.AddAsync(idea);
     }
 
-    private async Task<IEnumerable<Idea>> GetAllUserIdeasInternalAsync(string userId)
+    private async Task<IEnumerable<Idea>> GetAllUserIdeasInternalAsync(string userId, bool includePartnerIdeas)
     {
-        var ideas = await _ideaRepository.GetAllUserIdeasAsync(userId);
+        var ideas = new List<Idea>();
+
+        var userIdeas = await _ideaRepository.GetAllUserIdeasAsync(userId);
+        ideas.AddRange(userIdeas);
+
+        if (includePartnerIdeas)
+        {
+            var partners = await _userService.GetUserPartners(userId);
+
+            foreach (var partner in partners)
+            {
+                var partnerIdeas = await _ideaRepository.GetAllUserIdeasAsync(partner);
+                ideas.AddRange(partnerIdeas);
+            }
+        }
+
         return ideas;
     }
 
