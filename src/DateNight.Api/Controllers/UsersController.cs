@@ -21,6 +21,24 @@ namespace DateNight.Api.Controllers
             _userService = userService;
         }
 
+        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
+        [Consumes(MediaTypeNames.Text.Plain)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK, MediaTypeNames.Text.Plain)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest, MediaTypeNames.Text.Plain)]
+        public async Task<ActionResult<UserRegisterResponse>> DeleteUser(string id)
+        {
+            try
+            {
+                await _userService.DeleteUserAsync(id);
+
+                return Ok($"Deleted user '{id}'.");
+            }
+            catch (UserDoesNotExistException)
+            {
+                return NotFound("User does not exist.");
+            }
+        }
+
         [HttpGet("{id}"), Authorize]
         [ProducesResponseType(typeof(GetUserResponse), StatusCodes.Status200OK, MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest, MediaTypeNames.Text.Plain)]
@@ -73,28 +91,20 @@ namespace DateNight.Api.Controllers
         [ProducesResponseType(typeof(UserRegisterResponse), StatusCodes.Status201Created, MediaTypeNames.Application.Json)]
         public async Task<ActionResult<UserRegisterResponse>> RegisterUser(UserRegisterRequest user)
         {
-            var id = await _userService.CreateUserAsync(user.Name, user.Email, user.Password);
-
-            var reponse = new UserRegisterResponse(user.Name, user.Email, user.Password);
-
-            return Created(id, reponse);
-        }
-
-        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
-        [Consumes(MediaTypeNames.Text.Plain)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK, MediaTypeNames.Text.Plain)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest, MediaTypeNames.Text.Plain)]
-        public async Task<ActionResult<UserRegisterResponse>> DeleteUser(string id)
-        {
             try
             {
-                await _userService.DeleteUserAsync(id);
+                var id = await _userService.CreateUserAsync(user.Name, user.Email, user.Password);
+                var reponse = new UserRegisterResponse(user.Name, user.Email, user.Password);
 
-                return Ok($"Deleted user '{id}'.");
+                return Created(id, reponse);
             }
-            catch (UserDoesNotExistException)
+            catch (UserCreationFailedException)
             {
-                return NotFound("User does not exist.");
+                return BadRequest("Failed to register user. Please try again.");
+            }
+            catch (Exception)
+            {
+                return Problem();
             }
         }
 

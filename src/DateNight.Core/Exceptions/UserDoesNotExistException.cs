@@ -1,9 +1,8 @@
-﻿namespace DateNight.Core.Exceptions
+﻿namespace DateNight.Core.Exceptions;
+
+public class UserDoesNotExistException : Exception
 {
-    public class UserDoesNotExistException : Exception
+    public UserDoesNotExistException() : base("User does not exist")
     {
-        public UserDoesNotExistException() : base("User does not exist")
-        {
-        }
     }
 }

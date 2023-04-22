@@ -7,6 +7,8 @@ namespace DateNight.Core.Services;
 
 public class UserService : IUserService
 {
+    private const int PartnerCodeSize = 8;
+
     private readonly IAppLogger<UserService> _logger;
     private readonly ITokenService _tokenService;
     private readonly IUserRepository _userRepository;
@@ -29,9 +31,19 @@ public class UserService : IUserService
             Password = password
         };
 
+        await GenerateValidUserId(user);
+
         await _userRepository.AddAsync(user);
 
         return user.Id.ToString();
+    }
+
+    public async Task DeleteUserAsync(string id)
+    {
+        var user = id.Contains('@') ? await GetUserbyEmailAsync(id) : await GetUserByIdAsync(id);
+
+        await _userRepository.DeleteAsync(user);
+        _logger.LogInformation("Deleted user '{id}'", id);
     }
 
     public async Task<User> GetUserbyEmailAsync(string email)
@@ -50,14 +62,6 @@ public class UserService : IUserService
         var user = await _userRepository.GetByIdAsync(id) ?? throw new UserDoesNotExistException();
 
         return user;
-    }
-
-    public async Task DeleteUserAsync(string id)
-    {
-        var user = id.Contains('@') ? await GetUserbyEmailAsync(id) : await GetUserByIdAsync(id);
-
-        await _userRepository.DeleteAsync(user);
-        _logger.LogInformation("Deleted user '{id}'", id);
     }
 
     public async Task<string> LoginUserAsync(string username, string passwordText)
@@ -123,5 +127,24 @@ public class UserService : IUserService
         bool isMatch = computedHash.SequenceEqual(password.Hash);
 
         return isMatch;
+    }
+
+    private async Task GenerateValidUserId(User user)
+    {
+        const int MaxLoopCount = 10;
+
+        for (int i = 0; i < MaxLoopCount; i++)
+        {
+            var existingUsers = await _userRepository.GetUsersByPartialIdAsync(user.Id[..PartnerCodeSize]);
+
+            if (!existingUsers.Any())
+            {
+                return;
+            }
+
+            user.GenerateNewId();
+        }
+
+        throw new UserCreationFailedException($"Failed to generate a valid User Id after {MaxLoopCount} attempts.");
     }
 }

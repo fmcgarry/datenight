@@ -6,7 +6,7 @@ namespace DateNight.Core.Entities.UserAggregate
     {
         public User()
         {
-            Id = Guid.NewGuid().ToString("N");
+            this.GenerateNewId();
         }
 
         public string Email { get; set; } = string.Empty;

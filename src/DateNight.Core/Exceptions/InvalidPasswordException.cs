@@ -1,9 +1,8 @@
-﻿namespace DateNight.Core.Exceptions
+﻿namespace DateNight.Core.Exceptions;
+
+public class InvalidPasswordException : Exception
 {
-    public class InvalidPasswordException : Exception
+    public InvalidPasswordException() : base("Invalid password")
     {
-        public InvalidPasswordException() : base("Invalid password")
-        {
-        }
     }
 }
