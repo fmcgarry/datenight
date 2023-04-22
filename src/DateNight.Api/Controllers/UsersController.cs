@@ -94,9 +94,9 @@ namespace DateNight.Api.Controllers
             try
             {
                 var id = await _userService.CreateUserAsync(user.Name, user.Email, user.Password);
-                var reponse = new UserRegisterResponse(user.Name, user.Email, user.Password);
+                var response = new UserRegisterResponse(user.Name, user.Email, user.Password);
 
-                return Created(id, reponse);
+                return Created(id, response);
             }
             catch (UserCreationFailedException)
             {
