@@ -26,6 +26,25 @@ internal class DateNightApiClient : IDateNightApiClient
         _logger.LogInformation("HttpClient created with base address: {BaseAddress}", _httpClient.BaseAddress);
     }
 
+    public async Task AddPartner(string code)
+    {
+        _logger.LogInformation("Adding partner using code '{code}'", code);
+
+        string id = GetUserIdFromToken();
+
+        var content = new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            { "code", code }
+        });
+
+        var response = await _httpClient.PostAsync($"{_usersEndpoint}/{id}/partners", content);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Failed to add partner using code '{code}'. Status code: {StatusCode}", code, response.StatusCode);
+        }
+    }
+
     public async Task CreateIdeaAsync(IdeaModel idea)
     {
         _logger.LogInformation("Creating idea '{Title}'", idea.Title);
@@ -197,6 +216,18 @@ internal class DateNightApiClient : IDateNightApiClient
         _logger.LogError("Failed to login user. Status code: {StatusCode}", response.StatusCode);
 
         return false;
+    }
+
+    public async Task RemovePartner(string id)
+    {
+        string userId = GetUserIdFromToken();
+
+        var response = await _httpClient.DeleteAsync($"{_usersEndpoint}/{userId}/partners/{id}");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Failed to remove partner '{id}'. Status code: {StatusCode}", id, response.StatusCode);
+        }
     }
 
     public async Task SetIdeaAsActiveAsync(IdeaModel idea)

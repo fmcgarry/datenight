@@ -5,6 +5,8 @@ namespace DateNight.App.Clients.DateNightApi;
 
 public interface IDateNightApiClient
 {
+    Task AddPartner(string code);
+
     Task CreateIdeaAsync(IdeaModel idea);
 
     Task CreateUserAsync(string name, string email, string password);
@@ -24,6 +26,8 @@ public interface IDateNightApiClient
     Task<UserModel?> GetUserAsync(string id);
 
     Task<bool> LoginUserAsync(string email, string password);
+
+    Task RemovePartner(string id);
 
     Task SetIdeaAsActiveAsync(IdeaModel idea);
 

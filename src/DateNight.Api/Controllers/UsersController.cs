@@ -20,15 +20,15 @@ namespace DateNight.Api.Controllers
             _userService = userService;
         }
 
-        [HttpPost("{id}/partners/add")]
+        [HttpPost("{id}/partners")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK, MediaTypeNames.Text.Plain)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest, MediaTypeNames.Text.Plain)]
-        public async Task<ActionResult<UserRegisterResponse>> AddUserPartner(string id, string partnerCode)
+        public async Task<ActionResult<UserRegisterResponse>> AddUserPartner(string id, [FromForm] string code)
         {
             try
             {
-                await _userService.AddUserPartnerAsync(id, partnerCode);
-                return Ok($"Added partner '{partnerCode}' to user '{id}'.");
+                await _userService.AddUserPartnerAsync(id, code);
+                return Ok($"Added partner '{code}' to user '{id}'.");
             }
             catch (UserCreationFailedException)
             {
@@ -66,7 +66,7 @@ namespace DateNight.Api.Controllers
             try
             {
                 var user = await _userService.GetUserByIdAsync(id);
-                var response = new GetUserResponse(user.Id, user.Name, user.Email);
+                var response = new GetUserResponse(user.Id, user.Name, user.Email, user.Partners);
 
                 return Ok(response);
             }
@@ -147,7 +147,7 @@ namespace DateNight.Api.Controllers
             }
         }
 
-        [HttpPost("{id}/partners/remove")]
+        [HttpDelete("{id}/partners/{partnerId}")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK, MediaTypeNames.Text.Plain)]
         public async Task<ActionResult<UserRegisterResponse>> RemoveUserPartner(string id, string partnerId)
         {
