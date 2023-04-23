@@ -100,6 +100,11 @@ internal class DateNightApiClient : IDateNightApiClient
 
         var idea = await response.Content.ReadFromJsonAsync<IdeaModel>();
 
+        if (idea is not null)
+        {
+            ConvertToLocalTime(idea);
+        }
+
         return idea;
     }
 
@@ -118,11 +123,7 @@ internal class DateNightApiClient : IDateNightApiClient
 
         if (ideas is not null)
         {
-            foreach (var idea in ideas)
-            {
-                idea.CreatedOn = idea.CreatedOn.ToLocalTime();
-            }
-
+            ConvertToLocalTime(ideas);
             return ideas;
         }
 
@@ -152,6 +153,11 @@ internal class DateNightApiClient : IDateNightApiClient
 
         var idea = await response.Content.ReadFromJsonAsync<IdeaModel>();
 
+        if (idea is not null)
+        {
+            ConvertToLocalTime(idea);
+        }
+
         return idea;
     }
 
@@ -174,7 +180,33 @@ internal class DateNightApiClient : IDateNightApiClient
 
         var idea = await response.Content.ReadFromJsonAsync<IdeaModel>();
 
+        if (idea is not null)
+        {
+            ConvertToLocalTime(idea);
+        }
+
         return idea;
+    }
+
+    public async Task<IEnumerable<IdeaModel>> GetTopIdeasAsync(int start, int end)
+    {
+        _logger.LogInformation("Getting top ideas");
+
+        var response = await _httpClient.GetAsync($"{_ideasEndpoint}/top?start={start}&end={end}");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Failed to get top ideas. Status code: {StatusCode}", response.StatusCode);
+        }
+
+        var ideas = await response.Content.ReadFromJsonAsync<IEnumerable<IdeaModel>>();
+
+        if (ideas is not null)
+        {
+            return ConvertToLocalTime(ideas);
+        }
+
+        return Enumerable.Empty<IdeaModel>();
     }
 
     public async Task<UserModel?> GetUserAsync(string id)
@@ -293,6 +325,21 @@ internal class DateNightApiClient : IDateNightApiClient
 
         await UpdateUserInternalAsync(string.Empty, string.Empty, password);
         await LoginUserAsync(email, password);
+    }
+
+    private static IEnumerable<IdeaModel> ConvertToLocalTime(IEnumerable<IdeaModel> ideas)
+    {
+        foreach (var idea in ideas)
+        {
+            ConvertToLocalTime(idea);
+        }
+
+        return ideas;
+    }
+
+    private static void ConvertToLocalTime(IdeaModel idea)
+    {
+        idea.CreatedOn = idea.CreatedOn.ToLocalTime();
     }
 
     private string GetUserIdFromToken()

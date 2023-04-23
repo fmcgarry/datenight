@@ -23,6 +23,8 @@ public interface IDateNightApiClient
 
     Task<IdeaModel?> GetRandomIdeaAsync();
 
+    Task<IEnumerable<IdeaModel>> GetTopIdeasAsync(int start, int end);
+
     Task<UserModel?> GetUserAsync(string id);
 
     Task<bool> LoginUserAsync(string email, string password);

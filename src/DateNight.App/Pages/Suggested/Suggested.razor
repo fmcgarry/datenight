@@ -25,10 +25,10 @@
 </div>
 <div class="row mt-2">
     <div class="col d-flex justify-content-start">
-        <button class="btn btn-secondary w-100" @onclick=OnPreviousButtonClickAsync>Previous</button>
+        <button class="btn btn-secondary w-100" disabled="@(_isPreviousButtonDisabled)" @onclick=OnPreviousButtonClickAsync>Previous</button>
     </div>
     <div class="col d-flex justify-content-end">
-        <button class="btn btn-secondary w-100" @onclick=OnNextButtonClickedAsync>Next</button>
+        <button class="btn btn-secondary w-100" disabled="@(_isNextButtonDisabled)" @onclick=OnNextButtonClickedAsync>Next</button>
     </div>
 </div>
 <div class="row mt-4">
