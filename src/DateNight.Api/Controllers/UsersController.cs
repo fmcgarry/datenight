@@ -133,7 +133,7 @@ namespace DateNight.Api.Controllers
             try
             {
                 var userId = await _userService.CreateUserAsync(user.Name, user.Email, user.Password);
-                var response = new UserRegisterResponse(user.Name, user.Email, user.Password);
+                var response = new UserRegisterResponse(user.Name, user.Email);
 
                 return Created(userId, response);
             }
