@@ -1,9 +1,9 @@
-﻿using DateNight.App.Interfaces;
-using DateNight.App.Models;
+﻿using DateNight.App.Clients.DateNightApi;
+using DateNight.App.Components.IdeaComponent;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace DateNight.App.Pages;
+namespace DateNight.App.Pages.ActiveDate;
 
 public partial class ActiveDate
 {
@@ -37,13 +37,13 @@ public partial class ActiveDate
     {
     }
 
-    private void OnClickGetRandomIdeaButton(MouseEventArgs e)
-    {
-        Navigation.NavigateTo("/ideas/random");
-    }
-
     private void OnClickCreateNewIdeaButton(MouseEventArgs e)
     {
         Navigation.NavigateTo("/ideas/create");
+    }
+
+    private void OnClickGetRandomIdeaButton(MouseEventArgs e)
+    {
+        Navigation.NavigateTo("/ideas/random");
     }
 }

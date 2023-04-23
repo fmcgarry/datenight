@@ -1,4 +1,4 @@
-﻿using DateNight.App.Interfaces;
+﻿using DateNight.App.Components.IdeaComponent;
 using DateNight.App.Models;
 using Microsoft.Extensions.Logging;
 using System.IdentityModel.Tokens.Jwt;

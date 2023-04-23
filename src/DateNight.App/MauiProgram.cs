@@ -1,5 +1,4 @@
 ﻿using DateNight.App.Clients.DateNightApi;
-using DateNight.App.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace DateNight.App

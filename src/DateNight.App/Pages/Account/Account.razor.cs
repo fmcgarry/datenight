@@ -1,9 +1,8 @@
-using DateNight.App.Interfaces;
-using DateNight.App.Models;
+using DateNight.App.Clients.DateNightApi;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace DateNight.App.Pages;
+namespace DateNight.App.Pages.Account;
 
 public partial class Account
 {

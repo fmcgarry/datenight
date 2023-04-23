@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DateNight.App.Models;
+namespace DateNight.App.Pages.ChangePassword;
 
 internal class ChangePasswordModel
 {

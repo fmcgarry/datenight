@@ -1,8 +1,7 @@
-using DateNight.App.Interfaces;
-using DateNight.App.Models;
+using DateNight.App.Clients.DateNightApi;
 using Microsoft.AspNetCore.Components;
 
-namespace DateNight.App.Pages;
+namespace DateNight.App.Pages.Login;
 
 public partial class Login
 {

@@ -1,22 +1,21 @@
-﻿using DateNight.App.Interfaces;
-using DateNight.App.Models;
+﻿using DateNight.App.Clients.DateNightApi;
 using Microsoft.AspNetCore.Components;
 
-namespace DateNight.App.Components;
+namespace DateNight.App.Components.IdeaComponent;
 
 public partial class IdeaComponent
 {
     private readonly string _editModalId = "m" + Guid.NewGuid().ToString("N");
     private string _subtitleText = string.Empty;
 
-    [Parameter]
-    public IdeaModel Idea { get; set; }
-
-    [Parameter]
-    public EventCallback OnDeleteCallback { get; set; }
-
     [Inject]
-    internal IDateNightApiClient DateNightApiClient { get; set; }
+    public required IDateNightApiClient DateNightApiClient { get; init; }
+
+    [Parameter]
+    public required IdeaModel Idea { get; set; }
+
+    [Parameter]
+    public required EventCallback OnDeleteCallback { get; init; }
 
     protected override async Task OnInitializedAsync()
     {

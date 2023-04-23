@@ -1,5 +1,5 @@
-﻿using DateNight.App.Interfaces;
-using DateNight.App.Models;
+﻿using DateNight.App.Clients.DateNightApi;
+using DateNight.App.Components.IdeaComponent;
 using Microsoft.AspNetCore.Components;
 
 namespace DateNight.App.Components;
@@ -11,17 +11,17 @@ public partial class EditIdeaModal
     private readonly string _editModalTitleId = "m" + Guid.NewGuid().ToString("N");
     private IdeaModel _editIdea = new();
 
-    [Parameter]
-    public string Id { get; set; }
-
-    [Parameter]
-    public IdeaModel Idea { get; set; }
-
-    [Parameter]
-    public EventCallback OnEditFinishedCallback { get; set; }
-
     [Inject]
-    internal IDateNightApiClient DateNightApiClient { get; set; }
+    public required IDateNightApiClient DateNightApiClient { get; init; }
+
+    [Parameter]
+    public required string Id { get; init; }
+
+    [Parameter]
+    public required IdeaModel Idea { get; init; }
+
+    [Parameter]
+    public required EventCallback OnEditFinishedCallback { get; init; }
 
     protected override void OnInitialized()
     {
