@@ -15,7 +15,7 @@
                 @foreach (var item in _suggested)
                 {
                     <tr>
-                        <th scope="row" class="text-nowrap">@item.Rank</th>
+                        <th scope="row" class="text-nowrap text-center">@item.Rank</th>
                         <td class="w-100">@item.Idea.Title</td>
                     </tr>
                 }
@@ -23,16 +23,16 @@
         </table>
     </div>
 </div>
-<div class="row">
-    <div class="col">
-        <button class="btn btn-secondary">Previous</button>
+<div class="row mt-2">
+    <div class="col d-flex justify-content-start">
+        <button class="btn btn-secondary w-100" @onclick=OnPreviousButtonClickAsync>Previous</button>
     </div>
-    <div class="col">
-        <button class="btn btn-secondary">Next</button>
+    <div class="col d-flex justify-content-end">
+        <button class="btn btn-secondary w-100" @onclick=OnNextButtonClickedAsync>Next</button>
     </div>
 </div>
-<div class="row">
+<div class="row mt-4">
     <div class="col">
-        <button class="btn btn-primary w-100 mt-4">Steal</button>
+        <button class="btn btn-primary w-100" @onclick=OnStealButtonClickAsync>Steal</button>
     </div>
 </div>
