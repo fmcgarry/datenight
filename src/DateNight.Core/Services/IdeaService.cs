@@ -108,6 +108,25 @@ public class IdeaService : IIdeaService
         return idea;
     }
 
+    public async Task<IEnumerable<Idea>> GetTopIdeas(int start, int end)
+    {
+        if (start > end)
+        {
+            throw new ArgumentOutOfRangeException(nameof(start), "Start cannot be greater than end.");
+        }
+
+        if (end < start)
+        {
+            throw new ArgumentOutOfRangeException(nameof(end), "End cannot be less than start");
+        }
+
+        var ideas = await _ideaRepository.GetAllAsync();
+
+        var sortedIdeas = ideas.OrderBy(idea => idea.PopularityScore).ToArray();
+
+        return sortedIdeas[start..end];
+    }
+
     public async Task<Idea> GetUserActiveIdeaAsync(string? userId)
     {
         ArgumentNullException.ThrowIfNull(userId);

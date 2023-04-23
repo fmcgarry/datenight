@@ -142,6 +142,23 @@ namespace DateNight.Api.Controllers
             }
         }
 
+        [HttpGet("top")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<IdeaResponse>>> GetTopIdeas(int start, int end)
+        {
+            var ideas = await _ideaService.GetTopIdeas(start, end);
+
+            var ideaResponses = new List<IdeaResponse>();
+
+            foreach (var idea in ideas)
+            {
+                var ideaResponse = new IdeaResponse(idea.Id, idea.Title, idea.Description, idea.CreatedBy, idea.CreatedOn);
+                ideaResponses.Add(ideaResponse);
+            }
+
+            return Ok(ideaResponses);
+        }
+
         [HttpPost("active")]
         [Consumes("application/x-www-form-urlencoded")]
         public async Task<IActionResult> SetActiveIdea([FromForm] string id)

@@ -31,6 +31,8 @@ namespace DateNight.Core.Interfaces
 
         Task<Idea?> GetRandomUserIdeaAsync(string userId);
 
+        Task<IEnumerable<Idea>> GetTopIdeas(int start, int end);
+
         /// <summary>
         /// Get the currently active idea.
         /// </summary>
