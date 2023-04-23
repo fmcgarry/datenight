@@ -18,7 +18,7 @@ namespace DateNight.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddIdea(IdeaRequest idea)
+        public async Task<IActionResult> AddIdea(AddIdeaRequest idea)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -66,7 +66,8 @@ namespace DateNight.Api.Controllers
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var idea = await _ideaService.GetUserActiveIdeaAsync(userId);
 
-                var ideaResponse = new IdeaResponse(idea.Id, idea.Title, idea.Description, idea.CreatedBy, idea.CreatedOn);
+                var ideaResponse = new IdeaResponse(idea.Id, idea.Title, idea.Description, idea.CreatedBy,
+                                                    idea.CreatedOn, idea.PopularityScore);
 
                 return Ok(ideaResponse);
             }
@@ -90,7 +91,8 @@ namespace DateNight.Api.Controllers
                 return NotFound();
             }
 
-            var ideaResponse = new IdeaResponse(idea.Id, idea.Title, idea.Description, idea.CreatedBy, idea.CreatedOn);
+            var ideaResponse = new IdeaResponse(idea.Id, idea.Title, idea.Description, idea.CreatedBy,
+                                                idea.CreatedOn, idea.PopularityScore);
 
             return Ok(ideaResponse);
         }
@@ -107,7 +109,9 @@ namespace DateNight.Api.Controllers
 
                 foreach (var idea in ideas)
                 {
-                    var ideaResponse = new IdeaResponse(idea.Id, idea.Title, idea.Description, idea.CreatedBy, idea.CreatedOn);
+                    var ideaResponse = new IdeaResponse(idea.Id, idea.Title, idea.Description, idea.CreatedBy,
+                                                        idea.CreatedOn, idea.PopularityScore);
+
                     ideaResponses.Add(ideaResponse);
                 }
 
@@ -132,7 +136,8 @@ namespace DateNight.Api.Controllers
                     return NotFound("No ideas were found.");
                 }
 
-                var ideaResponse = new IdeaResponse(idea.Id, idea.Title, idea.Description, idea.CreatedBy, idea.CreatedOn);
+                var ideaResponse = new IdeaResponse(idea.Id, idea.Title, idea.Description, idea.CreatedBy,
+                                                    idea.CreatedOn, idea.PopularityScore);
 
                 return Ok(ideaResponse);
             }
@@ -152,7 +157,9 @@ namespace DateNight.Api.Controllers
 
             foreach (var idea in ideas)
             {
-                var ideaResponse = new IdeaResponse(idea.Id, idea.Title, idea.Description, idea.CreatedBy, idea.CreatedOn);
+                var ideaResponse = new IdeaResponse(idea.Id, idea.Title, idea.Description, idea.CreatedBy,
+                                                    idea.CreatedOn, idea.PopularityScore);
+
                 ideaResponses.Add(ideaResponse);
             }
 
@@ -179,7 +186,7 @@ namespace DateNight.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateIdea(string id, IdeaRequest idea)
+        public async Task<IActionResult> UpdateIdea(string id, UpdateIdeaRequest idea)
         {
             try
             {
@@ -187,6 +194,10 @@ namespace DateNight.Api.Controllers
 
                 ideaModel.Title = idea.Title;
                 ideaModel.Description = idea.Description;
+                ideaModel.CompletionCount += idea.State == IdeaState.Completed ? 1 : 0;
+                ideaModel.AbandonCount += idea.State == IdeaState.Abandoned ? 1 : 0;
+                ideaModel.StolenCount += idea.State == IdeaState.Stolen ? 1 : 0;
+                ideaModel.State = idea.State == IdeaState.Active ? Core.Entities.IdeaAggregate.IdeaState.Active : Core.Entities.IdeaAggregate.IdeaState.None;
 
                 await _ideaService.UpdateIdeaAsync(ideaModel);
 

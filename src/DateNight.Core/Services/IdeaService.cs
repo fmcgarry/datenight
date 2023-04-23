@@ -157,6 +157,11 @@ public class IdeaService : IIdeaService
             throw new ArgumentException("Idea does not exist.", nameof(idea));
         }
 
+        if (idea.State == IdeaState.Active)
+        {
+            await ActivateIdea(idea.Id);
+        }
+
         await _ideaRepository.UpdateAsync(idea);
     }
 
