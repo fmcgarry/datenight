@@ -66,7 +66,7 @@ namespace DateNight.Api.Controllers
             try
             {
                 var user = await _userService.GetUserByIdAsync(id);
-                var response = new GetUserResponse(user.Name, user.Email);
+                var response = new GetUserResponse(user.Id, user.Name, user.Email);
 
                 return Ok(response);
             }
