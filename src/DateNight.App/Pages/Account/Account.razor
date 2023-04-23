@@ -1,0 +1,81 @@
+﻿@page "/account"
+
+<div class="d-flex flex-column h-100">
+    <h3>Your Information</h3>
+
+    @if(_isLoading)
+    {
+        <div class="d-flex h-100 justify-content-center align-items-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <EditForm id="accountForm" Model="_account" OnValidSubmit="OnAccountFormValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <InputText class="form-control" id="name" @bind-Value="_account.Name" @onkeypress=@(() => _isDirty = true)></InputText>
+            </div>
+            <div class="mb-4">
+                <label for="email" class="form-label">Email</label>
+                <InputText class="form-control" id="email" @bind-Value="_account.Email" @onkeypress=@(() => _isDirty = true) />
+            </div>
+            <div class="mb-2">
+                <button type="submit" class="btn btn-success w-100" disabled="@(!_isDirty)">
+                    @if (_isBusy)
+                    {
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <span class="visually-hidden">Updating...</span>
+                    }
+                    else
+                    {
+                        <span>Update</span>
+                    }
+                </button>
+            </div>
+        </EditForm>
+        <div>
+            <button class="btn btn-outline-primary w-100" id="password" disabled="@_isDirty" @onclick="OnChangePasswordButtonClick">Change your password</button>
+        </div>
+
+        <div class="mt-4">
+            <div class="row">
+                <div class="col">
+                    <h3>Partners</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    @if(_isInPartnership)
+                    {
+                        <div class="row flex-column">
+                            <div class="col">
+                                <span>You are partners with: @(string.Join(", ", _partners.Select(x => x.Name)))</span>
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-danger w-100 mt-3" @onclick="OnLeaveButtonClick">Leave</button>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row flex-column">
+                            <div class="col mb-2">
+                                <span>Your code: @_userPartnerCode</span>
+                            </div>
+                            <EditForm id="partnerForm" Model="_partnerCode" OnValidSubmit="OnPartnerFormValidSubmit">
+                                <label for="partnerCode" class="form-label">Enter another user's code to join:</label>
+                                <InputText class="form-control" id="partnerCode" @bind-Value="_partnerCode.Code"></InputText>
+                                <button class="btn btn-primary w-100 mt-4" type="submit">Join</button>
+                            </EditForm>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>

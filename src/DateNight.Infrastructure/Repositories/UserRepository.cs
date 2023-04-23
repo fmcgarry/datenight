@@ -73,6 +73,14 @@ public class UserRepository : IUserRepository
         }
     }
 
+    public async Task<IEnumerable<User>> GetUsersByPartialIdAsync(string partialId)
+    {
+        var query = new QueryDefinition("SELECT * FROM c WHERE STARTSWITH(c.id, @partialId)").WithParameter("@partialId", partialId);
+        IEnumerable<User> results = await QueryAsync(query);
+
+        return results;
+    }
+
     public async Task UpdateAsync(User entity, CancellationToken cancellationToken = default)
     {
         await _container.UpsertItemAsync(entity, null, null, cancellationToken);

@@ -21,9 +21,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{5900F346-B
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DateNight.Api", "src\DateNight.Api\DateNight.Api.csproj", "{C5276BF0-5FBC-4262-8EE2-2C3193788991}"
-	ProjectSection(ProjectDependencies) = postProject
-		{6F4792C1-135B-4D2B-9FFA-988690A1F1C5} = {6F4792C1-135B-4D2B-9FFA-988690A1F1C5}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DateNight.Core", "src\DateNight.Core\DateNight.Core.csproj", "{B2E50170-2712-4735-898F-B03CBDA60301}"
 EndProject

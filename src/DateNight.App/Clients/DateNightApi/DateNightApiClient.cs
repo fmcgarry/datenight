@@ -1,9 +1,8 @@
-﻿using DateNight.App.Interfaces;
+﻿using DateNight.App.Components.IdeaComponent;
 using DateNight.App.Models;
 using Microsoft.Extensions.Logging;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Json;
-using System.Security.Claims;
 using System.Text.Json.Nodes;
 
 namespace DateNight.App.Clients.DateNightApi;
@@ -25,6 +24,25 @@ internal class DateNightApiClient : IDateNightApiClient
 
         _httpClient = httpClientFactory.CreateClient(HttpClientName);
         _logger.LogInformation("HttpClient created with base address: {BaseAddress}", _httpClient.BaseAddress);
+    }
+
+    public async Task AddPartner(string code)
+    {
+        _logger.LogInformation("Adding partner using code '{code}'", code);
+
+        string id = GetUserIdFromToken();
+
+        var content = new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            { "code", code }
+        });
+
+        var response = await _httpClient.PostAsync($"{_usersEndpoint}/{id}/partners", content);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Failed to add partner using code '{code}'. Status code: {StatusCode}", code, response.StatusCode);
+        }
     }
 
     public async Task CreateIdeaAsync(IdeaModel idea)
@@ -54,23 +72,6 @@ internal class DateNightApiClient : IDateNightApiClient
         {
             _logger.LogError("Failed to create user. Status code: {StatusCode}", response.StatusCode);
         }
-    }
-
-    public async Task UpdateUserAsync(string name, string email)
-    {
-        await UpdateUserInternalAsync(name, email, string.Empty);
-    }
-
-    public async Task UpdateUserPasswordAsync(string password)
-    {
-        var handler = new JwtSecurityTokenHandler();
-        var token = handler.ReadJwtToken(_httpClient.DefaultRequestHeaders.Authorization!.Parameter);
-
-        string email = token.Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
-        string name = token.Claims.First(claim => claim.Type == ClaimTypes.Name).Value;
-
-        await UpdateUserInternalAsync(string.Empty, string.Empty, password);
-        await LoginUserAsync(email, password);
     }
 
     public async Task DeleteIdeaAsync(IdeaModel idea)
@@ -217,6 +218,18 @@ internal class DateNightApiClient : IDateNightApiClient
         return false;
     }
 
+    public async Task RemovePartner(string id)
+    {
+        string userId = GetUserIdFromToken();
+
+        var response = await _httpClient.DeleteAsync($"{_usersEndpoint}/{userId}/partners/{id}");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Failed to remove partner '{id}'. Status code: {StatusCode}", id, response.StatusCode);
+        }
+    }
+
     public async Task SetIdeaAsActiveAsync(IdeaModel idea)
     {
         _logger.LogInformation("Setting idea '{Id}' as active", idea.Id);
@@ -247,13 +260,9 @@ internal class DateNightApiClient : IDateNightApiClient
         }
     }
 
-    private string GetUserIdFromToken()
+    public async Task UpdateUserAsync(string name, string email)
     {
-        var handler = new JwtSecurityTokenHandler();
-        var token = handler.ReadJwtToken(_httpClient.DefaultRequestHeaders.Authorization!.Parameter);
-        string id = token.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
-
-        return id;
+        await UpdateUserInternalAsync(name, email, string.Empty);
     }
 
     public async Task UpdateUserInternalAsync(string name, string email, string password)
@@ -273,5 +282,25 @@ internal class DateNightApiClient : IDateNightApiClient
         {
             _logger.LogError("Failed to update user. Status code: {StatusCode}", response.StatusCode);
         }
+    }
+
+    public async Task UpdateUserPasswordAsync(string password)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var token = handler.ReadJwtToken(_httpClient.DefaultRequestHeaders.Authorization!.Parameter);
+
+        string email = token.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Email).Value;
+
+        await UpdateUserInternalAsync(string.Empty, string.Empty, password);
+        await LoginUserAsync(email, password);
+    }
+
+    private string GetUserIdFromToken()
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var token = handler.ReadJwtToken(_httpClient.DefaultRequestHeaders.Authorization!.Parameter);
+        string id = token.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.NameId).Value;
+
+        return id;
     }
 }

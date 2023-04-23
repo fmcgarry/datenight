@@ -1,8 +1,7 @@
-using DateNight.App.Interfaces;
-using DateNight.App.Models;
+using DateNight.App.Clients.DateNightApi;
 using Microsoft.AspNetCore.Components;
 
-namespace DateNight.App.Pages;
+namespace DateNight.App.Pages.CreateAccount;
 
 public partial class CreateAccount
 {
@@ -12,7 +11,7 @@ public partial class CreateAccount
     public required IDateNightApiClient DateNightApiClient { get; init; }
 
     [Inject]
-    public required NavigationManager NavigationManager { get; set; }
+    public required NavigationManager NavigationManager { get; init; }
 
     private async Task OnValidSubmit()
     {

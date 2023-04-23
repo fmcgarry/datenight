@@ -1,15 +1,15 @@
-﻿using DateNight.App.Interfaces;
-using DateNight.App.Models;
+﻿using DateNight.App.Clients.DateNightApi;
+using DateNight.App.Components.IdeaComponent;
 using Microsoft.AspNetCore.Components;
 
-namespace DateNight.App.Pages;
+namespace DateNight.App.Pages.CreateIdea;
 
 public partial class CreateIdea
 {
     private IdeaModel _idea = new();
 
     [Inject]
-    internal IDateNightApiClient DateNightApiClient { get; set; }
+    public required IDateNightApiClient DateNightApiClient { get; init; }
 
     private async Task HandleValidSubmit()
     {

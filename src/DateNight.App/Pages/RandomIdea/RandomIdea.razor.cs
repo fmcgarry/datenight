@@ -1,8 +1,8 @@
-﻿using DateNight.App.Interfaces;
-using DateNight.App.Models;
+﻿using DateNight.App.Clients.DateNightApi;
+using DateNight.App.Components.IdeaComponent;
 using Microsoft.AspNetCore.Components;
 
-namespace DateNight.App.Pages;
+namespace DateNight.App.Pages.RandomIdea;
 
 public partial class RandomIdea
 {
@@ -12,10 +12,10 @@ public partial class RandomIdea
     private string _previousRandomIdeaId = string.Empty;
 
     [Inject]
-    public required NavigationManager NavigationManager { get; init; }
+    public required IDateNightApiClient DateNightApiClient { get; init; }
 
     [Inject]
-    public required IDateNightApiClient DateNightApiClient { get; init; }
+    public required NavigationManager NavigationManager { get; init; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -52,6 +52,11 @@ public partial class RandomIdea
         _previousRandomIdeaId = _idea.Id;
     }
 
+    private void OnCreateMoreClick()
+    {
+        NavigationManager.NavigateTo("/ideas/create");
+    }
+
     private async Task OnDeletedIdea()
     {
         await GetRandomIdea();
@@ -61,10 +66,5 @@ public partial class RandomIdea
     {
         await DateNightApiClient.SetIdeaAsActiveAsync(_idea);
         NavigationManager.NavigateTo("/ideas/active");
-    }
-
-    private void OnCreateMoreClick()
-    {
-        NavigationManager.NavigateTo("/ideas/create");
     }
 }

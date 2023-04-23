@@ -7,6 +7,8 @@ namespace DateNight.Core.Services;
 
 public class UserService : IUserService
 {
+    private const int PartnerCodeSize = 8;
+
     private readonly IAppLogger<UserService> _logger;
     private readonly ITokenService _tokenService;
     private readonly IUserRepository _userRepository;
@@ -16,6 +18,31 @@ public class UserService : IUserService
         _logger = logger;
         _userRepository = userRepository;
         _tokenService = tokenService;
+    }
+
+    public async Task AddUserPartnerAsync(string id, string partnerId)
+    {
+        var user = await GetUserByIdAsync(id);
+        var partners = await _userRepository.GetUsersByPartialIdAsync(partnerId);
+
+        if (partners.Count() > 1)
+        {
+            throw new ArgumentException($"More than one user id begins with {partnerId}");
+        }
+
+        var partner = partners.First();
+
+        if (!user.Partners.Contains(partner.Id))
+        {
+            user.Partners.Add(partner.Id);
+            await _userRepository.UpdateAsync(user);
+        }
+
+        if (!partner.Partners.Contains(user.Id))
+        {
+            partner.Partners.Add(id);
+            await _userRepository.UpdateAsync(partner);
+        }
     }
 
     public async Task<string> CreateUserAsync(string name, string email, string passwordText)
@@ -29,27 +56,11 @@ public class UserService : IUserService
             Password = password
         };
 
+        await GenerateValidUserId(user);
+
         await _userRepository.AddAsync(user);
 
         return user.Id.ToString();
-    }
-
-    public async Task<User> GetUserbyEmailAsync(string email)
-    {
-        _logger.LogInformation("Getting user with email '{email}'", email);
-
-        var user = await _userRepository.GetByEmail(email) ?? throw new UserDoesNotExistException();
-
-        return user;
-    }
-
-    public async Task<User> GetUserByIdAsync(string id)
-    {
-        _logger.LogInformation("Getting user '{id}'", id);
-
-        var user = await _userRepository.GetByIdAsync(id) ?? throw new UserDoesNotExistException();
-
-        return user;
     }
 
     public async Task DeleteUserAsync(string id)
@@ -58,6 +69,31 @@ public class UserService : IUserService
 
         await _userRepository.DeleteAsync(user);
         _logger.LogInformation("Deleted user '{id}'", id);
+    }
+
+    public async Task<User> GetUserbyEmailAsync(string email)
+    {
+        _logger.LogInformation("Getting user with email '{email}'", email);
+
+        var user = await _userRepository.GetByEmail(email) ?? throw new UserDoesNotExistException(email);
+
+        return user;
+    }
+
+    public async Task<User> GetUserByIdAsync(string id)
+    {
+        _logger.LogInformation("Getting user '{id}'", id);
+
+        var user = await _userRepository.GetByIdAsync(id) ?? throw new UserDoesNotExistException(id);
+
+        return user;
+    }
+
+    public async Task<IEnumerable<string>> GetUserPartners(string id)
+    {
+        var user = await GetUserByIdAsync(id);
+
+        return user.Partners;
     }
 
     public async Task<string> LoginUserAsync(string username, string passwordText)
@@ -76,9 +112,21 @@ public class UserService : IUserService
         return token;
     }
 
+    public async Task RemoveUserPartner(string id, string partnerId)
+    {
+        var user = await GetUserByIdAsync(id);
+        var partner = await GetUserByIdAsync(partnerId);
+
+        user.Partners.Remove(partnerId);
+        await _userRepository.UpdateAsync(user);
+
+        partner.Partners.Remove(user.Id);
+        await _userRepository.UpdateAsync(partner);
+    }
+
     public async Task UpdateUserAsync(string id, string name, string email, string passwordText)
     {
-        var user = await GetUserByIdAsync(id) ?? throw new UserDoesNotExistException();
+        var user = await GetUserByIdAsync(id) ?? throw new UserDoesNotExistException(id);
 
         if (!string.IsNullOrEmpty(email))
         {
@@ -123,5 +171,24 @@ public class UserService : IUserService
         bool isMatch = computedHash.SequenceEqual(password.Hash);
 
         return isMatch;
+    }
+
+    private async Task GenerateValidUserId(User user)
+    {
+        const int MaxLoopCount = 10;
+
+        for (int i = 0; i < MaxLoopCount; i++)
+        {
+            var existingUsers = await _userRepository.GetUsersByPartialIdAsync(user.Id[..PartnerCodeSize]);
+
+            if (!existingUsers.Any())
+            {
+                return;
+            }
+
+            user.GenerateNewId();
+        }
+
+        throw new UserCreationFailedException($"Failed to generate a valid User Id after {MaxLoopCount} attempts.");
     }
 }

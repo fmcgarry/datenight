@@ -25,7 +25,7 @@ namespace DateNight.Core.Interfaces
         /// <returns></returns>
         Task DeleteIdeaAsync(string id);
 
-        Task<IEnumerable<Idea>> GetAllUserIdeasAsync(string? userId);
+        Task<IEnumerable<Idea>> GetAllUserIdeasAsync(string? userId, bool includePartnerIdeas);
 
         Task<Idea> GetIdeaByIdAsync(string id);
 

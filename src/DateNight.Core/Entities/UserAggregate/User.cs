@@ -6,11 +6,12 @@ namespace DateNight.Core.Entities.UserAggregate
     {
         public User()
         {
-            Id = Guid.NewGuid().ToString("N");
+            this.GenerateNewId();
         }
 
         public string Email { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
+        public List<string> Partners { get; set; } = new();
         public Password Password { get; set; } = new();
         public List<string> Roles { get; set; } = new();
     }
