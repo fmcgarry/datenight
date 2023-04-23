@@ -32,11 +32,17 @@ public class UserService : IUserService
 
         var partner = partners.First();
 
-        user.Partners.Add(partner.Id);
-        await _userRepository.UpdateAsync(user);
+        if (!user.Partners.Contains(partner.Id))
+        {
+            user.Partners.Add(partner.Id);
+            await _userRepository.UpdateAsync(user);
+        }
 
-        partner.Partners.Add(id);
-        await _userRepository.UpdateAsync(partner);
+        if (!partner.Partners.Contains(user.Id))
+        {
+            partner.Partners.Add(id);
+            await _userRepository.UpdateAsync(partner);
+        }
     }
 
     public async Task<string> CreateUserAsync(string name, string email, string passwordText)
@@ -109,10 +115,13 @@ public class UserService : IUserService
     public async Task RemoveUserPartner(string id, string partnerId)
     {
         var user = await GetUserByIdAsync(id);
+        var partner = await GetUserByIdAsync(partnerId);
 
         user.Partners.Remove(partnerId);
-
         await _userRepository.UpdateAsync(user);
+
+        partner.Partners.Remove(user.Id);
+        await _userRepository.UpdateAsync(partner);
     }
 
     public async Task UpdateUserAsync(string id, string name, string email, string passwordText)

@@ -22,25 +22,19 @@ public class IdeaService : IIdeaService
         ArgumentNullException.ThrowIfNull(id);
         _logger.LogInformation("Setting idea '{Id}' as active", id);
 
-        var ideas = await _ideaRepository.GetAllAsync();
-        var currentActiveIdea = ideas.FirstOrDefault(idea => idea.Id == id && idea.State == IdeaState.Active);
+        var selectedIdea = await GetIdeaByIdAsync(id);
+        var ideas = await GetAllUserIdeasAsync(selectedIdea.CreatedBy, true);
 
-        if (currentActiveIdea is not null)
+        foreach (var activeIdea in ideas.Where(idea => idea.State == IdeaState.Active))
         {
-            currentActiveIdea.State = IdeaState.None;
-            await _ideaRepository.UpdateAsync(currentActiveIdea);
-        }
-        else
-        {
-            _logger.LogInformation("No idea was currently set as active");
+            activeIdea.State = IdeaState.None;
+            await _ideaRepository.UpdateAsync(activeIdea);
         }
 
-        var idea = await GetIdeaByIdInternalAsync(id);
+        selectedIdea.State = IdeaState.Active;
+        await _ideaRepository.UpdateAsync(selectedIdea);
 
-        idea.State = IdeaState.Active;
-        await _ideaRepository.UpdateAsync(idea);
-
-        _logger.LogInformation("Idea {Id} set as active", idea.Id);
+        _logger.LogInformation("Idea {Id} set as active", selectedIdea.Id);
     }
 
     public Task AddIdeaAsync(Idea idea)
