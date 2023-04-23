@@ -1,0 +1,38 @@
+@page "/suggested"
+
+<h2>Suggested</h2>
+
+<div class="row">
+    <div class="col">
+        <table class="table table-hover ">
+            <thead>
+                <tr>
+                    <th scope="col" class="w-auto">Rank</th>
+                    <th scope="col">Title</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in _suggested)
+                {
+                    <tr>
+                        <th scope="row" class="text-nowrap">@item.Rank</th>
+                        <td class="w-100">@item.Idea.Title</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <button class="btn btn-secondary">Previous</button>
+    </div>
+    <div class="col">
+        <button class="btn btn-secondary">Next</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <button class="btn btn-primary w-100 mt-4">Steal</button>
+    </div>
+</div>
