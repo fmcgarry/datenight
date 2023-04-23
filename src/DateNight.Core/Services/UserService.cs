@@ -30,9 +30,13 @@ public class UserService : IUserService
             throw new ArgumentException($"More than one user id begins with {partnerId}");
         }
 
-        user.Partners.Add(partners.First().Id);
+        var partner = partners.First();
 
+        user.Partners.Add(partner.Id);
         await _userRepository.UpdateAsync(user);
+
+        partner.Partners.Add(id);
+        await _userRepository.UpdateAsync(partner);
     }
 
     public async Task<string> CreateUserAsync(string name, string email, string passwordText)
