@@ -14,7 +14,7 @@
             <tbody>
                 @foreach (var item in _suggested)
                 {
-                    <tr>
+                    <tr class=@(_selected == item ? "table-active" : "") @onclick="@(() => OnTableRowClick(item))">
                         <th scope="row" class="text-nowrap text-center">@item.Rank</th>
                         <td class="w-100">@item.Idea.Title</td>
                     </tr>
@@ -33,6 +33,6 @@
 </div>
 <div class="row mt-4">
     <div class="col">
-        <button class="btn btn-primary w-100" @onclick=OnStealButtonClickAsync>Steal</button>
+        <button class="btn btn-primary w-100" disabled="@(_selected is null)" @onclick=OnStealButtonClick>Steal</button>
     </div>
 </div>

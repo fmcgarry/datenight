@@ -1,5 +1,4 @@
 ﻿using DateNight.App.Clients.DateNightApi;
-using DateNight.App.Components.IdeaComponent;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -12,20 +11,19 @@ public partial class Suggested
     private int _endIndex = NumResults;
     private bool _isNextButtonDisabled = false;
     private bool _isPreviousButtonDisabled = true;
-    private int _selectedIndex = 0;
+    private SuggestedModel? _selected = null;
     private int _startIndex = 0;
 
     [Inject]
-    public required IDateNightApiClient DateNightApiClient { get; set; }
+    public required IDateNightApiClient DateNightApiClient { get; init; }
+
+    [Inject]
+    public required NavigationManager NavigationManager { get; init; }
 
     protected override async Task OnInitializedAsync()
     {
+        _selected = null;
         await GetTopIdeasInRange(0, NumResults);
-    }
-
-    private async Task CreateNewIdeaBasedOnStolenIdea(IdeaModel selectedIdea)
-    {
-        await DateNightApiClient.CreateIdeaAsync(selectedIdea);
     }
 
     private async Task GetTopIdeasInRange(int start, int end)
@@ -42,6 +40,9 @@ public partial class Suggested
                 Idea = topIdeas[i]
             });
         }
+
+        _isNextButtonDisabled = _suggested.Count < NumResults;
+        _isPreviousButtonDisabled = _startIndex < 1;
     }
 
     private async Task OnNextButtonClickedAsync(MouseEventArgs e)
@@ -50,9 +51,6 @@ public partial class Suggested
         _endIndex = _startIndex + NumResults;
 
         await GetTopIdeasInRange(_startIndex, _endIndex);
-
-        _isNextButtonDisabled = _suggested.Count < NumResults;
-        _isPreviousButtonDisabled = _startIndex < 1;
     }
 
     private async Task OnPreviousButtonClickAsync(MouseEventArgs e)
@@ -61,22 +59,18 @@ public partial class Suggested
         _endIndex = _startIndex + NumResults;
 
         await GetTopIdeasInRange(_startIndex, _endIndex);
-
-        _isNextButtonDisabled = _suggested.Count < NumResults;
-        _isPreviousButtonDisabled = _startIndex < 1;
     }
 
-    private async Task OnStealButtonClickAsync(MouseEventArgs e)
+    private void OnStealButtonClick(MouseEventArgs e)
     {
-        var selectedIdea = _suggested[_selectedIndex].Idea;
-
-        await UpdateSelectedIdeaAsStolen(selectedIdea);
-        await CreateNewIdeaBasedOnStolenIdea(selectedIdea);
+        if (_selected is not null)
+        {
+            NavigationManager.NavigateTo($"ideas/create/{_selected.Idea.Id}");
+        }
     }
 
-    private async Task UpdateSelectedIdeaAsStolen(IdeaModel selectedIdea)
+    private void OnTableRowClick(SuggestedModel item)
     {
-        selectedIdea.State = IdeaModel.IdeaState.Stolen;
-        await DateNightApiClient.UpdateIdeaAsync(selectedIdea);
+        _selected = item;
     }
 }
