@@ -35,18 +35,20 @@ public partial class EditIdeaModal
 
     private async Task OnEditValidSubmit()
     {
-        await DateNightApiClient.UpdateIdeaAsync(Idea);
-
-        ResetEditIdea();
+        await DateNightApiClient.UpdateIdeaAsync(_editIdea);
         await OnEditFinishedCallback.InvokeAsync();
+        ResetEditIdea();
     }
 
     private void ResetEditIdea()
     {
-        _editIdea = new()
+        _editIdea = new IdeaModel()
         {
+            Id = Idea.Id,
             Title = Idea.Title,
-            Description = Idea.Description
+            Description = Idea.Description,
+            CreatedBy = Idea.CreatedBy,
+            CreatedOn = Idea.CreatedOn
         };
     }
 }
