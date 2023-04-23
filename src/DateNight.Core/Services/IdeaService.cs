@@ -120,7 +120,7 @@ public class IdeaService : IIdeaService
 
         _logger.LogInformation("Getting currently active idea");
 
-        var ideas = await GetAllUserIdeasInternalAsync(userId, false);
+        var ideas = await GetAllUserIdeasInternalAsync(userId, true);
         var currentlyActiveIdea = ideas.FirstOrDefault(idea => idea.State == IdeaState.Active);
 
         if (currentlyActiveIdea is null)
@@ -184,17 +184,5 @@ public class IdeaService : IIdeaService
         }
 
         return idea;
-    }
-
-    private async Task UpdateIdeaInternalAsync(Idea idea)
-    {
-        bool isIdeaInRepository = (await _ideaRepository.GetByIdAsync(idea.Id)) is not null;
-
-        if (!isIdeaInRepository)
-        {
-            throw new ArgumentException("Idea does not exist.", nameof(idea));
-        }
-
-        await _ideaRepository.UpdateAsync(idea);
     }
 }
