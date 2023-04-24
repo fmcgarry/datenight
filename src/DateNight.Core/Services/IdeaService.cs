@@ -108,6 +108,37 @@ public class IdeaService : IIdeaService
         return idea;
     }
 
+    public async Task<IEnumerable<Idea>> GetTopIdeas(int start, int end)
+    {
+        if (start > end)
+        {
+            throw new ArgumentOutOfRangeException(nameof(start), "Start cannot be greater than end.");
+        }
+
+        var ideas = await _ideaRepository.GetAllAsync();
+
+        var sortedIdeas = ideas.GroupBy(idea => idea.Title, StringComparer.InvariantCultureIgnoreCase)
+                               .Select(group => group.OrderBy(groupIdea => groupIdea.CreatedOn).First())
+                               .OrderByDescending(idea => idea.PopularityScore)
+                               .ToArray();
+
+        if (start < 0)
+        {
+            start = 0;
+        }
+        else if (start > sortedIdeas.Length)
+        {
+            start = sortedIdeas.Length;
+        }
+
+        if (end > sortedIdeas.Length)
+        {
+            end = sortedIdeas.Length;
+        }
+
+        return sortedIdeas[start..end];
+    }
+
     public async Task<Idea> GetUserActiveIdeaAsync(string? userId)
     {
         ArgumentNullException.ThrowIfNull(userId);
@@ -136,6 +167,11 @@ public class IdeaService : IIdeaService
         if (!isIdeaInRepository)
         {
             throw new ArgumentException("Idea does not exist.", nameof(idea));
+        }
+
+        if (idea.State == IdeaState.Active)
+        {
+            await ActivateIdea(idea.Id);
         }
 
         await _ideaRepository.UpdateAsync(idea);

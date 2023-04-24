@@ -61,7 +61,7 @@ public class IdeaServiceTests
         var mockedIdeaRepository = new Mock<IIdeaRepository>();
 
         mockedIdeaRepository
-            .Setup(x => x.GetAllAsync(It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAllUserIdeasAsync(It.IsAny<string>()))
             .ReturnsAsync(repositoryIdeas.AsEnumerable());
 
         mockedIdeaRepository
@@ -82,6 +82,7 @@ public class IdeaServiceTests
         await sut.ActivateIdea(newActiveIdea.Id);
 
         Assert.AreEqual(IdeaState.None, repositoryIdeas[0].State);
+        Assert.AreEqual(IdeaState.Active, repositoryIdeas[1].State);
     }
 
     [TestMethod]
@@ -143,6 +144,72 @@ public class IdeaServiceTests
 
         // Assert
         Assert.AreEqual(0, results.Count());
+    }
+
+    [TestMethod]
+    public async Task GetTopIdeas_WhenDuplicateIdeaTitles_ThenOldestIsReturned()
+    {
+        var mockedLogger = new Mock<IAppLogger<IdeaService>>();
+        string id = "This one";
+
+        var repositoryIdeas = new List<Idea>()
+        {
+            new Idea() { Id = id, Title = "Go to the Movies", CreatedOn = DateTime.MinValue },
+            new Idea() { Id = "Not this one", Title = "Go to the Movies", CreatedOn = DateTime.Now },
+        };
+
+        var mockedIdeaRepository = new Mock<IIdeaRepository>();
+
+        mockedIdeaRepository
+            .Setup(x => x.GetAllAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(repositoryIdeas.AsEnumerable());
+
+        var mockedUserService = new Mock<IUserService>();
+        var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object, mockedUserService.Object);
+
+        var ideas = (await sut.GetTopIdeas(0, repositoryIdeas.Count)).ToList();
+
+        Assert.AreEqual(id, ideas[0].Id);
+    }
+
+    [TestMethod]
+    public async Task GetTopIdeas_WhenDuplicateIdeaTitlesWithDifferentCasing_ThenOldestIsReturned()
+    {
+        var mockedLogger = new Mock<IAppLogger<IdeaService>>();
+        string id = "This one";
+
+        var repositoryIdeas = new List<Idea>()
+        {
+            new Idea() { Id = id, Title = "Go to the Movies", CreatedOn = DateTime.MinValue },
+            new Idea() { Id = "Not this one", Title = "go to the movies", CreatedOn = DateTime.Now },
+        };
+
+        var mockedIdeaRepository = new Mock<IIdeaRepository>();
+
+        mockedIdeaRepository
+            .Setup(x => x.GetAllAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(repositoryIdeas.AsEnumerable());
+
+        var mockedUserService = new Mock<IUserService>();
+        var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object, mockedUserService.Object);
+
+        var ideas = (await sut.GetTopIdeas(0, repositoryIdeas.Count)).ToList();
+
+        Assert.AreEqual(id, ideas[0].Id);
+    }
+
+    [TestMethod]
+    public async Task GetTopIdeas_WhenStartIsGreaterThanEnd_ThrowsArgumentOutOfRangeException()
+    {
+        int start = 2;
+        int end = 1;
+
+        var mockedLogger = new Mock<IAppLogger<IdeaService>>();
+        var mockedIdeaRepository = new Mock<IIdeaRepository>();
+        var mockedUserService = new Mock<IUserService>();
+        var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object, mockedUserService.Object);
+
+        await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(async () => await sut.GetTopIdeas(start, end));
     }
 
     [TestMethod]

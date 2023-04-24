@@ -2,7 +2,16 @@
 
 public class IdeaActions
 {
-    public record IdeaRequest(string Title, string Description);
+    public enum IdeaState
+    {
+        None,
+        Active,
+        Completed,
+        Abandoned,
+        Stolen
+    }
 
-    public record IdeaResponse(string Id, string Title, string Description, string CreatedBy, DateTime CreatedOn);
+    public record AddIdeaRequest(string Title, string Description);
+    public record UpdateIdeaRequest(string Title, string Description, IdeaState State);
+    public record IdeaResponse(string Id, string Title, string Description, string CreatedBy, DateTime CreatedOn, double PopularityScore);
 }
