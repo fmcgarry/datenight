@@ -304,19 +304,6 @@ This project contains most of the core business logic of the application, theref
 **Post-Conditions:** An UserDoesNotExistException is thrown to the caller  
 **Associated Requirements:** 9
 
-### AddUserToCouple_WhenUserAlreadyInCouple_ThrowsArgumentException
-
-**Description:** When a user is already in a couple and an attempt is made to add to another couple, then throw an ArgumentException.  
-**Related Issues:** #11  
-**Preconditions:** A user is already linked to a couple
-
-| Step | Action                                                              | Expected Response |
-| :--: | ------------------------------------------------------------------- | ----------------- |
-|  1   | Call AddUserToCouple method with a user that is already in a couple | ArgumentException |
-
-**Post-Conditions:** An ArgumentException is returned to the caller.  
-**Associated Requirements:** 9.2
-
 ### AddIdea_WhenDuplicateIdeaID_ThrowsArgumentException
 
 **Description:** When a user tries to add a duplicate idea, (e.g., from the Suggested page), an ArgumentException is thrown.  

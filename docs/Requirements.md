@@ -73,9 +73,8 @@
 
 9. System shall display an "Account" page to the user.
     1. System shall display the generated couple code to the user if the user is not in a couple.
-    2. System shall allow the user to input a couple code to join a couple if the user is not already in a couple.
-    3. System shall allow a user to leave a couple.
-    4. System shall allow the user to change their name.
+    2. System shall allow a user to leave a couple.
+    3. System shall allow the user to change their name.
 
 10. System shall display a "Suggested" page to the user.
     1. System shall aggregate the top 100 ideas from other couples in the app based on number of completions.
