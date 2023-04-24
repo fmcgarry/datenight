@@ -47,9 +47,9 @@ public class UserService : IUserService
 
     public async Task<string> CreateUserAsync(string name, string email, string passwordText)
     {
-        var isExistingUser = GetUserbyEmailAsync(email);
+        var existingUser = await _userRepository.GetByEmail(email);
 
-        if (isExistingUser is not null)
+        if (existingUser is not null)
         {
             throw new UserCreationFailedException("A user with the email already exists");
         }
