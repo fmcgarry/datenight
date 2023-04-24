@@ -86,6 +86,39 @@ public class IdeaServiceTests
     }
 
     [TestMethod]
+    public async Task AddIdeaAsync_WhenDuplicateIdeaID_ThrowsArgumentException()
+    {
+        // Arrange
+        var id = "123";
+
+        var idea = new Idea()
+        {
+            Id = id,
+            Title = "Test Title",
+            Description = "Test Description",
+        };
+
+        var repositoryIdeas = new List<Idea>()
+        {
+            new Idea() { Id = id }
+        };
+
+        var mockedIdeaRepository = new Mock<IIdeaRepository>();
+
+        mockedIdeaRepository
+            .Setup(x => x.GetByIdAsync(idea.Id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(repositoryIdeas[0]);
+
+        var mockedLogger = new Mock<IAppLogger<IdeaService>>();
+        var mockedUserService = new Mock<IUserService>();
+
+        var sut = new IdeaService(mockedLogger.Object, mockedIdeaRepository.Object, mockedUserService.Object);
+
+        // Assert
+        await Assert.ThrowsExceptionAsync<ArgumentException>(async () => await sut.AddIdeaAsync(idea));
+    }
+
+    [TestMethod]
     public async Task AddIdeaAsync_WhenNewIdea_ThenCreatedOnDateIsToday()
     {
         // Arrange

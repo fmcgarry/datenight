@@ -37,14 +37,21 @@ public class IdeaService : IIdeaService
         _logger.LogInformation("Idea {Id} set as active", selectedIdea.Id);
     }
 
-    public Task AddIdeaAsync(Idea idea)
+    public async Task AddIdeaAsync(Idea idea)
     {
         ArgumentNullException.ThrowIfNull(idea.Id);
         _logger.LogInformation("Adding idea '{Id}'.", idea.Id);
 
+        var existingId = GetIdeaByIdAsync(idea.Id);
+
+        if (existingId is not null)
+        {
+            throw new ArgumentException($"An idea with ID '{idea.Id}' already exists", nameof(idea));
+        }
+
         idea.CreatedOn = DateTime.UtcNow;
 
-        return AddIdeaInternalAsync(idea);
+        await _ideaRepository.AddAsync(idea);
     }
 
     public async Task DeleteIdeaAsync(Idea idea)
@@ -175,11 +182,6 @@ public class IdeaService : IIdeaService
         }
 
         await _ideaRepository.UpdateAsync(idea);
-    }
-
-    private async Task AddIdeaInternalAsync(Idea idea)
-    {
-        await _ideaRepository.AddAsync(idea);
     }
 
     private async Task<IEnumerable<Idea>> GetAllUserIdeasInternalAsync(string userId, bool includePartnerIdeas)
