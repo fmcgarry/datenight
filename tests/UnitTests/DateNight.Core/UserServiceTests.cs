@@ -100,4 +100,23 @@ public class UserServiceTests
         // Act/Assert
         await Assert.ThrowsExceptionAsync<UserCreationFailedException>(async () => await sut.CreateUserAsync(name, email, passwordText));
     }
+
+    [TestMethod]
+    public async Task CreateUserAsync_WhenUserIdGenerationFails_ThrowsUserDoesNotExistException()
+    {
+        // Arrange
+        string id = "123";
+        string name = "foo";
+        string email = "foo@test.com";
+        string passwordText = "bar12345";
+
+        var mockedLogger = new Mock<IAppLogger<UserService>>();
+        var mockedUserRepository = new Mock<IUserRepository>();
+        var mockedTokenService = new Mock<ITokenService>();
+
+        var sut = new UserService(mockedLogger.Object, mockedUserRepository.Object, mockedTokenService.Object);
+
+        // Act/Assert
+        await Assert.ThrowsExceptionAsync<UserDoesNotExistException>(async () => await sut.UpdateUserAsync(id, name, email, passwordText));
+    }
 }

@@ -291,7 +291,7 @@ This project contains most of the core business logic of the application, theref
 **Post-Conditions:** The Idea with the highest completion count is returned to the user  
 **Associated Requirements:** 7.3
 
-### UpdateUser_WhenUserDoesNotExist_ThrowsArgumentException
+### UpdateUser_WhenUserDoesNotExist_ThrowsUserDoesNotExistException
 
 **Description:** A user must exist to be updated.  
 **Related Issues:** #11  
@@ -299,9 +299,9 @@ This project contains most of the core business logic of the application, theref
 
 | Step | Action                                               | Expected Response       |
 | :--: | ---------------------------------------------------- | ----------------------- |
-|  1   | Call UpdateUser method with user that does not exist | ThrowsArgumentException |
+|  1   | Call UpdateUser method with user that does not exist | UserDoesNotExistException |
 
-**Post-Conditions:** An ArgumentException is thrown to the caller  
+**Post-Conditions:** An UserDoesNotExistException is thrown to the caller  
 **Associated Requirements:** 9
 
 ### AddUserToCouple_WhenUserAlreadyInCouple_ThrowsArgumentException
