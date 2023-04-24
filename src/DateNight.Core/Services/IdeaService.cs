@@ -42,9 +42,9 @@ public class IdeaService : IIdeaService
         ArgumentNullException.ThrowIfNull(idea.Id);
         _logger.LogInformation("Adding idea '{Id}'.", idea.Id);
 
-        var existingId = GetIdeaByIdAsync(idea.Id);
+        var existingIdea = await _ideaRepository.GetByIdAsync(idea.Id);
 
-        if (existingId is not null)
+        if (existingIdea is not null)
         {
             throw new ArgumentException($"An idea with ID '{idea.Id}' already exists", nameof(idea));
         }
