@@ -115,13 +115,12 @@ public class IdeaService : IIdeaService
             throw new ArgumentOutOfRangeException(nameof(start), "Start cannot be greater than end.");
         }
 
-        if (end < start)
-        {
-            throw new ArgumentOutOfRangeException(nameof(end), "End cannot be less than start.");
-        }
-
         var ideas = await _ideaRepository.GetAllAsync();
-        var sortedIdeas = ideas.OrderByDescending(idea => idea.PopularityScore).ToArray();
+
+        var sortedIdeas = ideas.GroupBy(idea => idea.Title, StringComparer.InvariantCultureIgnoreCase)
+                               .Select(group => group.OrderBy(groupIdea => groupIdea.CreatedOn).First())
+                               .OrderByDescending(idea => idea.PopularityScore)
+                               .ToArray();
 
         if (start < 0)
         {
