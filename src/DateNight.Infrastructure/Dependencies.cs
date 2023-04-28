@@ -12,20 +12,19 @@ namespace DateNight.Infrastructure;
 
 public static class Dependencies
 {
-    private const string IsLocal = "IsLocal";
-
     public static IServiceCollection AddIdeaService(this IServiceCollection services, IConfiguration config)
     {
-        if (config.GetValue<bool>(IsLocal))
+        string? databaseConnectionString = config.GetConnectionString("DateNightDatabase");
+
+        if (databaseConnectionString is null)
         {
             services.AddSingleton<IIdeaRepository, IdeaMemoryRepository>();
         }
         else
         {
-            string connectionString = config.GetConnectionString("DateNightDatabase") ?? string.Empty;
             var cosmosClientOptions = new CosmosClientOptions() { SerializerOptions = new() { PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase } };
 
-            services.AddSingleton(new CosmosClient(connectionString, cosmosClientOptions));
+            services.AddSingleton(new CosmosClient(databaseConnectionString, cosmosClientOptions));
             services.AddOptions<DateNightDatabaseOptions>().Bind(config.GetSection(DateNightDatabaseOptions.DateNightDatabase));
             services.AddTransient<IIdeaRepository, IdeaRepository>();
         }
@@ -39,9 +38,11 @@ public static class Dependencies
     {
         var config = builder.Build();
 
-        if (!config.GetValue<bool>(IsLocal))
+        string? keyVaultName = config.GetValue<string>("KeyVaultName");
+
+        if (keyVaultName is not null)
         {
-            string url = $"https://{config["KeyVaultName"]}.vault.azure.net/";
+            string url = $"https://{keyVaultName}.vault.azure.net/";
             builder.AddAzureKeyVault(new Uri(url), new DefaultAzureCredential());
         }
 
@@ -57,7 +58,9 @@ public static class Dependencies
 
     public static IServiceCollection AddUserService(this IServiceCollection services, IConfiguration config)
     {
-        if (config.GetValue<bool>(IsLocal))
+        string? databaseConnectionString = config.GetConnectionString("DateNightDatabase");
+
+        if (databaseConnectionString is null)
         {
             services.AddSingleton<IUserRepository, UserMemoryRepository>();
         }
