@@ -21,7 +21,7 @@ name: Build and deploy ASP.Net Core app to an Azure Web App
 
 env:
   AZURE_WEBAPP_NAME: fmcgarry-datenight    # set this to the name of your Azure Web App
-  AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
+  AZURE_WEBAPP_PACKAGE_PATH: './artifacts/datenight'      # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '7.x'                 # set this to the .NET Core version to use
   API_PROJECT_PATH: 'src/DateNight.Api'
 
@@ -54,13 +54,13 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: dotnet publish
-        run: dotnet publish ${{ env.API_PROJECT_PATH }} -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
+        run: dotnet publish ${{ env.API_PROJECT_PATH }} -c Release -o ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
-          name: .net-app
-          path: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
+          name: datenight
+          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
   deploy:
     permissions:
@@ -75,7 +75,7 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
-          name: .net-app
+          name: datenight
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -83,4 +83,4 @@ jobs:
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: .net-app
+          package: datenight
