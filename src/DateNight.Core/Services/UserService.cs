@@ -103,18 +103,18 @@ public class UserService : IUserService
         return user.Partners;
     }
 
-    public async Task<string> LoginUserAsync(string username, string passwordText)
+    public async Task<string> LoginUserAsync(string username, string password)
     {
         var user = await GetUserbyEmailAsync(username);
 
-        bool isValidPassword = VerifyPassword(passwordText, user.Password);
+        bool isValidPassword = VerifyPassword(password, user.Password);
 
         if (!isValidPassword)
         {
             throw new InvalidPasswordException();
         }
 
-        var token = _tokenService.GenerateToken(user, user.Roles);
+        var token = _tokenService.GenerateToken(user);
 
         return token;
     }

@@ -19,7 +19,7 @@ public class TokenService : ITokenService
         _configuration = configuration;
     }
 
-    public string GenerateToken(User user, IEnumerable<string> roles)
+    public string GenerateToken(User user)
     {
         _logger.LogInformation("Generating token for user '{0}'", user.Email);
 
@@ -37,7 +37,7 @@ public class TokenService : ITokenService
             new Claim(JwtRegisteredClaimNames.Aud, audience)
         };
 
-        foreach (var role in roles)
+        foreach (var role in user.Roles)
         {
             claims.Add(new Claim(ClaimTypes.Role, role));
         }
