@@ -1,0 +1,37 @@
+﻿@using TinyMCE.Blazor;
+
+<Editor @attributes=@InputAttributes Field="() => Value" @oninput="OnInput" @bind-Value="BoundValue" Conf="@_configuration" ScriptSrc="js/tinymce_6.2.0/tinymce.min.js" />
+
+@code {
+
+    [Parameter]
+    public string? Value { get; set; }
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    // https://learn.microsoft.com/en-us/aspnet/core/blazor/components/data-binding?view=aspnetcore-6.0#bind-across-more-than-two-components-1
+    private string BoundValue
+    {
+        get => Value ?? string.Empty;
+        set => ValueChanged.InvokeAsync(value);
+    }
+
+    // https://learn.microsoft.com/en-us/aspnet/core/blazor/components/?view=aspnetcore-7.0#attribute-splatting-and-arbitrary-parameters
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? InputAttributes { get; set; }
+
+    private readonly Dictionary<string, object> _configuration = new()
+    {
+        { "menubar", false },
+        { "statusbar", true },
+        { "branding", false },
+        { "plugins", "lists" },
+        { "toolbar", "undo redo | bold italic underline | superscript subscript | numlist bullist | outdent indent" }
+    };
+
+    private async Task OnInput()
+    {
+        await ValueChanged.InvokeAsync();
+    }
+}
