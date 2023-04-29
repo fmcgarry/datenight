@@ -10,7 +10,7 @@
         <InputText class="form-control" id="title" @bind-Value="_idea.Title" placeholder="Title"/>
     </div>
     <div class="mb-3">
-        <InputTextArea style="min-height: 10rem;" id="description" class="form-control" @bind-Value="_idea.Description" placeholder="Description"/>
+        <RichEditor style="min-height: 10rem;" id="description" class="form-control" @bind-Value="@_idea.Description" placeholder="Description" />
     </div>
     <button class="btn btn-success w-100" type="submit">Submit</button>
 </EditForm>
