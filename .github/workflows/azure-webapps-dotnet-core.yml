@@ -8,8 +8,12 @@ env:
 
 on:
   push:
-    branches:
+    branches: 
       - main
+    paths:
+      - 'src/**'                 # only inlcude changes made to src/ folder
+      - '!src/DateNight.App/**'  # ignore app project changes
+      
   workflow_dispatch:
 
 jobs:
@@ -41,7 +45,7 @@ jobs:
     runs-on: windows-latest
     needs: build
     environment:
-      name: 'production'
+      name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
