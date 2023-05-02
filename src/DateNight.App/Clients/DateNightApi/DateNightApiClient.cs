@@ -9,7 +9,6 @@ namespace DateNight.App.Clients.DateNightApi;
 
 internal class DateNightApiClient : IDateNightApiClient
 {
-    public const string HttpClientBaseAddress = "https://localhost:7000/";
     public const string HttpClientName = "DateNightApiClient";
 
     private const string _ideasEndpoint = "ideas";

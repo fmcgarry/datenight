@@ -17,14 +17,18 @@ namespace DateNight.App
 
             builder.Services.AddMauiBlazorWebView();
 
+            string dateNightApiBaseAddress;
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
             builder.Logging.AddDebug();
+            dateNightApiBaseAddress = "https://localhost:7000/";
+#else
+            dateNightApiBaseAddress = "https://fmcgarry-datenight.azurewebsites.net/";
 #endif
             builder.Services.AddSingleton<IDateNightApiClient, DateNightApiClient>();
             builder.Services.AddHttpClient(DateNightApiClient.HttpClientName).ConfigureHttpClient(x =>
             {
-                x.BaseAddress = new Uri(DateNightApiClient.HttpClientBaseAddress);
+                x.BaseAddress = new Uri(dateNightApiBaseAddress);
             });
 
             return builder.Build();
