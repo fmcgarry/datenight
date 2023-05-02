@@ -11,8 +11,8 @@ internal class DateNightApiClient : IDateNightApiClient
 {
     public const string HttpClientName = "DateNightApiClient";
 
-    private const string _ideasEndpoint = "ideas";
-    private const string _usersEndpoint = "users";
+    private const string IdeasEndpoint = "ideas";
+    private const string UsersEndpoint = "users";
 
     private readonly HttpClient _httpClient;
     private readonly ILogger<DateNightApiClient> _logger;
@@ -36,7 +36,7 @@ internal class DateNightApiClient : IDateNightApiClient
             { "code", code }
         });
 
-        var response = await _httpClient.PostAsync($"{_usersEndpoint}/{id}/partners", content);
+        var response = await _httpClient.PostAsync($"{UsersEndpoint}/{id}/partners", content);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -48,7 +48,7 @@ internal class DateNightApiClient : IDateNightApiClient
     {
         _logger.LogInformation("Creating idea '{Title}'", idea.Title);
 
-        var response = await _httpClient.PostAsJsonAsync(_ideasEndpoint, idea);
+        var response = await _httpClient.PostAsJsonAsync(IdeasEndpoint, idea);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -65,7 +65,7 @@ internal class DateNightApiClient : IDateNightApiClient
             Name = name
         });
 
-        var response = await _httpClient.PostAsync($@"{_usersEndpoint}\register", content);
+        var response = await _httpClient.PostAsync($@"{UsersEndpoint}\register", content);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -77,7 +77,7 @@ internal class DateNightApiClient : IDateNightApiClient
     {
         _logger.LogInformation("Deleting idea '{Id}'", idea.Id);
 
-        var response = await _httpClient.DeleteAsync($"{_ideasEndpoint}/{idea.Id}");
+        var response = await _httpClient.DeleteAsync($"{IdeasEndpoint}/{idea.Id}");
 
         if (!response.IsSuccessStatusCode)
         {
@@ -89,7 +89,7 @@ internal class DateNightApiClient : IDateNightApiClient
     {
         _logger.LogInformation("Getting currently active idea");
 
-        var response = await _httpClient.GetAsync($"{_ideasEndpoint}/active");
+        var response = await _httpClient.GetAsync($"{IdeasEndpoint}/active");
 
         if (!response.IsSuccessStatusCode)
         {
@@ -111,7 +111,7 @@ internal class DateNightApiClient : IDateNightApiClient
     {
         _logger.LogInformation("Getting all ideas");
 
-        var response = await _httpClient.GetAsync(_ideasEndpoint);
+        var response = await _httpClient.GetAsync(IdeasEndpoint);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -143,7 +143,7 @@ internal class DateNightApiClient : IDateNightApiClient
     {
         _logger.LogInformation("Getting idea '{Id}'", id);
 
-        var response = await _httpClient.GetAsync($"{_ideasEndpoint}/{id}");
+        var response = await _httpClient.GetAsync($"{IdeasEndpoint}/{id}");
 
         if (!response.IsSuccessStatusCode)
         {
@@ -164,7 +164,7 @@ internal class DateNightApiClient : IDateNightApiClient
     {
         _logger.LogInformation("Getting random idea");
 
-        var response = await _httpClient.GetAsync($"{_ideasEndpoint}/random");
+        var response = await _httpClient.GetAsync($"{IdeasEndpoint}/random");
 
         if (!response.IsSuccessStatusCode)
         {
@@ -191,7 +191,7 @@ internal class DateNightApiClient : IDateNightApiClient
     {
         _logger.LogInformation("Getting top ideas");
 
-        var response = await _httpClient.GetAsync($"{_ideasEndpoint}/top?start={start}&end={end}");
+        var response = await _httpClient.GetAsync($"{IdeasEndpoint}/top?start={start}&end={end}");
 
         if (!response.IsSuccessStatusCode)
         {
@@ -212,7 +212,7 @@ internal class DateNightApiClient : IDateNightApiClient
     {
         _logger.LogInformation("Getting user '{id}'", id);
 
-        var response = await _httpClient.GetAsync($"{_usersEndpoint}/{id}");
+        var response = await _httpClient.GetAsync($"{UsersEndpoint}/{id}");
 
         if (!response.IsSuccessStatusCode)
         {
@@ -232,7 +232,7 @@ internal class DateNightApiClient : IDateNightApiClient
             Password = password
         });
 
-        var response = await _httpClient.PostAsync($@"{_usersEndpoint}\login", content);
+        var response = await _httpClient.PostAsync($@"{UsersEndpoint}\login", content);
 
         if (response.IsSuccessStatusCode)
         {
@@ -253,7 +253,7 @@ internal class DateNightApiClient : IDateNightApiClient
     {
         string userId = GetUserIdFromToken();
 
-        var response = await _httpClient.DeleteAsync($"{_usersEndpoint}/{userId}/partners/{id}");
+        var response = await _httpClient.DeleteAsync($"{UsersEndpoint}/{userId}/partners/{id}");
 
         if (!response.IsSuccessStatusCode)
         {
@@ -271,7 +271,7 @@ internal class DateNightApiClient : IDateNightApiClient
         };
 
         var content = new FormUrlEncodedContent(queryParamters);
-        var response = await _httpClient.PostAsync($"{_ideasEndpoint}/active", content);
+        var response = await _httpClient.PostAsync($"{IdeasEndpoint}/active", content);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -283,7 +283,7 @@ internal class DateNightApiClient : IDateNightApiClient
     {
         _logger.LogInformation("Updating idea '{Title}'", idea.Title);
 
-        var response = await _httpClient.PutAsJsonAsync($"{_ideasEndpoint}/{idea.Id}", idea);
+        var response = await _httpClient.PutAsJsonAsync($"{IdeasEndpoint}/{idea.Id}", idea);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -307,7 +307,7 @@ internal class DateNightApiClient : IDateNightApiClient
             Name = name
         });
 
-        var response = await _httpClient.PutAsync($@"{_usersEndpoint}\{id}", content);
+        var response = await _httpClient.PutAsync($@"{UsersEndpoint}\{id}", content);
 
         if (!response.IsSuccessStatusCode)
         {
