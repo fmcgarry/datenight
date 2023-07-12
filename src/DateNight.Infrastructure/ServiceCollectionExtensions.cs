@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DateNight.Infrastructure;
 
-public static class Dependencies
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddIdeaService(this IServiceCollection services, IConfiguration config)
     {
