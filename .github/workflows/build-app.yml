@@ -1,11 +1,12 @@
-name: Build Android App
+name: Build App
 
 on:
   workflow_call:
 
 env:
-  PROJECT_PATH: src\DateNight.App
-  BUILD_OUTPUT_PATH: artifacts\DateNight.App
+  PROJECT_PATH: 'src\DateNight.App'
+  BUILD_OUTPUT_PATH: 'artifacts\DateNight.App'
+  DOTNET_VERSON: '7.x'
 
 jobs:
   build:
@@ -17,7 +18,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '7.x'
+        dotnet-version: ${{env.DOTNET_VERSON}}
 
     - name: Install MAUI workload
       run: dotnet workload install maui
