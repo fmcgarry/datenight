@@ -2,8 +2,8 @@
 using DateNight.Core.Interfaces;
 using DateNight.Core.Services;
 using DateNight.Infrastructure.Logging;
-using DateNight.Infrastructure.Options;
 using DateNight.Infrastructure.Repositories;
+using DateNight.Infrastructure.Tokens;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -56,9 +56,9 @@ public static class ServiceCollectionExtensions
         return builder;
     }
 
-    public static IServiceCollection AddUserService(this IServiceCollection services, IConfiguration configurationSection)
+    public static IServiceCollection AddUserService(this IServiceCollection services, IConfiguration databaseOptionsSection, IConfiguration tokenServiceOptionsSection)
     {
-        string? databaseConnectionString = GetDateNightCosmosDbConnectionString(configurationSection);
+        string? databaseConnectionString = GetDateNightCosmosDbConnectionString(databaseOptionsSection);
 
         if (string.IsNullOrEmpty(databaseConnectionString))
         {
@@ -67,12 +67,13 @@ public static class ServiceCollectionExtensions
         else
         {
             services.AddDateNightCosmosDbClient(databaseConnectionString);
-            services.AddOptionsFromConfigurationSection<DateNightDatabaseOptions>(configurationSection);
+            services.AddOptionsFromConfigurationSection<DateNightDatabaseOptions>(databaseOptionsSection);
             services.AddTransient<IUserRepository, UserRepository>();
         }
 
-        services.AddTransient<IUserService, UserService>();
+        services.AddOptionsFromConfigurationSection<TokenServiceOptions>(tokenServiceOptionsSection);
         services.AddTransient<ITokenService, TokenService>();
+        services.AddTransient<IUserService, UserService>();
 
         return services;
     }

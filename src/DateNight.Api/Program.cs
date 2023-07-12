@@ -11,7 +11,7 @@ builder.Configuration.AddRequiredInfrastructureConfiguration();
 
 builder.Services.AddAppLogger();
 builder.Services.AddIdeaService(builder.Configuration.GetSection(DateNightDatabase));
-builder.Services.AddUserService(builder.Configuration.GetSection(DateNightDatabase));
+builder.Services.AddUserService(builder.Configuration.GetSection(DateNightDatabase), builder.Configuration.GetSection(JwtSettings));
 
 builder.Services.AddControllers();
 builder.Services.AddSwaggerDocumentation();

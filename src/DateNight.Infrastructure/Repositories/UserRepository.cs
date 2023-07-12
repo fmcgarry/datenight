@@ -1,5 +1,4 @@
 ﻿using DateNight.Core.Interfaces;
-using DateNight.Infrastructure.Options;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Options;
 using User = DateNight.Core.Entities.UserAggregate.User;

@@ -1,6 +1,5 @@
 ﻿using DateNight.Core.Entities.IdeaAggregate;
 using DateNight.Core.Interfaces;
-using DateNight.Infrastructure.Options;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Options;
 
