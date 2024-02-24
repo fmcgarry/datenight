@@ -26,7 +26,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DateNight.Core", "src\DateN
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DateNight.Infrastructure", "src\DateNight.Infrastructure\DateNight.Infrastructure.csproj", "{98BFCD1B-BD0E-42FB-A0EE-30E67E769EA7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DateNightApp", "src\DateNight.App\DateNightApp.csproj", "{6F4792C1-135B-4D2B-9FFA-988690A1F1C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DateNightApp", "src\DateNightApp\DateNightApp.csproj", "{6F4792C1-135B-4D2B-9FFA-988690A1F1C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
