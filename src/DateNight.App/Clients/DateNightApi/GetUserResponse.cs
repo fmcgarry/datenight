@@ -1,4 +1,4 @@
-﻿namespace DateNight.App.Clients.DateNightApi;
+﻿namespace DateNightApp.Clients.DateNightApi;
 
 internal class GetUserResponse
 {

@@ -1,4 +1,4 @@
-﻿namespace DateNight.App.Models;
+﻿namespace DateNightApp.Models;
 
 public class UserModel
 {

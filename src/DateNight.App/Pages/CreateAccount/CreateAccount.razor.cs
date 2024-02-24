@@ -1,7 +1,7 @@
-using DateNight.App.Clients.DateNightApi;
+using DateNightApp.Clients.DateNightApi;
 using Microsoft.AspNetCore.Components;
 
-namespace DateNight.App.Pages.CreateAccount;
+namespace DateNightApp.Pages.CreateAccount;
 
 public partial class CreateAccount
 {

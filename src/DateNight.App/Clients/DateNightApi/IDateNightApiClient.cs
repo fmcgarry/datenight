@@ -1,7 +1,7 @@
-﻿using DateNight.App.Components.IdeaComponent;
-using DateNight.App.Models;
+﻿using DateNightApp.Components.IdeaComponent;
+using DateNightApp.Models;
 
-namespace DateNight.App.Clients.DateNightApi;
+namespace DateNightApp.Clients.DateNightApi;
 
 public interface IDateNightApiClient
 {

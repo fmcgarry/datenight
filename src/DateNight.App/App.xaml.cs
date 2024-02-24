@@ -1,4 +1,4 @@
-﻿namespace DateNight.App
+﻿namespace DateNightApp
 {
     public partial class App : Application
     {

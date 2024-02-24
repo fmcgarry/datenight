@@ -1,4 +1,4 @@
-﻿namespace DateNight.App.Pages.Account;
+﻿namespace DateNightApp.Pages.Account;
 
 internal class PartnerModel
 {

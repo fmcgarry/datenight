@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DateNight.App.Pages.CreateAccount;
+namespace DateNightApp.Pages.CreateAccount;
 
 internal class CreateAccountModel
 {

@@ -1,7 +1,7 @@
-﻿using DateNight.App.Clients.DateNightApi;
+﻿using DateNightApp.Clients.DateNightApi;
 using Microsoft.AspNetCore.Components;
 
-namespace DateNight.App.Components.IdeaComponent;
+namespace DateNightApp.Components.IdeaComponent;
 
 public partial class IdeaComponent
 {

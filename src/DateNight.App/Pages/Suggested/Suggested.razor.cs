@@ -1,8 +1,8 @@
-﻿using DateNight.App.Clients.DateNightApi;
+﻿using DateNightApp.Clients.DateNightApi;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace DateNight.App.Pages.Suggested;
+namespace DateNightApp.Pages.Suggested;
 
 public partial class Suggested
 {

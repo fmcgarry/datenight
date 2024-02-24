@@ -1,9 +1,9 @@
-﻿using DateNight.App.Clients.DateNightApi;
-using DateNight.App.Components.IdeaComponent;
+﻿using DateNightApp.Clients.DateNightApi;
+using DateNightApp.Components.IdeaComponent;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace DateNight.App.Pages.ActiveDate;
+namespace DateNightApp.Pages.ActiveDate;
 
 public partial class ActiveDate
 {

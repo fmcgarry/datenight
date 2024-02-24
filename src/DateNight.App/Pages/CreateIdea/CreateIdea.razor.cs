@@ -1,8 +1,8 @@
-﻿using DateNight.App.Clients.DateNightApi;
-using DateNight.App.Components.IdeaComponent;
+﻿using DateNightApp.Clients.DateNightApi;
+using DateNightApp.Components.IdeaComponent;
 using Microsoft.AspNetCore.Components;
 
-namespace DateNight.App.Pages.CreateIdea;
+namespace DateNightApp.Pages.CreateIdea;
 
 public partial class CreateIdea
 {

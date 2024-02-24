@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DateNight.App.Pages.Login;
+namespace DateNightApp.Pages.Login;
 
 public class LoginModel
 {

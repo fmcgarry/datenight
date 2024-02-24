@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DateNight.App.Pages.Account;
+namespace DateNightApp.Pages.Account;
 
 public class AccountModel
 {

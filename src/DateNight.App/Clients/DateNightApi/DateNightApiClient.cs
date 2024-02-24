@@ -1,11 +1,11 @@
-﻿using DateNight.App.Components.IdeaComponent;
-using DateNight.App.Models;
+﻿using DateNightApp.Components.IdeaComponent;
+using DateNightApp.Models;
 using Microsoft.Extensions.Logging;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Json;
 using System.Text.Json.Nodes;
 
-namespace DateNight.App.Clients.DateNightApi;
+namespace DateNightApp.Clients.DateNightApi;
 
 internal class DateNightApiClient : IDateNightApiClient
 {

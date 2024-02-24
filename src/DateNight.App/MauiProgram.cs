@@ -1,7 +1,7 @@
-﻿using DateNight.App.Clients.DateNightApi;
+﻿using DateNightApp.Clients.DateNightApi;
 using Microsoft.Extensions.Logging;
 
-namespace DateNight.App
+namespace DateNightApp
 {
     public static class MauiProgram
     {

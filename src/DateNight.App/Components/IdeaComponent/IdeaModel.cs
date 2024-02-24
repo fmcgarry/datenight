@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DateNight.App.Components.IdeaComponent;
+namespace DateNightApp.Components.IdeaComponent;
 
 public class IdeaModel
 {

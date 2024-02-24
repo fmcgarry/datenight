@@ -1,4 +1,4 @@
-namespace DateNight.App.Shared;
+namespace DateNightApp.Shared;
 
 public partial class NavMenu
 {

@@ -1,6 +1,6 @@
-﻿using DateNight.App.Components.IdeaComponent;
+﻿using DateNightApp.Components.IdeaComponent;
 
-namespace DateNight.App.Pages.Suggested;
+namespace DateNightApp.Pages.Suggested;
 
 internal class SuggestedModel
 {
