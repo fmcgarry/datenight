@@ -14,11 +14,10 @@ builder.Configuration.AddAppKeyVault();
 builder.Services.AddAppLogger();
 builder.Services.AddIdeaService(builder.Configuration.GetSection(DateNightDatabase));
 builder.Services.AddUserService(builder.Configuration.GetSection(DateNightDatabase));
-
-builder.Services.AddControllers();
-builder.Services.AddSwaggerDocumentation();
 builder.Services.AddJwtAuthentication(builder.Configuration.GetSection(JwtSettings));
-builder.Services.AddApplicationInsightsTelemetry();
+
+builder.Services.AddSwaggerDocumentation();
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
