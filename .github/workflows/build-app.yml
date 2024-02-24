@@ -27,4 +27,4 @@ jobs:
       run: dotnet restore ${{env.PROJECT_PATH}}
 
     - name: Build Android App
-      run: dotnet build ${{env.PROJECT_PATH}} --no-restore -c Release -f:net7.0-android -o ${{env.BUILD_OUTPUT_PATH}}
+      run: dotnet build ${{env.PROJECT_PATH}} --no-restore -c Release -f:net8.0-android -o ${{env.BUILD_OUTPUT_PATH}}
