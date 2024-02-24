@@ -6,7 +6,7 @@ name: API build
 env:
   PROJECT_PATH: 'src/DateNight.Api'
   OUTPUT_PATH: 'artifacts/DateNight.Api'
-  DOTNET_VERSION: '7.x'
+  DOTNET_VERSION: '8.x'
 
 on:
   push:

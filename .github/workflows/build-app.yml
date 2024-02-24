@@ -6,7 +6,7 @@ on:
 env:
   PROJECT_PATH: 'src\DateNight.App'
   BUILD_OUTPUT_PATH: 'artifacts\DateNight.App'
-  DOTNET_VERSON: '7.x'
+  DOTNET_VERSON: '8.x'
 
 jobs:
   build:
