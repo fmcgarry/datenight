@@ -1,7 +1,6 @@
 ﻿using Azure.Identity;
 using DateNight.Core.Interfaces;
 using DateNight.Core.Services;
-using DateNight.Infrastructure.Logging;
 using DateNight.Infrastructure.Repositories;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Configuration;
@@ -13,13 +12,6 @@ namespace DateNight.Infrastructure;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddAppLogger(this IServiceCollection services)
-    {
-        services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
-
-        return services;
-    }
-
     public static IServiceCollection AddIdeaService(this IServiceCollection services, IConfiguration configurationSection)
     {
         string? databaseConnectionString = GetDateNightCosmosDbConnectionString(configurationSection);

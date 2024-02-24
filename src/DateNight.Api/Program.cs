@@ -1,6 +1,7 @@
 using DateNight.Api;
 using DateNight.Infrastructure;
 using DateNight.Infrastructure.Auth;
+using DateNight.Infrastructure.Logging;
 
 const string DateNightDatabase = "DateNightDatabase";
 const string JwtSettings = "JwtSettings";
