@@ -14,7 +14,7 @@ on:
       - main
     paths:
       - 'src/**'                 # only run when changes are made to src/ folder
-      - '!src/DateNight.App/**'  # ignore app project changes
+      - '!src/DateNightApp/**'  # ignore app project changes
       
   workflow_dispatch:
 

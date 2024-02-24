@@ -1,0 +1,18 @@
+﻿@page "/ideas/view"
+@using DateNightApp.Components.IdeaComponent
+
+<h3>View Ideas</h3>
+
+@if (_ideas is not null)
+{
+    <div class="container-fluid mt-4">
+        <div class="row">
+            @foreach (var idea in _ideas)
+            {
+                <div class="col mb-4 d-flex justify-content-center">
+                    <IdeaComponent Idea="idea" OnDeleteCallback="GetAllIdeas" />
+                </div>
+            }
+        </div>
+    </div>
+}

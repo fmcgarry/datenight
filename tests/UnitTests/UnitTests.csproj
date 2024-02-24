@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <Folder Include="DateNight.Api\" />
-    <Folder Include="DateNight.App\" />
+    <Folder Include="DateNightApp\" />
     <Folder Include="DateNight.Infrastructure\" />
   </ItemGroup>
 

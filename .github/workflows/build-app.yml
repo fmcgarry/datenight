@@ -4,8 +4,8 @@ on:
   workflow_call:
 
 env:
-  PROJECT_PATH: 'src\DateNight.App'
-  BUILD_OUTPUT_PATH: 'artifacts\DateNight.App'
+  PROJECT_PATH: 'src\DateNightApp'
+  BUILD_OUTPUT_PATH: 'artifacts\DateNightApp'
   DOTNET_VERSON: '8.x'
 
 jobs:

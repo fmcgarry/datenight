@@ -6,7 +6,7 @@ A comprehensive suite of testing scenarios.
 
 The tests defined in this section are separated by their respective projects.
 
-## DateNight.App
+## DateNightApp
 
 Since this is the UI project, these tests comprise of safe guards for user input and error checking user data. They do not follow the naming format like the rests of do because they are UI tests.
 
