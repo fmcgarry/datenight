@@ -6,7 +6,8 @@ using static DateNight.Api.Data.IdeaActions;
 
 namespace DateNight.Api.Controllers
 {
-    [ApiController, Authorize]
+    [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class IdeasController : ControllerBase
     {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DateNight.Infrastructure.Tokens;
+namespace DateNight.Infrastructure.Auth;
 
 public class TokenServiceOptions
 {
