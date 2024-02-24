@@ -1,5 +1,4 @@
-﻿using Azure.Identity;
-using DateNight.Core.Interfaces;
+﻿using DateNight.Core.Interfaces;
 using DateNight.Core.Services;
 using DateNight.Infrastructure.Repositories;
 using Microsoft.Azure.Cosmos;
@@ -30,21 +29,6 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IIdeaService, IdeaService>();
 
         return services;
-    }
-
-    public static IConfigurationBuilder AddRequiredInfrastructureConfiguration(this IConfigurationBuilder builder)
-    {
-        var config = builder.Build();
-
-        string? keyVaultName = config.GetValue<string>("KeyVaultName");
-
-        if (keyVaultName is not null)
-        {
-            string url = $"https://{keyVaultName}.vault.azure.net/";
-            builder.AddAzureKeyVault(new Uri(url), new DefaultAzureCredential());
-        }
-
-        return builder;
     }
 
     public static IServiceCollection AddUserService(this IServiceCollection services, IConfiguration databaseOptionsSection)

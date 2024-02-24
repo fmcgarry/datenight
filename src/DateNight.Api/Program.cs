@@ -8,9 +8,9 @@ const string JwtSettings = "JwtSettings";
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Configuration.AddRequiredInfrastructureConfiguration();
+builder.Configuration.AddAppKeyVault();
 
+// Add services to the container.
 builder.Services.AddAppLogger();
 builder.Services.AddIdeaService(builder.Configuration.GetSection(DateNightDatabase));
 builder.Services.AddUserService(builder.Configuration.GetSection(DateNightDatabase));
